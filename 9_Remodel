@@ -1,0 +1,15 @@
+#!/bin/bash
+
+<<COMMENT
+Input:
+1. structure.pdb
+2. blueprint
+
+E for strand
+H for helix
+L for loop
+D for random
+COMMENT
+
+{ROSETTA}/tools/remodel/getBluePrintFromCoords.pl -pdbfile structure.pdb > blueprint
+{ROSETTA}/main/source/bin/remodel.default.linuxgccrelease -database {ROSETTA}/main/database -s structure.pdb -remodel:blueprint blueprint -ex1 -ex2aro -nstruct 10

@@ -1,0 +1,64 @@
+#!/bin/bash
+
+<<COMMENT
+No previous structure needed, just the information.
+COMMENT
+
+#Clean structure--->Auto downloads from RCSB through wget.
+{ROSETTA}/tools/protein_tools/scripts/clean_pdb.py 3Q4H B
+
+#Get score before relaxing the structure to compaire.
+{ROSETTA}/main/source/bin/score_jd2.default.linuxgccrelease -s structure.pdb -out:suffix _notrelaxed -nstruct 1
+
+#Relax Structure
+echo '
+-database {ROSETTA}/main/database
+-in:file:s structure.pdb
+-relax:thorough
+-nstruct 10
+-out:suffix _relaxed
+'>flags
+
+{ROSETTA}/main/source/bin/relax.default.linuxgccrelease @flags
+
+#---------------------------------------------------------------------------------------------
+
+#Protein Design
+echo '
+-database {ROSETTA}/main/database
+-in:file:s {PATH}/structure.pdb
+-resfile {PATH}/mutations.resfile
+-ignore_unrecognized_res
+-nstruct 1000 
+-mute core.util.prof
+-favor_native_res 0
+-out:file:silent {PATH}/design.out
+'>flags
+
+echo '
+USE_INPUT_SC
+ALLAA
+start
+'>mutations.resfile
+
+echo '
+#!/bin/bash
+#PBS -N Design
+#PBS -q fat
+#PBS -l select=1:ncpus=1
+#PBS -j oe
+
+{ROSETTA}/main/source/bin/fixbb.linuxgccrelease @{PATH}/flags
+'>design.pbs
+#---------------------------------------------------------------------------------------------
+
+#Relax Chosen Structure
+echo '
+-database {ROSETTA}/main/database
+-in:file:s structure.pdb
+-relax:thorough
+-nstruct 10
+-out:suffix _relaxed
+'>flags
+
+{ROSETTA}/main/source/bin/relax.default.linuxgccrelease @flags
