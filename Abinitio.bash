@@ -2,7 +2,7 @@
 
 <<COMMENT
 This is a Bash script that automatically sets the correct files to run Rosetta Abinitio followed by Clustering followed by plotting the computation result in a HPC (High Preformace Computer) that uses PBS as its job scheduler.
-Written by Sari Sabban on 27-June-2017
+Written by Sari Sabban on 27-June-2017.
 
 Required Input Files:
 1. aat000_03_05.200_v1_3
