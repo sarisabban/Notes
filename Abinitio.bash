@@ -33,7 +33,7 @@ echo '-database {ROSETTA}/main/database
 -in:file:fasta ./structure.fasta
 -in:file:native ./structure.pdb
 -psipred_ss2 ./t000_.psipred_ss2
--nstruct 1
+-nstruct 25
 -abinitio:relax
 -use_filters true
 -abinitio::increase_cycles 10
@@ -49,7 +49,7 @@ echo '#!/bin/bash
 #PBS -l walltime=9:00:00
 #PBS -l select=1:ncpus=1
 #PBS -j oe
-#PBS -J 1-10
+#PBS -J 1-1000
 
 cd $PBS_O_WORKDIR
 {ROSETTA}/main/source/bin/AbinitioRelax.default.linuxgccrelease @./flags
