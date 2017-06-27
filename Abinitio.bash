@@ -75,7 +75,7 @@ gnuplot
 set terminal postscript
 set output './plot.pdf'
 set encoding iso_8859_1
-set xlabel "RMSD (\305)"
+set xlabel 'RMSD (\305)'
 set ylabel 'Score'
 set yrange [:-80]
 set xrange [0:20]
