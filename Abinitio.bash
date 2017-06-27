@@ -70,17 +70,17 @@ rm {HOME}/*.fsc
 rm fold_silent_*
 rm Abinitio.o*
 mv S_* cluster
+cd cluster
 echo '-database {ROSETTA}/main/database
 -in:file:fullatom
 -cluster:radius 3
 -nooutput
--out:file:silent cluster_silent.out' > flags
+-out:file:silent cluster.out' > flags
 {ROSETTA}/main/source/bin/cluster.default.linuxgccrelease @flags -in:file:s *.pdb
 rm *.pdb
-{ROSETTA}/main/source/bin/extract_pdbs.linuxgccrelease -in::file::silent cluster_silent.out -out:pdb -in:file:tags
+{ROSETTA}/main/source/bin/extract_pdbs.linuxgccrelease -in::file::silent cluster.out -out:pdb -in:file:tags
 gnuplot
 set terminal postscript
-set output "plot.pdf"
 set encoding iso_8859_1
 set xlabel "RMSD (\305)"
 set ylabel 'Score'
