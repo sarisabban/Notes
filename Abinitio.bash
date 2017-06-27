@@ -24,35 +24,19 @@ How To Use:
 	bash Abinitio.bash && qsub abinitio.pbs
 6. This script is setup to run using the PBS job scheduler, simple changes can be made to make it work on other job schedulers, but thorough understading of each job scheduler is nessesary to make these modifications.
 7. The default computatio settings are for normal Abinitio computation (25,000 structures). You will have to change the walltime for larger computations (1,000,000):
-	sed -i '/#PBS -l walltime=9:00:00/d' Abinitio.bash && sed -i '/#PBS -l walltime=2:00:00/d' Abinitio.bash && sed -i 's/thin/thin_1m/g' Abinitio.bash
+	sed -i '/#PBS -l walltime=9:00:00/d' Abinitio.bash && sed -i '/#PBS -l walltime=2:00:00/d' Abinitio.bash && sed -i 's/thin/thin_1m/g' Abinitio.bash && sed -i 's/-nstruct 25/-nstruct 1000/g' Abinitio.bash
 COMMENT
 #---------------------------------------------------------------------------------------------------------------
-echo '-database {ROSETTA}/main/database
--in:file:frag3 ./aat000_03_05.200_v1_3
--in:file:frag9 ./aat000_09_05.200_v1_3
--in:file:fasta ./structure.fasta
--in:file:native ./structure.pdb
--psipred_ss2 ./t000_.psipred_ss2
--nstruct 25
--abinitio:relax
--use_filters true
--abinitio::increase_cycles 10
--abinitio::rg_reweight 0.5
--abinitio::rsd_wt_helix 0.5
--abinitio::rsd_wt_loop 0.5
--relax::fast
--out:file:silent ./fold_silent_${PBS_ARRAY_INDEX}.out' > flags
-
 echo '#!/bin/bash
 #PBS -N Abinitio
 #PBS -q thin
 #PBS -l walltime=9:00:00
 #PBS -l select=1:ncpus=1
 #PBS -j oe
-#PBS -J 1-1000
+#PBS -J 1-10
 
 cd $PBS_O_WORKDIR
-{ROSETTA}/main/source/bin/AbinitioRelax.default.linuxgccrelease @./flags
+{ROSETTA}/main/source/bin/AbinitioRelax.default.linuxgccrelease -database {ROSETTA}/main/database -in:file:frag3 ./aat000_03_05.200_v1_3 -in:file:frag9 ./aat000_09_05.200_v1_3 -in:file:fasta ./structure.fasta -in:file:native ./structure.pdb -psipred_ss2 ./t000_.psipred_ss2 -nstruct 1 -abinitio:relax -use_filters true -abinitio::increase_cycles 10 -abinitio::rg_reweight 0.5 -abinitio::rsd_wt_helix 0.5 -abinitio::rsd_wt_loop 0.5 -relax::fast -out:file:silent ./fold_silent_${PBS_ARRAY_INDEX}.out
 
 qsub cluster.pbs -W depend=afterokarray:${PBS_JOBID}' > abinitio.pbs
 
@@ -64,7 +48,7 @@ cat << 'EOF' > cluster.pbs
 #PBS -l select=1:ncpus=1
 #PBS -j oe
 
-{ROSETTA}/main/source/bin/relax.default.linuxgccrelease -database {ROSETTA}/main/database -s ./structure.pdb -relax:thorough -nooutput -nstruct 100 -out:file:silent ./relax.out
+{ROSETTA}/main/source/bin/relax.default.linuxgccrelease -database {ROSETTA}/main/database -s ./structure.pdb -relax:thorough -nooutput -nstruct 10 -out:file:silent ./relax.out
 grep SCORE ./relax.out | awk '{print $27 "\t" $2}' > ./relax.dat
 {ROSETTA}/main/source/bin/combine_silent.default.linuxgccrelease -in:file:silent ./fold_silent_*.out -out:file:silent ./fold.out
 grep SCORE ./fold.out | awk '{print $27 "\t" $2}' > ./fold.dat
