@@ -31,7 +31,7 @@ echo '-database {ROSETTA}/main/database
 -in:file:fasta {PATH}/structure.fasta
 -in:file:native {PATH}/structure.pdb
 -psipred_ss2 {PATH}/t000_.psipred_ss2
--nstruct 25
+-nstruct 1
 -abinitio:relax
 -use_filters true
 -abinitio::increase_cycles 10
@@ -47,38 +47,44 @@ echo '#!/bin/bash
 #PBS -l walltime=9:00:00
 #PBS -l select=1:ncpus=1
 #PBS -j oe
-#PBS -J 1-1000
+#PBS -J 1-10
 
 {ROSETTA}/main/source/bin/AbinitioRelax.default.linuxgccrelease @{PATH}/flags
 
-qsub cluster.bash -W depend=afterokarray:${PBS_JOBID}'>abinitio.pbs
+qsub cluster.pbs -W depend=afterokarray:${PBS_JOBID}'>abinitio.pbs
 
-cat << 'EOF' > cluster.bash
+cat << 'EOF' > cluster.pbs
 #!/bin/bash
-{ROSETTA}/main/source/bin/relax.default.linuxgccrelease -database {ROSETTA}/main/database -s structure.pdb -relax:thorough -nooutput -nstruct 100 -out:file:silent relax.out
-grep SCORE relax.out | awk '{print $27 "\t" $2}' > relax.dat
-{ROSETTA}/main/source/bin/combine_silent.default.linuxgccrelease -in:file:silent fold_silent_*.out -out:file:silent fold.out
-grep SCORE fold.out | awk '{print $27 "\t" $2}' > fold.dat
-tail -n +2 "fold.dat" > "fold.dat.tmp" && mv "fold.dat.tmp" "fold.dat"
-mkdir cluster
-grep SCORE fold.out | sort -nk +2 | head -200 | awk '{print $30}' > list
-cat list | awk '{print}' ORS=" " > liststring
-xargs {ROSETTA}/main/source/bin/extract_pdbs.linuxgccrelease -in::file::silent fold.out -out:pdb -in:file:tags < liststring
-rm list
-rm liststring
+#PBS -N Clustering
+#PBS -q thin
+#PBS -l select=1:ncpus=1
+#PBS -j oe
+
+{ROSETTA}/main/source/bin/relax.default.linuxgccrelease -database {ROSETTA}/main/database -s {PATH}/structure.pdb -relax:thorough -nooutput -nstruct 100 -out:file:silent {PATH}/relax.out
+grep SCORE {PATH}/relax.out | awk '{print $27 "\t" $2}' > {PATH}/relax.dat
+{ROSETTA}/main/source/bin/combine_silent.default.linuxgccrelease -in:file:silent {PATH}/fold_silent_*.out -out:file:silent {PATH}/fold.out
+grep SCORE {PATH}/fold.out | awk '{print $27 "\t" $2}' > {PATH}/fold.dat
+tail -n +2 "{PATH}/fold.dat" > "{PATH}/fold.dat.tmp" && mv "{PATH}/fold.dat.tmp" "{PATH}/fold.dat"
+mkdir {PATH}/cluster
+grep SCORE {PATH}/fold.out | sort -nk +2 | head -200 | awk '{print $30}' > {PATH}/list
+cat {PATH}/list | awk '{print}' ORS=" " > {PATH}/liststring
+xargs {ROSETTA}/main/source/bin/extract_pdbs.linuxgccrelease -in::file::silent {PATH}/fold.out -out:pdb -in:file:tags < {PATH}/liststring
+rm {PATH}/list
+rm {PATH}/liststring
 rm {HOME}/*.fsc
-rm fold_silent_*
-rm Abinitio.o*
-mv S_* cluster
-cd cluster
+rm {PATH}/fold_silent_*
+rm {PATH}/Abinitio.o*
+mv S_* {PATH}/cluster
+cd {PATH}/cluster
 echo '-database {ROSETTA}/main/database
 -in:file:fullatom
 -cluster:radius 3
 -nooutput
--out:file:silent cluster.out' > flags
-{ROSETTA}/main/source/bin/cluster.default.linuxgccrelease @flags -in:file:s *.pdb
-rm *.pdb
-{ROSETTA}/main/source/bin/extract_pdbs.linuxgccrelease -in::file::silent cluster.out -out:pdb -in:file:tags
+-out:file:silent {PATH}/cluster/cluster.out' > {PATH}/cluster/flags
+{ROSETTA}/main/source/bin/cluster.default.linuxgccrelease @{PATH}/cluster/flags -in:file:s {PATH}/cluster/*.pdb
+rm {PATH}/cluster/*.pdb
+{ROSETTA}/main/source/bin/extract_pdbs.linuxgccrelease -in::file::silent {PATH}/cluster/cluster.out -out:pdb -in:file:tags
+cd {PATH}
 gnuplot
 set terminal postscript
 set encoding iso_8859_1
@@ -87,6 +93,6 @@ set ylabel 'Score'
 set yrange [:-80]
 set xrange [0:20]
 set title 'Abinitio Result'
-plot 'fold.dat' lc rgb 'red' pointsize 0.2 pointtype 7 title '', \
-'relax.dat' lc rgb 'green' pointsize 0.2 pointtype 7 title ''
+plot '{PATH}/fold.dat' lc rgb 'red' pointsize 0.2 pointtype 7 title '', \
+'{PATH}/relax.dat' lc rgb 'green' pointsize 0.2 pointtype 7 title ''
 exit
