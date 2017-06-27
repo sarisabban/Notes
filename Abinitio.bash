@@ -4,7 +4,7 @@
 This is a Bash script that automatically sets the correct files to run Rosetta Abinitio followed by Clustering followed by plotting the computation result in a HPC (High Preformace Computer) that uses PBS as its job scheduler.
 Written by Sari Sabban on 27-June-2017
 
-Input Files:
+Required Input Files:
 1. aat000_03_05.200_v1_3
 2. aat000_09_05.200_v1_3
 3. structure.pdb
@@ -12,7 +12,7 @@ Input Files:
 5. t000_.psipred_ss2
 
 How To Use:
-1. Before using this script make sure it works in your HPC by running each section individually, job chaining (what this script does) can disrupt the HPC is run incorrectly.
+1. Before using this script make sure it works in your HPC by running each section individually, job chaining (what this script does) can disrupt the HPC if run incorrectly.
 2. Find all nessesary paths in this script and change them using this command:
 	sed -i 's^{ROSETTA}^PATH/TO/ROSETTA^g' Abinitio.bash
 	sed -i 's^{PATH}^PATH/TO/FILES^g' Abinitio.bash
@@ -22,8 +22,9 @@ How To Use:
 	bash Abinitio.bash
 5. Submit job for computation using this command:
 	qsub abinitio.pbs
+6. This script is setup to run using the PBS job scheduler, simple changes can be made to make it work on other job schedulers, but thorough understading of each job scheduler is nessesary to make these modifications.
 COMMENT
-
+#---------------------------------------------------------------------------------------------------------------
 echo '-database {ROSETTA}/main/database
 -in:file:frag3 {PATH}/aat000_03_05.200_v1_3
 -in:file:frag9 {PATH}/aat000_09_05.200_v1_3
@@ -73,8 +74,8 @@ echo '-database {ROSETTA}/main/database
 -in:file:fullatom
 -cluster:radius 3
 -nooutput
--out:file:silent cluster_silent.out' > cluster_flags
-{ROSETTA}/main/source/bin/cluster.default.linuxgccrelease @cluster_flags -in:file:s *.pdb
+-out:file:silent cluster_silent.out' > flags
+{ROSETTA}/main/source/bin/cluster.default.linuxgccrelease @flags -in:file:s *.pdb
 rm *.pdb
 {ROSETTA}/main/source/bin/extract_pdbs.linuxgccrelease -in::file::silent cluster_silent.out -out:pdb -in:file:tags
 gnuplot
@@ -82,7 +83,7 @@ set terminal postscript
 set output "plot.pdf"
 set encoding iso_8859_1
 set xlabel "RMSD (\305)"
-set ylabel 'Scores'
+set ylabel 'Score'
 set yrange [:-80]
 set xrange [0:20]
 set title 'Abinitio Result'
