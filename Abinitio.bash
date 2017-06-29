@@ -40,7 +40,7 @@ cat << 'EOF' > abinitio.pbs
 cd $PBS_O_WORKDIR
 {ROSETTA}/main/source/bin/AbinitioRelax.default.linuxgccrelease -database {ROSETTA}/main/database -in:file:frag3 ./aat000_03_05.200_v1_3 -in:file:frag9 ./aat000_09_05.200_v1_3 -in:file:fasta ./structure.fasta -in:file:native ./structure.pdb -psipred_ss2 ./t000_.psipred_ss2 -nstruct 25 -abinitio:relax -use_filters true -abinitio::increase_cycles 10 -abinitio::rg_reweight 0.5 -abinitio::rsd_wt_helix 0.5 -abinitio::rsd_wt_loop 0.5 -relax::fast -out:file:silent ./fold_silent_${PBS_ARRAY_INDEX}.out
 
-qsub -W depend=afterok:${PBS_ARRAY_ID} cluster.pbs #<---- PROBLEM HERE
+#qsub -W depend=afterok:${PBS_ARRAY_ID} cluster.pbs #<---- PROBLEM HERE
 EOF
 
 cat << 'EOF' > cluster.pbs
