@@ -25,7 +25,7 @@ How To Use:
 	bash Abinitio.bash && qsub abinitio.pbs
 6. This script is setup to run using the PBS job scheduler, simple changes can be made to make it work on other job schedulers, but thorough understading of each job scheduler is nessesary to make these modifications.
 7. The default computation settings are for normal Abinitio computation (25,000 decoys). You will have to run the following command to setup the script for larger computations (1,000,000 decoys):
-	sed -i '/#PBS -l walltime=9:00:00/d' Abinitio.bash && sed -i '/#PBS -l walltime=2:00:00/d' Abinitio.bash && sed -i 's/thin/thin_1m/g' Abinitio.bash && sed -i 's/-nstruct 25/-nstruct 1000/g' Abinitio.bash
+	sed -i '/#PBS -l walltime=9:00:00/d' Abinitio.bash && sed -i 's/thin/thin_1m/g' Abinitio.bash && sed -i 's/-nstruct 25/-nstruct 1000/g' Abinitio.bash
 COMMENT
 #---------------------------------------------------------------------------------------------------------------
 cat << 'EOF' > abinitio.pbs
@@ -47,7 +47,7 @@ cat << 'EOF' > cluster.pbs
 #!/bin/bash
 #PBS -N Clustering
 #PBS -q thin
-#PBS -l walltime=2:00:00
+#PBS -l walltime=9:00:00
 #PBS -l select=1:ncpus=1
 #PBS -j oe
 
