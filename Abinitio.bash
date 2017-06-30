@@ -55,10 +55,10 @@ cd $PBS_O_WORKDIR
 {ROSETTA}/main/source/bin/relax.default.linuxgccrelease -database {ROSETTA}/main/database -s ./structure.pdb -native ./structure.pdb -relax:thorough -in:file:fullatom -nooutput -nstruct 100 -out:file:silent ./relax.out
 grep SCORE ./relax.out | awk '{print $20 "\t" $2}' > ./relax.dat
 {ROSETTA}/main/source/bin/combine_silent.default.linuxgccrelease -in:file:silent ./fold_silent_*.out -out:file:silent ./fold.out
-grep SCORE ./fold.out | awk '{print $27 "\t" $2}' > ./fold.dat
+grep SCORE ./fold.out | awk '{print $28 "\t" $2}' > ./fold.dat
 tail -n +2 "./fold.dat" > "./fold.dat.tmp" && mv "./fold.dat.tmp" "./fold.dat"
 mkdir ./cluster
-grep SCORE ./fold.out | sort -nk +2 | head -200 | awk '{print $30}' > ./list
+grep SCORE ./fold.out | sort -nk +2 | head -200 | awk '{print $31}' > ./list
 cat ./list | awk '{print}' ORS=" " > ./liststring
 xargs {ROSETTA}/main/source/bin/extract_pdbs.linuxgccrelease -in::file::silent ./fold.out -out:pdb -in:file:tags < ./liststring
 rm ./list
