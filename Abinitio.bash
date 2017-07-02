@@ -26,6 +26,8 @@ How To Use:
 6. This script is setup to run using the PBS job scheduler, simple changes can be made to make it work on other job schedulers, but thorough understading of each job scheduler is nessesary to make these modifications.
 7. The default computation settings are for normal Abinitio computation (25,000 decoys). You will have to run the following command to setup the script for larger computations (1,000,000 decoys):
 	sed -i '/#PBS -l walltime=9:00:00/d' Abinitio.bash && sed -i 's/thin/thin_1m/g' Abinitio.bash && sed -i 's/-nstruct 25/-nstruct 1000/g' Abinitio.bash
+8. Submit job using the following command to allow abinitio.pbs to be submitted first, then when it is finished cluster.pbs is immidiatly submitted:
+	qsub abinitio.pbs && qsub -W depend=after:${PBS_ARRAY_ID} cluster.pbs
 COMMENT
 #---------------------------------------------------------------------------------------------------------------
 cat << 'EOF' > abinitio.pbs
@@ -39,8 +41,6 @@ cat << 'EOF' > abinitio.pbs
 
 cd $PBS_O_WORKDIR
 {ROSETTA}/main/source/bin/AbinitioRelax.default.linuxgccrelease -database {ROSETTA}/main/database -in:file:frag3 ./aat000_03_05.200_v1_3 -in:file:frag9 ./aat000_09_05.200_v1_3 -in:file:fasta ./structure.fasta -in:file:native ./structure.pdb -psipred_ss2 ./t000_.psipred_ss2 -nstruct 25 -abinitio:relax -use_filters true -abinitio::increase_cycles 10 -abinitio::rg_reweight 0.5 -abinitio::rsd_wt_helix 0.5 -abinitio::rsd_wt_loop 0.5 -relax::fast -out:file:silent ./fold_silent_${PBS_ARRAY_INDEX}.out
-
-#qsub -W depend=afterok:${PBS_ARRAY_ID} cluster.pbs #<---- PROBLEM HERE
 EOF
 
 cat << 'EOF' > cluster.pbs
