@@ -17,6 +17,6 @@ COMMENT
 sudo apt install python-pip
 sudo python -m pip install numpy biopython
 python {ROSETTA}/tools/protein_tools/scripts/generate_atom_pair_constraint_file.py structure.pdb structure.cst
-{ROSETTA}/main/source/bin/remodel.default.linuxgccrelease -database {ROSETTA}/main/database -s structure.pdb -remodel:blueprint blueprint -remodel:quick_and_dirty -remodel:num_trajectory 100 -save_top 3 -nezdes:cstfile structure.cst
+{ROSETTA}/main/source/bin/remodel.default.linuxgccrelease -database {ROSETTA}/main/database -s structure.pdb -remodel:blueprint blueprint -remodel:quick_and_dirty -remodel:num_trajectory 100 -save_top 3 -enzdes:cstfile structure.cst
 
-/app/biology/Rosetta_3.7/main/source/bin/remodel.default.linuxgccrelease -database /app/biology/Rosetta_3.7/main/database -s structure.pdb -remodel:blueprint blueprint -remodel:quick_and_dirty -remodel:num_trajectory 100 -save_top 3 -nezdes:cstfile structure.cst
+/app/biology/Rosetta_3.7/main/source/bin/remodel.default.linuxgccrelease -database /app/biology/Rosetta_3.7/main/database -s structure.pdb -remodel:blueprint blueprint -remodel:quick_and_dirty -remodel:num_trajectory 100 -save_top 3 -enzdes:cstfile structure.cst
