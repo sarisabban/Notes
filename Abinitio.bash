@@ -8,11 +8,12 @@ This script was written by Sari Sabban on 27-June-2017.
 
 Required Input Files:
 ---------------------
-1. aat000_03_05.200_v1_3 	---> The 3-mer fragment file
-2. aat000_09_05.200_v1_3	---> The 9-mer fragment file
-3. structure.pdb		---> The structure's PDB file
-4. structure.fasta		---> The structure's sequence file in FASTA format
-5. t000_.psipred_ss2		---> The PsiPred prediction file
+1. frags.200.3mers 	---> The 3-mer fragment file (aat000_03_05.200_v1_3 from Robetta)
+2. frags.200.9mers	---> The 9-mer fragment file (aat000_09_05.200_v1_3 from Robetta)
+3. pre.psipred.ss2	---> The PsiPred prediction file (t000_.psipred_ss2 from Robetta)
+4. structure.pdb	---> The structure's PDB file
+5. structure.fasta	---> The structure's sequence file in FASTA format
+
 
 How To Use:
 -----------
@@ -40,7 +41,7 @@ cat << 'EOF' > abinitio.pbs
 #PBS -J 1-1000
 
 cd $PBS_O_WORKDIR
-{ROSETTA}/main/source/bin/AbinitioRelax.default.linuxgccrelease -database {ROSETTA}/main/database -in:file:frag3 ./aat000_03_05.200_v1_3 -in:file:frag9 ./aat000_09_05.200_v1_3 -in:file:fasta ./structure.fasta -in:file:native ./structure.pdb -psipred_ss2 ./t000_.psipred_ss2 -nstruct 25 -abinitio:relax -use_filters true -abinitio::increase_cycles 10 -abinitio::rg_reweight 0.5 -abinitio::rsd_wt_helix 0.5 -abinitio::rsd_wt_loop 0.5 -relax::fast -out:file:silent ./fold_silent_${PBS_ARRAY_INDEX}.out
+{ROSETTA}/main/source/bin/AbinitioRelax.default.linuxgccrelease -database {ROSETTA}/main/database -in:file:frag3 ./frags.200.3mers -in:file:frag9 ./frags.200.9mers -in:file:fasta ./structure.fasta -in:file:native ./structure.pdb -psipred_ss2 ./pre.psipred.ss2 -nstruct 25 -abinitio:relax -use_filters true -abinitio::increase_cycles 10 -abinitio::rg_reweight 0.5 -abinitio::rsd_wt_helix 0.5 -abinitio::rsd_wt_loop 0.5 -relax::fast -out:file:silent ./fold_silent_${PBS_ARRAY_INDEX}.out
 EOF
 
 cat << 'EOF' > cluster.pbs
