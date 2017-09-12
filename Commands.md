@@ -36,6 +36,7 @@ sudo apt install weechat vim ffmpeg pymol gnuplot tmux openconnect python3-pip g
 * tty-clock
 * whois
 * xscreensaver xscreensaver-gl-extra xscreensaver-data-extra
+* flowblade
 
 ##For Debian
 su
