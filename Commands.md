@@ -749,7 +749,7 @@ ffmpeg -ss 13 -t 3 -i IMG_1669.mov -vcodec copy -acodec copy Shake.mov
 ffmpeg -f concat -safe 0 -i <(for f in ./*.mov; do echo "file '$PWD/$f'"; done) -c copy output.mov
 
 #Record Desktop Screen - Amazing quality but VERY LARGE FILE SIZES
-ffmpeg -f x11grab -s 1280x800 -r 30 -i :0.0 -c:v libx264 -pix_fmt yuv420p X.mkv
+ffmpeg -f x11grab -s 1280x800 -r 30 -i :0.0 -c:v ffv1 X.mkv
 
 #Record Desktop Screen
 
