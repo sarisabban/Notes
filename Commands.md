@@ -717,7 +717,6 @@ ffmpeg -i 1.mkv -vcodec libx264 -r 25 -crf 23 -ab 384k -acodec ac3 3.mp4
 #loop
 for i in *.mkv; do ffmpeg -i "$i" -vcodec libx264 -r 25 -crf 23 -ab 384k -acodec ac3 "${i%.mkv}.mp4"; done
 
-
 #No lost quality
 ffmpeg -i input.mkv -c copy -sn -movflags faststart out.mp4
 
@@ -748,6 +747,12 @@ ffmpeg -ss 13 -t 3 -i IMG_1669.mov -vcodec copy -acodec copy Shake.mov
 
 #Merg video files
 ffmpeg -f concat -safe 0 -i <(for f in ./*.mov; do echo "file '$PWD/$f'"; done) -c copy output.mov
+
+#Record Desktop Screen - Amazing quality but VERY LARGE FILE SIZES
+ffmpeg -f x11grab -s 1280x800 -r 30 -i :0.0 -c:v libx264 -pix_fmt yuv420p X.mkv
+
+#Record Desktop Screen
+
 --------------------------------------------------
 **#Python**
 
