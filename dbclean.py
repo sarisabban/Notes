@@ -5,7 +5,7 @@ This script is used to prepare a PDB database for the Epigrafting protocol
 To use:
 python3 dbclean.py
 '''
-
+current = os.getcwd()
 import gzip , os
 
 #Download Database
@@ -61,13 +61,30 @@ for files in filelist:
 		else:
 			pass
 
-#Generate the PDB List
+#Generate The PDB List
 filelist = os.listdir('PDBDatabase')
 for files in filelist:
 	filename = current + '/PDBDatabase/' + files
 	TheList = open('pdb.list' , 'a')
 	TheList.write(filename + '\n')
 	TheList.close()
+
+#Remove All Structures Larger Than 150 Amino Acids
+Script = open('script' , 'w')
+Script.write('''
+for file in *.pdb; do
+	CHAINAnumb=`grep ATOM $file | awk '{print $5 "\t" $6}' | grep A | tail -n 1 | awk '{print $2}'`
+	CHAINBnumb=`grep ATOM $file | awk '{print $5 "\t" $6}' | grep B | tail -n 1 | awk '{print $2}'`
+	[[ $CHAINBnumb = *[!0-9]* || $CHAINAnumb = *[!0-9]* ]] && continue
+	AminoAcids=$((CHAINBnumb-CHAINAnumb))
+	echo $AminoAcids
+	if (( $AminoAcids \< 150 ))
+		then
+			rm $file ;
+	fi
+done''')
+os.system('bash script')
+os.remove('script')
 
 #Clean Database
 result = []
