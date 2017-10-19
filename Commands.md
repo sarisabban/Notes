@@ -5,7 +5,7 @@
 ##Ubuntu Gnome
 ###For University - MUST first open web browser and put in password
 sudo apt update && sudo apt full-upgrade
-sudo apt install gnome-tweak-tool weechat vim ffmpeg pymol gnuplot tmux openconnect python3-pip git htop dssp -y && sudo python3 -m pip install numpy biopython tweepy bs4 praw zeep
+sudo apt install gnome-tweak-tool weechat vim ffmpeg pymol gnuplot tmux openconnect python3-pip git htop dssp -y && sudo pip3 install biopython bs4
 * Rosetta
 * PyRosetta
 
