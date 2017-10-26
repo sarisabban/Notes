@@ -2,14 +2,12 @@
 --------------------------------------------------
 **#Linux**
 
-##Ubuntu Gnome
-###For University - MUST first open web browser and put in password
-sudo apt update && sudo apt full-upgrade
-sudo apt install gnome-tweak-tool weechat vim ffmpeg pymol gnuplot tmux openconnect python3-pip git htop dssp -y && sudo pip3 install biopython bs4
-#Turn off side bar in weechat
+#Ubuntu
+sudo apt update && sudo apt full-upgrade && sudo apt install weechat vim ffmpeg pymol gnuplot tmux openconnect python3-pip git htop dssp -y && sudo pip3 install biopython bs4 scikit-learn numpy scipy pandas matplotlib
+
+##Temp
+sudo apt install gnome-shell
 /set buflist.look.enabled off
-* Rosetta
-* PyRosetta
 
 ##Programs:
 * weechat
