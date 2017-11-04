@@ -1,0 +1,26 @@
+#!/bin/bash
+
+<<COMMENT
+Input:
+1. structure.pdb
+2. blueprint
+
+E for strand
+H for helix
+L for loop
+D for random
+COMMENT
+
+{ROSETTA}/tools/remodel/getBluePrintFromCoords.pl -pdbfile structure.pdb > blueprint
+{ROSETTA}/main/source/bin/remodel.default.linuxgccrelease -database {ROSETTA}/main/database -s structure.pdb -remodel:blueprint blueprint -ex1 -ex2aro -nstruct 10
+#-----
+sudo apt install python-pip
+sudo python -m pip install numpy biopython
+python {ROSETTA}/tools/protein_tools/scripts/generate_atom_pair_constraint_file.py structure.pdb structure.cst
+{ROSETTA}/main/source/bin/remodel.default.linuxgccrelease -database {ROSETTA}/main/database -s structure.pdb -remodel:blueprint blueprint -remodel:quick_and_dirty -remodel:num_trajectory 100 -save_top 3 -cst_file structure.cst
+
+/app/biology/Rosetta_3.7/main/source/bin/remodel.default.linuxgccrelease -database /app/biology/Rosetta_3.7/main/database -s structure.pdb -remodel:blueprint blueprint -remodel:quick_and_dirty -remodel:num_trajectory 100 -save_top 3 -cst_file structure.cst -out:file:silent remodel.out
+
+
+#Final Command So Far:
+/app/biology/Rosetta_3.7/main/source/bin/remodel.default.linuxgccrelease -database /app/biology/Rosetta_3.7/main/database -s structure.pdb -remodel:blueprint blueprint -remodel:quick_and_dirty -remodel:num_trajectory 10 -save_top 3 -hb_srbb 1.0 -hb_lrbb 1.0 -rsigma 1.0 -ss_pair 1.0 -cst_file structure.cst -cstfilter 1000000

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+<<COMMENT
+Input:
+1. structure.pdb
+2. Resfile
+COMMENT
+
+{ROSETTA}/main/source/bin/rosetta_scripts.linuxgccrelease -s structure.pdb -parser:protocol {PATH}/relax_design.xml -nstruct 1 -ex1 -ex2
