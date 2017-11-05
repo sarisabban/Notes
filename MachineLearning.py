@@ -1,4 +1,4 @@
-import os , numpy , pandas , matplotlib.pyplot , matplotlib.colors					#pip3 install numpy pandas matplotlib scikit-learn
+import os , numpy , pandas , matplotlib.pyplot								#pip3 install numpy pandas matplotlib scikit-learn
 #--------------------------------------------------
 ''' Representation '''
 from sklearn import model_selection
@@ -6,10 +6,10 @@ data = pandas.read_csv('fruits.csv')
 #print(data)												#To see dataset table
 #print(data.head())											#To see only the top of the table
 #print(data.shape)											#Shows dimentions of the table (Rows , Columns)
-X = data[['mass', 'width', 'height' , 'color_score']]									#Identify features
+X = data[['mass', 'width', 'height' , 'color_score']]							#Identify features
 Y = data['fruit_label']											#Identify target lable(s)/value(s)
 X_train, X_test, Y_train, Y_test = model_selection.train_test_split(X , Y , random_state = 0)		#Split dataset into a train set (75%) and a test set (25%) [random_state: if use None then the split will change everytime the program is run. On the other hand if you use random_state=some_number, then you can guarantee that the output of Run 1 will be equal to the output of Run 2, i.e. your split will be always the same. It doesn't matter what the actual random_state number is 42, 0, 21, ... The important thing is that everytime you use 42, you will always get the same output the first time you make the split]
-prediction = [[20 , 4.3 , 5.5]]
+prediction = [[20 , 4.3 , 5.5 , 0.8]]
 #--------------------------------------------------
 ''' Feature Engineering '''
 #Polynomial:
@@ -44,20 +44,32 @@ prediction = [[20 , 4.3 , 5.5]]
 #from sklearn import linear_model
 #ML = linear_model.LogisticRegression(C = 10).fit(X_train , Y_train)
 
-#6.1 - SVM:
+###6.1 - SVM:
 #from sklearn import svm
 #ML = svm.LinearSVC(C = 1, random_state = 0).fit(X_train, Y_train)
 
-#6.2 - Kernalised SVM: 'rbf' , 'linear' , 'poly'
+###6.2 - Kernalised SVM: 'rbf' , 'linear' , 'poly'
 #from sklearn import svm
 #ML = svm.SVC(kernel = 'rbf' , C = 1, gamma = 1 , random_state = 0).fit(X_train, Y_train)
 
 #7 - Dicision Trees:
-from sklearn import tree
-ML = tree.DecisionTreeClassifier(max_depth = 3 , random_state=0).fit(X_train, Y_train)
+#from sklearn import tree
+#ML = tree.DecisionTreeClassifier(max_depth = 3 , random_state=0).fit(X_train, Y_train)
 #ML = tree.DecisionTreeRegressor(max_depth = 3 , random_state=0).fit(X_train, Y_train)
 
+#8 - Naive Bayes:
+#from sklearn import naive_bayes
+#ML = naive_bayes.GaussianNB().fit(X_train, Y_train)
 
+#9 - Random Forest:
+#from sklearn import ensemble
+#ML = ensemble.RandomForestClassifier(n_estimators = 10).fit(X_train, Y_train)
+#ML = ensemble.RandomForestRegressor(n_estimators = 10).fit(X_train, Y_train)
+
+#10 - GBDT
+#from sklearn import ensemble
+#ML = ensemble.GradientBoostingClassifier(n_estimators = 10 , learning_rate = 0.1 , max_depth = 3).fit(X_train, Y_train)
+#ML = ensemble.GradientBoostingRegressor(n_estimators = 10 , learning_rate = 0.1 , max_depth = 3).fit(X_train, Y_train)
 #--------------------------------------------------
 ''' Evaluate '''
 #Default Score:
@@ -85,6 +97,12 @@ ML = tree.DecisionTreeClassifier(max_depth = 3 , random_state=0).fit(X_train, Y_
 #prediction = ML.predict(X_test)
 #print(metrics.confusion_matrix(Y_test , prediction))
 #print(metrics.classification_report(Y_test , prediction , target_names = X.columns.values))
+
+###Decision Function:
+#for item in list(zip(Y_test , ML.decision_function(X_test))): print(item)
+
+###Predict Probability:
+#for item in list(zip(Y_test , ML.predict_proba(X_test))): print(item)
 #--------------------------------------------------
 ''' Optimisation '''
 #Cross-Validation:
@@ -101,7 +119,11 @@ ML = tree.DecisionTreeClassifier(max_depth = 3 , random_state=0).fit(X_train, Y_
 #print('Test Score\n' , score[1])
 
 #Grid Search:
-
+#from sklearn import model_selection
+#value = model_selection.GridSearchCV(ML , param_grid = {'max_depth' : [1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10]})
+#value.fit(X_train , Y_train)
+#print(value.best_params_)
+#print(value.best_score_)
 #--------------------------------------------------
 ''' Prediction '''
 #print(ML.predict(prediction))
@@ -111,22 +133,12 @@ ML = tree.DecisionTreeClassifier(max_depth = 3 , random_state=0).fit(X_train, Y_
 #scatter = pandas.plotting.scatter_matrix(X_train, c = Y_train , hist_kwds = {'bins' : 15} , cmap = matplotlib.cm.get_cmap('gnuplot')).all()
 #matplotlib.pyplot.show(scatter)
 
-
-
-
-#KNN Plot Clasdification:
-
-
-
-#KNN Plot Regression:
-
-
-
 #Regression Plot:
 #matplotlib.pyplot.scatter(data[['mass']] , data[['width']])
 #matplotlib.pyplot.show()
 
 #Classification/Cluster Plot:
+#import matplotlib.colors
 #matplotlib.pyplot.scatter(data[['mass']] , data[['width']] , c = data[['fruit_label']] , cmap = matplotlib.colors.ListedColormap(['#FFFF00' , '#00FF00' , '#0000FF' , '#000000']))
 #matplotlib.pyplot.show()
 
@@ -150,7 +162,7 @@ ML = tree.DecisionTreeClassifier(max_depth = 3 , random_state=0).fit(X_train, Y_
 
 #Decision Tree:
 #TheTree = tree.export_graphviz(ML , out_file = 'tree.dot')
-#os.system('dot -Tpng tree.dot -o tree.png')			#sudo apt install graphviz
+#os.system('dot -Tpng tree.dot -o tree.png')#sudo apt install graphviz
 #os.remove('tree.dot')
 
 #Feature Importance:
@@ -161,3 +173,8 @@ ML = tree.DecisionTreeClassifier(max_depth = 3 , random_state=0).fit(X_train, Y_
 #matplotlib.pyplot.xticks(range(X.shape[1]) , indices)
 #matplotlib.pyplot.xlim([-1 , X.shape[1]])
 #matplotlib.pyplot.show()
+
+###Precision-Recall Curve:
+###ROC Curve:
+###KNN Plot Clasdification:
+###KNN Plot Regression:
