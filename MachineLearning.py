@@ -66,10 +66,15 @@ prediction = [[20 , 4.3 , 5.5 , 0.8]]
 #ML = ensemble.RandomForestClassifier(n_estimators = 10).fit(X_train, Y_train)
 #ML = ensemble.RandomForestRegressor(n_estimators = 10).fit(X_train, Y_train)
 
-#10 - GBDT
+#10 - GBDT:
 #from sklearn import ensemble
 #ML = ensemble.GradientBoostingClassifier(n_estimators = 10 , learning_rate = 0.1 , max_depth = 3).fit(X_train, Y_train)
 #ML = ensemble.GradientBoostingRegressor(n_estimators = 10 , learning_rate = 0.1 , max_depth = 3).fit(X_train, Y_train)
+
+#11 - Neural Network: in Classifier 'lbfgs' , 'relu' , 'tanh' - in Regressor: 'identity', 'logistic', 'tanh', 'relu'
+#from sklearn import neural_network
+#ML = neural_network.MLPClassifier(hidden_layer_sizes = [10 , 100 , 1] , solver = 'lbfgs' , alpha = 1 , random_state = 0).fit(X_train, Y_train)
+#ML = neural_network.MLPRegressor(hidden_layer_sizes = [10 , 100 , 1] , activation = 'logistic' , alpha = 1 , random_state = 0).fit(X_train, Y_train)
 #--------------------------------------------------
 ''' Evaluate '''
 #Default Score:
