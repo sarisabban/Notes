@@ -22,7 +22,7 @@ prediction = [[20 , 4.3 , 5.5 , 0.8]]
 #preprocessing.MinMaxScaler().fit_transform(X_train)
 #preprocessing.MinMaxScaler().fit_transform(X_test)
 #--------------------------------------------------
-''' Models '''
+''' Supervised Learning Models '''
 #1 - KNN:
 #from sklearn import neighbors
 #ML = neighbors.KNeighborsClassifier(n_neighbors = 5).fit(X_train , Y_train)
@@ -76,7 +76,7 @@ prediction = [[20 , 4.3 , 5.5 , 0.8]]
 #ML = neural_network.MLPClassifier(hidden_layer_sizes = [10 , 100 , 1] , solver = 'lbfgs' , alpha = 1 , random_state = 0).fit(X_train, Y_train)
 #ML = neural_network.MLPRegressor(hidden_layer_sizes = [10 , 100 , 1] , activation = 'logistic' , alpha = 1 , random_state = 0).fit(X_train, Y_train)
 
-#Unsupervised:
+''' Unsupervised Learning Models '''
 #12 - PCA:
 #from sklearn import preprocessing , decomposition
 #data_normalised = preprocessing.StandardScaler().fit(X).transform(X)
@@ -94,6 +94,21 @@ prediction = [[20 , 4.3 , 5.5 , 0.8]]
 #data_normalised = preprocessing.StandardScaler().fit(X).transform(X)
 #ML = manifold.TSNE(n_components = 2).fit(data_normalised).fit_transform(data_normalised)
 #print(ML)
+
+#15 K-Means:
+#from sklearn import preprocessing , cluster
+#data_normalised = preprocessing.MinMaxScaler().fit(X).transform(X)
+#ML = cluster.KMeans(n_clusters = 4 , random_state = 0).fit(data_normalised)
+
+#16 - Agglomerative:
+#from sklearn import preprocessing , cluster
+#data_normalised = preprocessing.MinMaxScaler().fit(X).transform(X)
+#ML = cluster.AgglomerativeClustering(n_clusters = 4).fit_predict(data_normalised)
+
+#17 - DBSCAN:
+#from sklearn import preprocessing , cluster
+#data_normalised = preprocessing.MinMaxScaler().fit(X).transform(X)
+#ML = cluster.DBSCAN(eps = 2 , min_samples = 2)#.fit_predict(data_normalised)
 #--------------------------------------------------
 ''' Evaluate '''
 #Default Score:
