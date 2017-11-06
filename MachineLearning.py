@@ -8,6 +8,7 @@ data = pandas.read_csv('fruits.csv')
 #print(data.shape)											#Shows dimentions of the table (Rows , Columns)
 X = data[['mass', 'width', 'height' , 'color_score']]							#Identify features
 Y = data['fruit_label']											#Identify target lable(s)/value(s)
+#print(X.columns.values)                    #Prints out all the column heads of the features
 X_train, X_test, Y_train, Y_test = model_selection.train_test_split(X , Y , random_state = 0)		#Split dataset into a train set (75%) and a test set (25%) [random_state: if use None then the split will change everytime the program is run. On the other hand if you use random_state=some_number, then you can guarantee that the output of Run 1 will be equal to the output of Run 2, i.e. your split will be always the same. It doesn't matter what the actual random_state number is 42, 0, 21, ... The important thing is that everytime you use 42, you will always get the same output the first time you make the split]
 prediction = [[20 , 4.3 , 5.5 , 0.8]]
 #--------------------------------------------------
