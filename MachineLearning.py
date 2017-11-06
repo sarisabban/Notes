@@ -75,6 +75,25 @@ prediction = [[20 , 4.3 , 5.5 , 0.8]]
 #from sklearn import neural_network
 #ML = neural_network.MLPClassifier(hidden_layer_sizes = [10 , 100 , 1] , solver = 'lbfgs' , alpha = 1 , random_state = 0).fit(X_train, Y_train)
 #ML = neural_network.MLPRegressor(hidden_layer_sizes = [10 , 100 , 1] , activation = 'logistic' , alpha = 1 , random_state = 0).fit(X_train, Y_train)
+
+#Unsupervised:
+#12 - PCA:
+#from sklearn import preprocessing , decomposition
+#data_normalised = preprocessing.StandardScaler().fit(X).transform(X)
+#ML = decomposition.PCA(n_components = 2).fit(data_normalised).transform(data_normalised)
+#print(ML)
+
+#13 - MDS:
+#from sklearn import preprocessing , manifold
+#data_normalised = preprocessing.StandardScaler().fit(X).transform(X)
+#ML = manifold.MDS(n_components = 2).fit(data_normalised).fit_transform(data_normalised)
+#print(ML)
+
+#14 - t-SNE:
+#from sklearn import preprocessing , manifold
+#data_normalised = preprocessing.StandardScaler().fit(X).transform(X)
+#ML = manifold.TSNE(n_components = 2).fit(data_normalised).fit_transform(data_normalised)
+#print(ML)
 #--------------------------------------------------
 ''' Evaluate '''
 #Default Score:
