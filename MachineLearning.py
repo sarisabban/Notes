@@ -213,6 +213,11 @@ prediction = [[20 , 4.3 , 5.5 , 0.8]]
 #matplotlib.pyplot.xlim([-1 , X.shape[1]])
 #matplotlib.pyplot.show()
 
+#Unsupervised Learning Plot:
+#for i in [0 , 1]:
+# matplotlib.pyplot.scatter(ML[Y == i , 0] , ML[Y == i , 1])
+#matplotlib.pyplot.show()
+
 ###Precision-Recall Curve:
 ###ROC Curve:
 ###KNN Plot Clasdification:
