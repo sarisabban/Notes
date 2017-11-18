@@ -1000,7 +1000,7 @@ python end
 
 2. CD to image location then run following commands in terminal:
 rename 's/\d+/sprintf("%05d",$&)/e' *.png
-ffmpeg -i %05d.png Movie.avi
+ffmpeg -i %05d.png Movie.mkv
 
 ***To convert between video codecs:
 ffmpeg -i FILENAME.mkv -vcodec copy -acodec copy FILENAME.avi
