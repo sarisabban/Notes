@@ -887,18 +887,17 @@ Movie > Program > Scene Loop > Steady > 4 seconds each
 set ray_trace_frames
 mpng video, width=2400
 
-##for pymol before 1.8.6:
+##for pymol before 1.8.6:  <--- Most Realible Way
 make a .py file with the following script
 	cmd.load('structure.pse')
 	cmd.viewport (2400 , 2400)
 	cmd.set('ray_trace_mode' , 0)
-	cmd.frame(2250)
 	cmd.mpng('video')
 
 then open from terminal in code mode
 pymol -c FILENAME.py
 
-iOS video convert command
+iOS video convert command <--- Most Realible Way
 ffmpeg -f image2 -i video%4d.png -r 30 -vcodec libx264 -pix_fmt yuv420p -acodec libvo_aacenc -ab 128k -profile:v high -level 4.2 video.mp4
 
 iOS simpler video convert command
