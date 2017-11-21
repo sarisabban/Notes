@@ -72,11 +72,10 @@ prediction = [[20 , 4.3 , 5.5 , 0.8]]
 #ML = ensemble.GradientBoostingClassifier(n_estimators = 10 , learning_rate = 0.1 , max_depth = 3).fit(X_train, Y_train)
 #ML = ensemble.GradientBoostingRegressor(n_estimators = 10 , learning_rate = 0.1 , max_depth = 3).fit(X_train, Y_train)
 
-#11 - Neural Network: in Classifier 'lbfgs' , 'relu' , 'tanh' - in Regressor: 'identity', 'logistic', 'tanh', 'relu'
+#11 - Neural Network: in Classifier 'lbfgs' , 'relu' , 'tanh' - in Regressor: 'identity', 'logistic', 'tanh', 'relu' - http://scikit-learn.org/stable/modules/neural_networks_supervised.html
 #from sklearn import neural_network
 #ML = neural_network.MLPClassifier(hidden_layer_sizes = [10 , 100 , 1] , solver = 'lbfgs' , alpha = 1 , random_state = 0).fit(X_train, Y_train)
 #ML = neural_network.MLPRegressor(hidden_layer_sizes = [10 , 100 , 1] , activation = 'logistic' , alpha = 1 , random_state = 0).fit(X_train, Y_train)
-
 ''' Unsupervised Learning Models '''
 #12 - PCA:
 #from sklearn import preprocessing , decomposition
