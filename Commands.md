@@ -1,6 +1,6 @@
 **#Linux**
 #Ubuntu
-sudo apt update && sudo apt full-upgrade && sudo apt install weechat vim ffmpeg pymol gnuplot tmux openconnect python3-pip git htop dssp -y && sudo pip3 install biopython bs4 scikit-learn numpy pandas matplotlib
+sudo apt update && sudo apt full-upgrade && sudo apt install weechat vim ffmpeg pymol gnuplot tmux openconnect python3-pip git htop dssp python3-tk -y && sudo pip3 install biopython bs4 scikit-learn numpy pandas matplotlib
 ##Temp command on weechat
 /set buflist.look.enabled off
 --------------------------------------------------
