@@ -50,3 +50,48 @@ data = pandas.read_csv('temp2' , sep = ';').sort_values('Author').reset_index(dr
 data.to_csv('authors.csv' , sep = ';')
 print(data)
 os.system('rm temp temp2')
+
+
+'''
+#Better Script?
+import itertools
+
+import requests
+
+def format_author(author):
+    return ' '.join(author.get(key, '').strip() for key in ['given', 'family'])
+
+
+def member_publications(member_id, mailto=None, rows_per_page=1000):
+    params = dict(
+        select='DOI,author',
+        cursor='*',
+        rows=rows_per_page,
+    )
+    if mailto:
+        params['mailto'] = mailto
+
+    base_url = 'https://api.crossref.org/members/{}/works'.format(member_id)
+    while True:
+        response = requests.get(base_url, params=params)
+        message = response.json()['message']
+        items = message['items']
+        for item in items:
+            yield item['DOI'], item.get('author', [])
+        if len(items) < rows_per_page:
+            break
+        params['cursor'] = message['next-cursor']
+
+
+if __name__ == '__main__':
+    for doi, authors in member_publications(
+        2674, mailto='hart.michael@gmail.com'
+    ):
+        row = ';'.join(
+            itertools.chain(
+                [doi],
+                (format_author(a) for a in authors)
+            )
+        )
+        print(row)
+'''
