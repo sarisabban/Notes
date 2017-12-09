@@ -78,3 +78,37 @@ data = pandas.read_csv('temp2' , sep = ';').sort_values('Author').reset_index(dr
 data.to_csv('authors.csv' , sep = ';')
 print(data)
 os.system('rm temp temp2')
+
+'''
+#Compressed
+import os , requests , urllib.parse , pandas
+
+#Mine Data
+cursor = '*'
+rows = rows_per_page = 1000
+while rows == rows_per_page:
+	response = requests.get('https://api.crossref.org/members/2674/works?rows={}&select=DOI,author&cursor={}&mailto={}'.format(rows_per_page , cursor , 'contact@omicsgroup.com')).json()
+	message = response['message']
+	items = message['items']
+	for item in items:
+		output = item['DOI']
+		if 'author' in item: output += ';{authors}'.format(doi = item['DOI'] , authors = (';'.join(('{given} {family}'.format(given = author.get('given' , '') , family = author.get('family' , '')).strip()) for author in item['author'])))
+		with open('temp' , 'a') as tempfile: tempfile.write(output + '\n')
+		print(output)
+	rows = len(items)
+	cursor = urllib.parse.quote(message['next-cursor'])
+
+#Organise Data
+tempfile = open('temp' , 'r')
+with open('temp2' , 'a') as tempfile2: tempfile2.write('Author;DOI\n')
+print('\x1b[31m' + 'Organising Authors...' + '\x1b[0m')
+for line in tempfile:
+	line = line.strip().split(';')
+	for entry in line[1:]:
+		authors = entry + ';' + line[0] + '\n'
+		with open('temp2' , 'a') as tempfile2: tempfile2.write(authors)
+print('\x1b[31m' + 'Sorting Table...' + '\x1b[0m')
+data = pandas.read_csv('temp2' , sep = ';').sort_values('Author').reset_index(drop = True)
+data.to_csv('authors.csv' , sep = ';')
+os.remove('temp') ; os.remove('temp2') ; print('\x1b[32m' + 'Done' + '\x1b[0m')
+'''
