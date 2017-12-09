@@ -27,7 +27,7 @@ while rows == rows_per_page:
 		if 'author' in item:
 			output += ';{authors}'.format(doi=item['DOI'] , authors=format_authors(item['author']))
 		tempfile = open('temp' , 'a')
-		tempfile.write(output)
+		tempfile.write(output + '\n')
 		tempfile.close()
 		print(output)
 	rows = len(items)
