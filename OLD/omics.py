@@ -57,7 +57,7 @@ if __name__ == '__main__':
 	for doi , authors in member_publications(2674 , mailto = 'ac.research@icloud.com'):
 		row = ';'.join(itertools.chain([doi] , (format_author(a) for a in authors)))
 		tempfile = open('temp' , 'a')
-		tempfile.write(row)
+		tempfile.write(row + '\n')
 		tempfile.close()
 		print(row)
 '''
