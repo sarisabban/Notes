@@ -4,15 +4,27 @@ sudo apt update && sudo apt full-upgrade && sudo apt install weechat vim ffmpeg 
 ##Temp command on weechat
 /set buflist.look.enabled off
 --------------------------------------------------
+**#TMUX**
+#Aziz Supercomputer Environment Setup
+tmux new -s aziz -n aziz \; split-window -h -p25 \; split-window -v -p50
+--------------------------------------------------
 **#Convert Images**
 #Convert a PDF file to a PNG image - increase r to increase quality
 gs -sDEVICE=jpeg -sOutputFile=FILENAME.jpg -r1000 FILENAME.pdf
 #Invert colours of image
 convert -negate FILENAME.gif NEWFILENAME.gif
 --------------------------------------------------
-**#TMUX**
-#Aziz Supercomputer Environment Setup
-tmux new -s aziz -n aziz \; split-window -h -p25 \; split-window -v -p50
+**#PyMOL**
+#Generate Movies
+## 1. Make a .py file with the following script
+cmd.load('structure.pse')
+cmd.viewport (2400 , 2400)
+cmd.set('ray_trace_mode' , 0)
+cmd.mpng('video')
+## 2. Then run the script from the terminal
+pymol -c FILENAME.py
+## 3. Then convert the images to a video
+ffmpeg -f image2 -i video%4d.png -r 30 -vcodec libx264 -pix_fmt yuv420p -acodec libvo_aacenc -ab 128k -profile:v high -level 4.2 video.mp4
 --------------------------------------------------
 **#FFMPEG**
 #Re-encode .mkv to .mp4 To Work With Samsung TV
