@@ -3,6 +3,10 @@
 sudo apt update && sudo apt full-upgrade && sudo apt install weechat vim ffmpeg pymol gnuplot tmux openconnect python3-pip git htop dssp python3-tk -y && sudo pip3 install biopython bs4 scikit-learn scipy numpy pandas matplotlib
 ##Temp command on weechat
 /set buflist.look.enabled off
+
+#Manjaro
+sudo fdisk -l
+sudo dd bs=4M if=manjaro-gnome-17.0.6-stable-x86_64.iso of=/dev/sdb1 status=progress
 --------------------------------------------------
 **#TMUX**
 #Aziz Supercomputer Environment Setup
