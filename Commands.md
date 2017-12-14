@@ -6,11 +6,11 @@ sudo apt update && sudo apt full-upgrade && sudo apt install weechat vim ffmpeg 
 sudo fdisk -l
 sudo dd bs=4M if=manjaro-gnome-17.0.6-stable-x86_64.iso of=/dev/sdb status=progress
 
-sudo pacman update && sudo apt full-upgrade
+sudo pacman -Syu &&
 
 sudo pacman install weechat ffmpeg pymol gnuplot tmux openconnect python3-pip git htop -y 
 
-sudo pip3 install biopython bs4 scikit-learn scipy numpy pandas matplotlib
+&& sudo pip3 install biopython bs4 scikit-learn scipy numpy pandas matplotlib
 /set buflist.look.enabled off
 --------------------------------------------------
 **#TMUX**
