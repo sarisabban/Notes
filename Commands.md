@@ -6,7 +6,7 @@ sudo apt update && sudo apt full-upgrade && sudo apt install weechat vim ffmpeg 
 
 #Manjaro
 sudo fdisk -l
-sudo dd bs=4M if=manjaro-gnome-17.0.6-stable-x86_64.iso of=/dev/sdb1 status=progress
+sudo dd bs=4M if=manjaro-gnome-17.0.6-stable-x86_64.iso of=/dev/sdb status=progress
 --------------------------------------------------
 **#TMUX**
 #Aziz Supercomputer Environment Setup
