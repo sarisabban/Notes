@@ -7,7 +7,7 @@ sudo fdisk -l
 sudo dd bs=4M if=manjaro-gnome-17.0.6-stable-x86_64.iso of=/dev/sdb status=progress
 sudo pacman -Syu &&
 
-sudo pacman -S weechat ffmpeg pymol gnuplot tmux openconnect python3-pip git htop -y && sudo pip3 install biopython bs4 scikit-learn scipy numpy pandas matplotlib
+sudo pacman -S weechat pymol gnuplot tmux git htop python3-pip && sudo pip3 install biopython bs4 scikit-learn scipy numpy pandas matplotlib
 /set buflist.look.enabled off
 --------------------------------------------------
 **#TMUX**
