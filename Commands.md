@@ -4,6 +4,9 @@ sudo fdisk -l
 sudo dd bs=4M if=manjaro.iso of=/dev/sdb status=progress
 ## Programs to install
 sudo pacman -Syu && sudo pacman -S weechat pymol gnuplot tmux git htop python-pip && sudo pip install biopython bs4 scikit-learn scipy numpy pandas matplotlib
+
+pamac-manager -> top right -> preferences -> AUR -> Enable AUR -> go back to main menu -> search for dssp -> check and click apply
+
 /set buflist.look.enabled off
 --------------------------------------------------
 **#TMUX**
