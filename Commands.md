@@ -3,10 +3,7 @@
 sudo fdisk -l
 sudo dd bs=4M if=manjaro.iso of=/dev/sdb status=progress
 ## Programs to install
-sudo pacman -Syu && sudo pacman -S weechat pymol gnuplot tmux git htop yaourt python-pip && sudo pip install biopython bs4 scikit-learn scipy numpy pandas matplotlib
-
-sudo yaourt -S dssp
-
+sudo pacman -Syu && sudo pacman -S weechat pymol gnuplot tmux git htop yaourt python-pip && sudo pip install biopython bs4 scikit-learn scipy numpy pandas matplotlib && yaourt -S dssp
 /set buflist.look.enabled off
 --------------------------------------------------
 **#TMUX**
@@ -15,7 +12,7 @@ tmux new -s aziz -n aziz \; split-window -h -p25 \; split-window -v -p50
 --------------------------------------------------
 **#PyMOL**
 # Generate movies
-## 1. Make a .py file with the following script
+## 1. Make a FILENAME.py file with the following script
 cmd.load('structure.pse')
 cmd.viewport (2400 , 2400)
 cmd.set('ray_trace_mode' , 0)
