@@ -8,7 +8,7 @@ Layers:				*Input layer:	1 layer , 1 node
 					*Output layer:	1 layer , nodes = number of features 
 '''
 import numpy , random , keras , pandas , sklearn
-from sklearn import model_selection
+#from sklearn import model_selection
 
 #Import data
 data = pandas.read_csv('fruits.csv')																					#Import .csv dataset
@@ -17,7 +17,7 @@ Y = pandas.DataFrame.as_matrix(data['fruit_label'])																		#Convert to
 n_class = 4																												#Identify the number of classes
 #Y = keras.utils.to_categorical(Y, n_class)																				#One-hot encoding. 
 X , Y = sklearn.utils.shuffle(X , Y , random_state = 0)																	#Shuffle the dataset to make sure similar instances are not clustering next to each other
-train_x , test_x , train_y , test_y = model_selection.train_test_split(X , Y , random_state = 0)						#Split into train/test sets
+#train_x , test_x , train_y , test_y = model_selection.train_test_split(X , Y , random_state = 0)						#Split into train/test sets. This may not be needed because at the training function (line33) keras can automatically split the data to train and test sets
 
 #Setup neural network
 model = keras.models.Sequential()																						#Call the Sequential model object, which is a linear stack of layers
@@ -30,11 +30,11 @@ model.add(keras.layers.core.Dense(n_class , activation = 'softmax'))												
 model.compile(keras.optimizers.Adam() , loss = 'sparse_categorical_crossentropy' , metrics = ['accuracy'])				#Compile the model, identify here the loss function, the optimiser, and the evaluation metric
 
 #Train model
-model.fit(train_x , train_y , batch_size = 8 , epochs = 50 , verbose = 3)												#Preform the network training, input the training feature and class tensors, identify the batch size (conventional to use multiples of 8 - 8 , 16 , 32 etc...), and the epoch number. Verbose 23 is best to printout the epoch cycle only
+model.fit(X , Y , batch_size = 8 , epochs = 50 , verbose = 2 , validation_split  = 0.25)								#Preform the network training, input the training feature and class tensors, identify the batch size (conventional to use multiples of 8 - 8 , 16 , 32 etc...), and the epoch number. Verbose 23 is best to printout the epoch cycle only. The validation split is splitting the dataset into a train/test set (0.25 = 25% for the test set), thus the final accuracy we want to use is the valication accuracy (where it is measured using the test set's preformace on the model)
 
 #Output
-score = model.evaluate(test_x , test_y , verbose = 0)																	#Use the testing feature and class tensors to evaluate the model's accuracy
-print('Test accuracy:' , score[1])
+#score = model.evaluate(test_x , test_y , verbose = 0)																	#Use the testing feature and class tensors to evaluate the model's accuracy,not really needed since we are using the validation argument in the train function (line 33)
+#print('Test accuracy:' , score[1])
 '''
 #Save model weights to HDF5 - sudo pip3 install h5py
 model_json = model.to_json()
@@ -53,3 +53,6 @@ load_model.compile(keras.optimizers.Adam() , loss = 'sparse_categorical_crossent
 score = load_model.evaluate(test_x , test_y , verbose = 0)
 print('Test accuracy:' , score[1])
 '''
+#Prediction
+prediction = model.predict_classes(numpy.array([[130 , 6.0 , 8.2 , 0.71]]))
+print(prediction)
