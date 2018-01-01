@@ -56,3 +56,14 @@ print('Test accuracy:' , score[1])
 #Prediction
 prediction = model.predict_classes(numpy.array([[130 , 6.0 , 8.2 , 0.71]]))
 print(prediction)
+
+'''
+keras.layers.Dense(units = 2 , activation = 'relu')													#All nodes connected to each other
+keras.layers.Dropout(rate = 0.5)																	#Percentage of nodes to be randomly switched off during an epoch
+keras.layers.Flatten()																				#Flattens a tensor into a vector (None, 64, 32, 32) ---> 64*32*32 ---> (None, 65536)
+keras.layers.ZeroPadding2D(padding = (1 , 1))														#Adds rows and columns of zeros at the top, bottom, left and right side of an image tensor
+keras.layers.Convolution2D(filters = 32 , kernel_size = (1 , 1) ,  activation = 'relu')				#For CNN
+keras.layers.MaxPooling2D(pool_size = (2 , 2))														#Pooling the output from a CNN, it is a form of non-linear down-sampling
+keras.layers.LSTM(units = 2 , activation = 'relu' , dropout = 0.25 , recurrent_dropout = 0.25)		#For RNN
+
+'''
