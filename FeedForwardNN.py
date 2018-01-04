@@ -15,13 +15,14 @@ data = pandas.read_csv('fruits.csv')																					#Import .csv dataset
 X = pandas.DataFrame.as_matrix(data[['mass' , 'width', 'height' , 'color_score']])										#Convert to numpy array
 Y = pandas.DataFrame.as_matrix(data['fruit_label'])																		#Convert to numpy array
 n_class = 4																												#Identify the number of classes
+n_featu = X.shape[1]	
 #Y = keras.utils.to_categorical(Y, n_class)																				#One-hot encoding. 
 X , Y = sklearn.utils.shuffle(X , Y , random_state = 0)																	#Shuffle the dataset to make sure similar instances are not clustering next to each other
 #train_x , test_x , train_y , test_y = model_selection.train_test_split(X , Y , random_state = 0)						#Split into train/test sets. This may not be needed because at the training function (line33) keras can automatically split the data to train and test sets
 
 #Setup neural network
 model = keras.models.Sequential()																						#Call the Sequential model object, which is a linear stack of layers
-model.add(keras.layers.core.Dense(3 , input_shape = (n_class,) , activation = 'relu'))									#Hidden layer 1 with 3 nodes and the relu activation function, but here (only for the first hidden later) we must identify the shape of the input classes as (4,) because of 4 classes
+model.add(keras.layers.core.Dense(3 , input_shape = (n_featu,) , activation = 'relu'))									#Hidden layer 1 with 3 nodes and the relu activation function, but here (only for the first hidden later) we must identify the shape of the input features as (4,) because X has 4 features in each example
 #model.add(keras.layers.core.Dropout(0.02))																				#Randomly not train (not use nodes) in a network (a form of regularisation to help prevent overfitting). rate = between 0 & 1 which is the rate of dropping nodes, 0.2 = 20% of the nodes will be randomly turned off (0.2 - 0.5 is usually ideal) too low = useless, too high = underlearning. This layer can be added anywhere (before the first hidden layer, between hidden layers, etc...). It is best used on larger networks rather than small ones
 model.add(keras.layers.core.Dense(3 , activation = 'relu'))																#Hidden layer 2 with 3 nodes and the relu activation function
 model.add(keras.layers.core.Dense(n_class , activation = 'softmax'))													#Output layer with 4 nodes (because of 4 classes) and the softmax activation function
@@ -58,12 +59,22 @@ prediction = model.predict_classes(numpy.array([[130 , 6.0 , 8.2 , 0.71]]))
 print(prediction)
 
 '''
-keras.layers.Dense(units = 2 , activation = 'relu')													#All nodes connected to each other
-keras.layers.Dropout(rate = 0.5)																	#Percentage of nodes to be randomly switched off during an epoch
-keras.layers.Flatten()																				#Flattens a tensor into a vector (None, 64, 32, 32) ---> 64*32*32 ---> (None, 65536)
-keras.layers.ZeroPadding2D(padding = (1 , 1))														#Adds rows and columns of zeros at the top, bottom, left and right side of an image tensor
-keras.layers.Convolution2D(filters = 32 , kernel_size = (1 , 1) ,  activation = 'relu')				#For CNN
-keras.layers.MaxPooling2D(pool_size = (2 , 2))														#Pooling the output from a CNN, it is a form of non-linear down-sampling
-keras.layers.LSTM(units = 2 , activation = 'relu' , dropout = 0.25 , recurrent_dropout = 0.25)		#For RNN
+keras.layers.Dense(units = 2 , activation = 'relu')																		#All nodes connected to each other
 
+					  X has 5 examples each with 4 features
+					  |
+					  ٧
+Dense1 (3 nodes)	(5,4)	<--- input_shape = (4,) 1 weights for 1 feature, therefore 4 weights
+					  |
+					  ٧
+Dense2 (3 nodes)	(5,3)	<--- 3 features because output of 3 nodes, same number of examples, therefore input_shape = (3,) 1 weights for 1 feature, therefore 3 weights
+					  |
+					  ٧
+Dense3 (3 nodes)	(5,3)	<--- 3 features because output of 3 nodes, same number of examples, therefore input_shape = (3,) 1 weights for 1 feature, therefore 3 weights
+					  |
+					  ٧
+Dense4 (4 nodes)	(5,3)	<--- 3 features because output of 3 nodes, same number of examples, therefore input_shape = (3,) 1 weights for 1 feature, therefore 3 weights
+					  |
+					  ٧
+					(5,4)	<--- 1 node for 1 class in Y, therefore 4 output values for 4 different classes (the probability of each class), this is compaired to the Y classes from the dataset to see if we get it right or wrong (the loss function)
 '''

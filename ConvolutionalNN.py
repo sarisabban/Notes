@@ -79,3 +79,41 @@ def VGG_16():	#Award winning CNN (but doesn't work here)
 	model.add(keras.layers.Dense(4096 , activation = 'relu'))
 	model.add(keras.layers.Dropout(0.5))
 	model.add(keras.layers.Dense(2 , activation = 'softmax'))
+	
+'''
+keras.layers.Convolution2D(filters = 32 , kernel_size = (1 , 1) , strides=(1 , 1) ,  activation = 'relu', )				#For CNN, filter is the third dimention of the matrix that results from the kernel * image values () , kernel size is the shape of the convolution window, strides is the rate of the movement of the window across the image.
+keras.layers.ZeroPadding2D(padding = (1 , 1))																			#Adds zeros to rows and columns on a tensor. This is used when examples in a dataset do not have the same number of features (they have different shapes), therefore padding is used to add zero to small examples to bring their shapes up to make the whole dataset equal in shape. (1 , 1) means rows and columns
+keras.layers.MaxPooling2D(pool_size = (2 , 2))																			#Pooling the output of a convolutional layer (in a CNN), the (2,2) indicates number of pooling window into 1 window (here it will half the original number of windows from the conv layer).
+keras.layers.Flatten()																									#Flattens only the features of a tensor into a single number (None, 64, 32, 32) ---> 64*32*32 ---> (None, 65536). This does not affect the number of examples in the tensor, only the features. It is used to bridge a CNN to a Dense layer (Conv -> Pool -> Conv -> Pool -> Conv -> Pool -> Flatten -> Dense -> Dense -> Output). Therefore combines the features into a single value afterwich it is in a shape that can enter a dense layer.
+
+The convolution window is (3,3)
+The filter increases by convention (not manditory) 16 - 32 - 64 - 128
+						X is a 224x224 pixel coloured image
+						|
+						٧
+Conv1				(224,224,16)	<--- input_shape = (224,224,3) 224x224 pixel image and channel number of 3 for RGB
+						|
+						٧
+MaxPool				(,222,222,32)	<--- we lose 2 pixels from the edge
+						|
+						٧
+Conv1				(,111,111,32)	<--- smaller matrix
+						|
+						٧
+MaxPool				(,109,109,364)	<--- we lose 2 pixels from the edge
+						|
+						٧
+Conv1				(,54,54,64)		<--- smaller matrix
+						|
+						٧
+MaxPool				(,52,52,128)	<--- we lose 2 pixels from the edge
+						|
+						٧
+Flatten				(,26,26,128)	<--- flatten by multiplying the shapes 26*26*128
+						|
+						٧
+Dense	(2 nodes)	(,86528)		<--- 1 node for 1 class in Y, therefore 2 output values for 2 different classes (the probability of each class), this is compaired to the Y classes from the dataset to see if we get it right or wrong (the loss function). (examples , timestep , classes)
+						|
+						٧
+					(,2)
+'''
