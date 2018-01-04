@@ -16,7 +16,7 @@ X = pandas.DataFrame.as_matrix(data[['mass' , 'width', 'height' , 'color_score']
 Y = pandas.DataFrame.as_matrix(data['fruit_label'])																		#Convert to numpy array
 n_class = 4																												#Identify the number of classes
 n_featu = X.shape[1]	
-#Y = keras.utils.to_categorical(Y, n_class)																				#One-hot encoding. 
+#Y = keras.utils.to_categorical(Y, n_class)																				#One-hot encoding. Depends on the Loss Function, some loss functions do not need encoding, others do
 X , Y = sklearn.utils.shuffle(X , Y , random_state = 0)																	#Shuffle the dataset to make sure similar instances are not clustering next to each other
 #train_x , test_x , train_y , test_y = model_selection.train_test_split(X , Y , random_state = 0)						#Split into train/test sets. This may not be needed because at the training function (line33) keras can automatically split the data to train and test sets
 
