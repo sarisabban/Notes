@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import numpy , random , keras , pandas , sklearn
 
 #Import data
