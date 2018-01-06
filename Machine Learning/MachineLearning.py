@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import os , numpy , pandas , matplotlib.pyplot								#pip3 install numpy pandas matplotlib scikit-learn
 #--------------------------------------------------
 ''' Representation '''
