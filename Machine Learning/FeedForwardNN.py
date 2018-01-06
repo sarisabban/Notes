@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 '''
 Optimisers:			Adam Gradient Descent
 Loss function:		Cross-Entropy
