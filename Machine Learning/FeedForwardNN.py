@@ -3,7 +3,8 @@
 '''
 Optimisers:			Adam Gradient Descent
 Loss function:		Cross-Entropy
-Activiation:		ReLU
+Activiation:		ReLU for the hidden layers and softmax for the output layer (to give probability of different classes) or linear function (for regression)
+					Leaky ReLU (small negative slope rather than 0) is sometimes used to allow better backpropagation if a certain weight have a too large of a negative weight that causes the node to never fire. Only used if large portion of the nodes are deing, other than that always use ReLU.
 Neural Networks:	Feed Forward , Recurrent , Convolutional , Unsupervised (GAN)
 Layers:				*Input layer:	1 layer , 1 node
 					*Hidden layer:	1 - 2 layers (except for convolutional networks). The starting number of nodes can be between the number of nodes in the input later and the number of nodes in the output layer
