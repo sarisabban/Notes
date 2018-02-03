@@ -1,19 +1,16 @@
 # Manjaro i3
 sudo fdisk -l
 sudo dd bs=4M if=manjaro.iso of=/dev/sdb status=progress
-## Programs to install
-sudo pacman -Syu && sudo pacman -S weechat firefox pymol gnuplot tmux git htop python-pip yaourt boost boost-libs xfce4-terminal && sudo pip install biopython bs4 scikit-learn scipy numpy pandas matplotlib tensorflow keras h5py scipy && sudo install_pulse && xinput set-button-map 11 1 2 3 5 4 6 7 && yaourt -S dssp
+## Programs to install and environment setup
+sudo pacman -Syu && sudo pacman -S weechat firefox pymol gnuplot tmux git htop python-pip yaourt boost boost-libs xfce4-terminal && sudo pip install biopython bs4 scikit-learn scipy numpy pandas matplotlib tensorflow keras h5py scipy && sudo install_pulse && xinput set-button-map 11 1 2 3 5 4 6 7 && sed -i 's/bindsym $mod+Return exec terminal/bindsym $mod+Return exec xcfe4-terminal/' .i3/config && yaourt -S dssp
 
-## a better terminal copy/pasting
-under # start a terminal
-replace the word terminal with xcfe4-terminal
-mod-shift-r
-
-## english date
+## English date
 mod-z>settings>manjaro settings manager>locale settigns>double click on English (united kingdom)>right click and choose (set as default display language and format)
-reboot
 
-## weechat
+## Weechat setup
 /set buflist.look.enabled off
+/server add freenode irc.freenode.net
 /set irc.server.freenode.sasl_username NICKNAME
 /set irc.server.freenode.sasl_password PASSWORD
+
+sudo reboot
