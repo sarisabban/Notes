@@ -1,0 +1,25 @@
+#Manjaro i3
+sudo fdisk -l
+sudo dd bs=4M if=manjaro.iso of=/dev/sdb status=progress
+## Programs to install
+sudo pacman -Syu && sudo pacman -S weechat firefox pymol gnuplot tmux git htop python-pip yaourt boost boost-libs && sudo pip install biopython bs4 scikit-learn scipy numpy pandas matplotlib tensorflow keras h5py scipy && yaourt -S dssp && 
+
+## reverse mouse scrolling
+in /.i3/config add
+exec --no-startup-id synclient HorizEdgeScroll=1 VertEdgeScroll=1 VertScrollDelta=-111 NaturalScrolling
+then ---> mod-shift-r ---> to reload the congif file
+
+## a better terminal copy/pasting
+sudo pacman -S xfce4-terminal
+under # start a terminal
+replace the word terminal with xcfe4-terminal
+mod-shift-r
+
+## sound in firefox
+sudo install_pulse
+reboot
+
+## weechat
+/set buflist.look.enabled off
+/set irc.server.freenode.sasl_username NICKNAME
+/set irc.server.freenode.sasl_password PASSWORD
