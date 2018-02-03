@@ -2,13 +2,7 @@
 sudo fdisk -l
 sudo dd bs=4M if=manjaro.iso of=/dev/sdb status=progress
 ## Programs to install
-sudo pacman -Syu && sudo pacman -S weechat firefox pymol gnuplot tmux git htop python-pip yaourt boost boost-libs xfce4-terminal && sudo pip install biopython bs4 scikit-learn scipy numpy pandas matplotlib tensorflow keras h5py scipy && sudo install_pulse && yaourt -S dssp
-
-## reverse mouse scrolling
-xinput set-button-map 11 1 2 3 5 4 6 7
-
-
-
+sudo pacman -Syu && sudo pacman -S weechat firefox pymol gnuplot tmux git htop python-pip yaourt boost boost-libs xfce4-terminal && sudo pip install biopython bs4 scikit-learn scipy numpy pandas matplotlib tensorflow keras h5py scipy && sudo install_pulse && xinput set-button-map 11 1 2 3 5 4 6 7 && yaourt -S dssp
 
 ## a better terminal copy/pasting
 under # start a terminal
