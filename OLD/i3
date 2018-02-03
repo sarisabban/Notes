@@ -5,9 +5,10 @@ sudo dd bs=4M if=manjaro.iso of=/dev/sdb status=progress
 sudo pacman -Syu && sudo pacman -S weechat firefox pymol gnuplot tmux git htop python-pip yaourt boost boost-libs xfce4-terminal && sudo pip install biopython bs4 scikit-learn scipy numpy pandas matplotlib tensorflow keras h5py scipy && sudo install_pulse && yaourt -S dssp
 
 ## reverse mouse scrolling
-vim /etc/X11/xorg.conf.d/30-touchpad.conf
-between the sections add: 
-"NaturalScrolling" "true"
+xinput set-button-map 11 1 2 3 5 4 6 7
+
+
+
 
 ## a better terminal copy/pasting
 under # start a terminal
