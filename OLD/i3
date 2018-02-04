@@ -5,7 +5,7 @@ sudo fdisk -l
 sudo dd bs=4M if=manjaro.iso of=/dev/sdb status=progress
 
 ## Programs to install and environment setup
-sudo pacman -Syu && sudo pacman -S weechat firefox pymol gnuplot tmux git htop python-pip yaourt boost boost-libs gnome-disk-utility xfce4-terminal && sudo pip install biopython bs4 scikit-learn scipy numpy pandas matplotlib tensorflow keras h5py scipy && sudo install_pulse && xinput set-button-map 11 1 2 3 5 4 6 7 && sed -i 's/bindsym $mod+Return exec terminal/bindsym $mod+Return exec xcfe4-terminal/' .i3/config && echo "exec xinput set-button-map 11 1 2 3 5 4 6 7" >> .i3/config && yaourt -S dssp
+sudo pacman -Syu && sudo pacman -S weechat firefox pymol gnuplot tmux git htop python-pip yaourt boost boost-libs gnome-disk-utility xfce4-terminal && sudo pip install biopython bs4 scikit-learn scipy numpy pandas matplotlib tensorflow keras h5py scipy && sudo install_pulse && xinput set-button-map 11 1 2 3 5 4 6 7 && sed -i 's/bindsym $mod+Return exec terminal/bindsym $mod+Return exec xcfe4-terminal/' .i3/config && echo "exec xinput set-button-map 11 1 2 3 5 4 6 7" >> .i3/config && sed -i 's/bindsym $mod+F2 exec palemoon/bindsym $mod+F2 exec firefox/' .i3/config && yaourt -S dssp
 
 ## English date
 mod-z>settings>manjaro settings manager>locale settigns>double click on English (united kingdom)>right click and choose (set as default display language and format)
