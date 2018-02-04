@@ -3,9 +3,9 @@
 sudo fdisk -l
 sudo dd bs=4M if=manjaro.iso of=/dev/sdb status=progress
 ## Programs to install
-sudo pacman -Syu && 
-sudo pacman -S weechat pymol gnuplot tmux git htop python-pip yaourt boost boost-libs && sudo pip install biopython bs4 scikit-learn scipy numpy pandas matplotlib tensorflow keras h5py scipy && yaourt -S dssp
+sudo pacman -Syu && sudo pacman -S weechat pymol gnuplot tmux git htop python-pip yaourt boost boost-libs && sudo pip install biopython bs4 scikit-learn scipy numpy pandas matplotlib tensorflow keras h5py scipy && yaourt -S dssp
 /set buflist.look.enabled off
+/server add freenode irc.freenode.net
 /set irc.server.freenode.sasl_username NICKNAME
 /set irc.server.freenode.sasl_password PASSWORD
 --------------------------------------------------
