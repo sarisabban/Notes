@@ -39,13 +39,18 @@ pacstrap /mnt base base-devel
 arch-chroot /mnt
 passwd
 # add root password
-
-
-
-
-
-
-
-
-
+vi /etc/locale.gen
+# comment out my langauge
+locale-gen
+cd /usr/share/zoneinfo/Asia
+## ls to see options ln -s /usr/share/zoneinfo/Asia/..... /etc/localtime
+echo acresearch > /etc/hostname
+pacman -S grub-bios
+grub-install /dev/sda
+mkinitcpio -p linux
+grub-mkconfig -o /boot/grub/grub.cfg
+exit
+genfstab /mnt >> /mnt/etc/fstab
+umount /mnt
+reboot
 
