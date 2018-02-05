@@ -17,3 +17,16 @@ mod-z>settings>manjaro settings manager>locale settigns>double click on English 
 /set irc.server.freenode.sasl_password PASSWORD
 
 sudo reboot
+
+
+
+
+# Install Arch Linux:
+cfdisk /dev/sda
+## Delete all paritions
+## setup swap to be 1/2 of ram (1gb) --- New>primary>1000>End
+## setup root New>primary>keep the same>
+## Select root to be Bootable and select swap to be >type>82
+## Write>yes
+
+
