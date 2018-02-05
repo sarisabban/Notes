@@ -66,6 +66,10 @@ exit
 acresearch
 password
 
+sudo pacman -S xorg xorg-xinit
+# enter for default
+# 1
+?????????????
 sudo pacman -S i3
 
 
