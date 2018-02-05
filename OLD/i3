@@ -57,3 +57,17 @@ reboot
 root
 password
 
+useradd -m -g users -G wheel -s /bin/bash acresearch
+passwd acresearch ******************
+EDITOR=nano visudo
+# comment out %wheel ALL=(ALL) ALL
+
+exit
+acresearch
+password
+
+sudo pacman -S i3
+
+
+
+
