@@ -2,8 +2,12 @@
 ## Live USB
 sudo fdisk -l
 sudo dd bs=4M if=manjaro.iso of=/dev/sdb status=progress
-## Programs to install
-yes | sudo pacman -Syu && yes | sudo pacman -S weechat pymol gnuplot tmux git htop python-pip yaourt boost boost-libs && sudo pip install biopython bs4 scikit-learn scipy numpy pandas matplotlib tensorflow keras h5py scipy && yaourt -S dssp
+## Programs to install (pacman)
+sudo pacman -Syu && sudo pacman -S weechat pymol gnuplot tmux git htop python-pip yaourt boost boost-libs && sudo pip install biopython bs4 scikit-learn scipy numpy pandas matplotlib tensorflow keras h5py scipy && yaourt -S dssp
+
+## Programs to install (APT)
+sudo apt update && sudo apt full-upgrade && sudo apt install weechat pymol gnuplot tmux git htop python3-pip dssp -y && sudo pip3 install biopython bs4 scikit-learn scipy numpy pandas matplotlib tensorflow keras h5py scipy
+
 ## Weechat setup
 /set buflist.look.enabled off
 /server add freenode irc.freenode.net
