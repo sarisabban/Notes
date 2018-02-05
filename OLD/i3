@@ -54,3 +54,6 @@ genfstab /mnt >> /mnt/etc/fstab
 umount /mnt
 reboot
 
+root
+password
+
