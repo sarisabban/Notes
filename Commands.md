@@ -8,6 +8,18 @@ sudo pacman -Syu && sudo pacman -S weechat pymol gnuplot tmux git htop python-pi
 ## Programs to install (APT)
 sudo apt update && sudo apt full-upgrade && sudo apt install weechat pymol gnuplot tmux git htop python3-pip dssp -y && sudo pip3 install biopython bs4 scikit-learn scipy numpy pandas matplotlib tensorflow keras h5py scipy
 
+
+## Antergos
+
+sudo pacman -Syu && sudo pacman -S weechat pymol gnuplot tmux git htop python-pip yaourt && sudo pip install biopython bs4 scikit-learn scipy numpy pandas matplotlib tensorflow keras h5py scipy && yaourt -S dssp
+
+https://wiki.archlinux.org/index.php/Mac#Firmware_updates
+https://wiki.archlinux.org/index.php/Broadcom_wireless#b43
+yaourt -S b43-firmware
+yaourt -S b43-firmware-classic
+yaourt -S b43-firmware-legacy
+
+
 ## Weechat setup
 /set buflist.look.enabled off
 /server add freenode irc.freenode.net
