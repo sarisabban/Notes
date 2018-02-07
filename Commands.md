@@ -1,24 +1,10 @@
-**#Linux Manjaro**
+**#Linux Antergos**
 ## Live USB
 sudo fdisk -l
-sudo dd bs=4M if=manjaro.iso of=/dev/sdb status=progress
-## Programs to install (pacman)
-sudo pacman -Syu && sudo pacman -S weechat pymol gnuplot tmux git htop python-pip yaourt boost boost-libs && sudo pip install biopython bs4 scikit-learn scipy numpy pandas matplotlib tensorflow keras h5py scipy && yaourt -S dssp
+sudo dd bs=4M if=antergos.iso of=/dev/sdb status=progress
 
-## Programs to install (APT)
-sudo apt update && sudo apt full-upgrade && sudo apt install weechat pymol gnuplot tmux git htop python3-pip dssp -y && sudo pip3 install biopython bs4 scikit-learn scipy numpy pandas matplotlib tensorflow keras h5py scipy
-
-
-## Antergos
-
-sudo pacman -Syu && sudo pacman -S weechat pymol gnuplot tmux git htop python-pip yaourt && sudo pip install biopython bs4 scikit-learn scipy numpy pandas matplotlib tensorflow keras h5py scipy && yaourt -S dssp
-
-https://wiki.archlinux.org/index.php/Mac#Firmware_updates
-https://wiki.archlinux.org/index.php/Broadcom_wireless#b43
-yaourt -S b43-firmware
-yaourt -S b43-firmware-classic
-yaourt -S b43-firmware-legacy
-
+## Programs to install (PacMan)
+sudo pacman -Syu && sudo pacman -S weechat pymol gnuplot tmux git htop python-pip yaourt && sudo pip install biopython bs4 scikit-learn scipy numpy pandas matplotlib tensorflow keras h5py scipy && yaourt -S b43-firmware dssp
 
 ## Weechat setup
 /set buflist.look.enabled off
