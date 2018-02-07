@@ -1,12 +1,10 @@
 **#Linux Antergos**
-## Live USB
+# Live USB
 sudo fdisk -l
 sudo dd bs=4M if=antergos.iso of=/dev/sdb status=progress
-
-## Programs to install (PacMan)
+# Programs to install (PacMan)
 sudo pacman -Syu && sudo pacman -S weechat pymol gnuplot tmux git htop python-pip yaourt && sudo pip install biopython bs4 scikit-learn scipy numpy pandas matplotlib tensorflow keras h5py scipy && yaourt -S b43-firmware dssp
-
-## Weechat setup
+# Weechat setup
 /set buflist.look.enabled off
 /server add freenode irc.freenode.net
 /set irc.server.freenode.autoconnect on
@@ -16,7 +14,7 @@ sudo pacman -Syu && sudo pacman -S weechat pymol gnuplot tmux git htop python-pi
 /set irc.server.freenode.sasl_password PASSWORD
 --------------------------------------------------
 **#TMUX**
-# Aziz supercomputer environment setup
+# Supercomputer environment setup
 tmux new -s aziz -n aziz \; split-window -h -p25 \; split-window -v -p50
 --------------------------------------------------
 **#PyMOL**
