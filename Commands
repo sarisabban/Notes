@@ -12,6 +12,26 @@ sudo pacman -Syu && sudo pacman -S weechat pymol gnuplot tmux git htop python-pi
 /set irc.server.freenode.ssl on
 /set irc.server.freenode.sasl_username NICKNAME
 /set irc.server.freenode.sasl_password PASSWORD
+
+
+
+Basic + fonts + AUR
+xorg-xinit
+xorg-server
+xterm
+i3
+xf86-video-intel
+#add exec i3 to a new .xinitrc in the home directory
+
+firefox
+gedit
+[all others]
+a better terminal
+
+an audio driver
+sort copy/paste in the terminal
+
+
 --------------------------------------------------
 **#TMUX**
 # Supercomputer environment setup
