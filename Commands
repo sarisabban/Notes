@@ -15,6 +15,14 @@ sudo pacman -Syu && sudo pacman -S weechat pymol gnuplot tmux git htop python-pi
 
 
 ## i3 SETUP
+
+echo '[time]
+command=date '+%H:%M'
+interval=1
+[wifi]
+interval=10
+seperator=false'>>/etc/i3blocks.conf
+
 Basic + fonts + AUR
 xorg-xinit
 xorg-server
@@ -28,6 +36,10 @@ gedit
 xfce4-terminal
 
 an audio driver
+
+
+
+
 
 --------------------------------------------------
 **#TMUX**
