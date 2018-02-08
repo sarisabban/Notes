@@ -26,8 +26,7 @@ xf86-video-intel
 firefox
 gedit
 [all others]
-a better terminal
-
+xfce4-terminal
 an audio driver
 sort copy/paste in the terminal
 
