@@ -18,10 +18,7 @@ sudo pacman -Syu && sudo pacman -S weechat pymol gnuplot tmux git htop python-pi
 
 echo '[time]
 command=date '+%H:%M'
-interval=1
-[wifi]
-interval=10
-seperator=false'>>/etc/i3blocks.conf
+interval=1'>>/etc/i3blocks.conf
 
 Basic + fonts + AUR
 xorg-xinit
@@ -32,7 +29,7 @@ xf86-video-intel
 #add exec i3 to a new .xinitrc in the home directory
 firefox
 gedit
-[all others]
+[all others] ranger ncmpcpp
 xfce4-terminal
 
 an audio driver
