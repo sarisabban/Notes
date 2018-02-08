@@ -136,3 +136,16 @@ bindsym $mod+t exec gedit
 #
 #Keyboard media player
 #playerctl
+
+
+
+
+
+#for the /etc/i3blocks.conf
+#[time]
+#command=date '+%H:%M'
+#interval=1
+#[wifi]
+#interval=10
+#seperator=false
+
