@@ -13,7 +13,7 @@ sudo pacman -Syu && sudo pacman -S weechat pymol gnuplot tmux git python-pip yao
 /set irc.server.freenode.sasl_username NICKNAME
 /set irc.server.freenode.sasl_password PASSWORD
 # Programs to install (Raspberry Pi)
-sudo apt update && sudo apt full-upgrade && sudo apt install weechat tmux git python3-pip lynx htop dssp && pip3 install biopython bs4 scikit-learn scipy numpy pandas tensorflow keras
+sudo hostname AraspPI && sudo apt update && sudo apt full-upgrade && sudo apt install weechat tmux git python3-pip lynx htop dssp && pip3 install biopython bs4 scikit-learn scipy numpy pandas tensorflow keras
 --------------------------------------------------
 **#TMUX**
 # Supercomputer environment setup
