@@ -17,7 +17,7 @@ passwd
 
 sudo raspi-config
 
-sudo hostname AraspPI && sudo sed -i 's/^exit 0/setterm -blank 0\nexit 0/g' /etc/rc.local && sudo apt update && sudo apt full-upgrade && sudo apt install weechat vim tmux git python3-pip lynx htop dssp && sudo pip3 install biopython bs4 scikit-learn scipy numpy pandas tensorflow keras
+sudo sed -i 's/raspberrypi/AraspPI/g' /etc/hostname && sudo sed -i 's/^exit 0/setterm -blank 0\nexit 0/g' /etc/rc.local && sudo apt update && sudo apt full-upgrade && sudo apt install weechat vim tmux git python3-pip lynx htop dssp && sudo pip3 install biopython bs4 scikit-learn scipy numpy pandas tensorflow keras
 # Weechat setup
 /server add freenode irc.freenode.net
 /set irc.server.freenode.autoconnect on
