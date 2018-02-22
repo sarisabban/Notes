@@ -14,7 +14,8 @@ sudo pacman -Syu && sudo pacman -S weechat pymol gnuplot tmux git python-pip yao
 /set irc.server.freenode.sasl_password PASSWORD
 
 # Programs to install (Raspberry Pi)
-Change default password: usermod passwd
+passwd
+sudo raspi-config
 sudo hostname AraspPI && sudo apt update && sudo apt full-upgrade && sudo apt install weechat tmux git python3-pip lynx htop dssp && pip3 install biopython bs4 scikit-learn scipy numpy pandas tensorflow keras
 # Weechat setup
 /server add freenode irc.freenode.net
