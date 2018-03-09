@@ -1,9 +1,19 @@
 **#Linux Setup**
-# Live USB
-sudo fdisk -l
-sudo dd bs=4M if=FILENAME.iso of=/dev/sdb status=progress
+----------
 # Programs to install (PacMan)
-sudo pacman -Syu && sudo pacman -S weechat pymol openconnect gnuplot tmux git python-pip yaourt && sudo pip install biopython bs4 scikit-learn scipy numpy pandas matplotlib tensorflow keras h5py && yaourt -S b43-firmware dssp
+sudo pacman -Syu && 
+sudo pacman -S weechat pymol openconnect gnuplot tmux git python-pip yaourt python-numpy python-biopython python-scipy matplotlib python-pandas python-beautifulsoup4 python-scikit-learn python-tensorflow
+
+
+
+
+&& sudo pip install keras 
+
+&& yaourt -S b43-firmware dssp
+
+
+
+
 # Weechat setup
 /set buflist.look.enabled off
 /server add freenode irc.freenode.net
@@ -12,6 +22,7 @@ sudo pacman -Syu && sudo pacman -S weechat pymol openconnect gnuplot tmux git py
 /set irc.server.freenode.ssl on
 /set irc.server.freenode.sasl_username NICKNAME
 /set irc.server.freenode.sasl_password PASSWORD
+----------
 # Programs to install (Raspberry Pi)
 passwd
 sudo sed -i 's/XKBLAYOUT="gb"/XKBLAYOUT="us"/g' /etc/default/keyboard && sudo sed -i 's/raspberrypi/AraspPI/g' /etc/hostname && sudo sed -i 's/^exit 0/setterm -blank 0\nexit 0/g' /etc/rc.local && sudo apt update && sudo apt full-upgrade && sudo apt install weechat vim tmux git python3-pip lynx htop dssp && sudo pip3 install biopython bs4 scikit-learn scipy numpy pandas tensorflow keras
@@ -23,6 +34,10 @@ sudo sed -i 's/XKBLAYOUT="gb"/XKBLAYOUT="us"/g' /etc/default/keyboard && sudo se
 /set irc.server.freenode.nicks "AraspPI"
 /set irc.server.freenode.sasl_username NICKNAME
 /set irc.server.freenode.sasl_password PASSWORD
+----------
+# Live USB
+sudo fdisk -l
+sudo dd bs=4M if=FILENAME.iso of=/dev/sdb status=progress
 --------------------------------------------------
 **#TMUX**
 # Supercomputer environment setup
