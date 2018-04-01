@@ -23,7 +23,7 @@ model.add(keras.layers.Dense(2 , activation = 'softmax'))																							
 #print(model.summary())
 
 #Compile model
-model.compile(keras.optimizers.Adam() , loss = 'categorical_crossentropy' , metrics = ['accuracy'])
+model.compile(keras.optimizers.Adam(lr = 0.01) , loss = 'categorical_crossentropy' , metrics = ['accuracy'])
 
 #Train model
 model.fit_generator(train_image , steps_per_epoch = 4 , validation_data = valid_image , validation_steps = 4 , epochs = 5 , verbose = 2)															#fit_generator fits a model on data generated batch by batch (from the data that grabs only a batch of images at a time). steps_per_epoch is total number of batches of samples yeild from the generator before an epoch cycles is declaired complete, because 40 images in total (20 cat 20 dog) in the training set and a batch size of 10 pictures at a time then it will take 4 batches to complete 1 epoch through the whole training dataset. Validation using the validation set. validation_steps is just like the steps_per_epoch but for the validation set. 

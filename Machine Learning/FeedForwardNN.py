@@ -9,6 +9,8 @@ Neural Networks:	Feed Forward , Recurrent , Convolutional , Unsupervised (GAN)
 Layers:				*Input layer:	1 layer , 1 node
 					*Hidden layer:	1 - 2 layers (except for convolutional networks). The starting number of nodes can be between the number of nodes in the input later and the number of nodes in the output layer
 					*Output layer:	1 layer , nodes = number of features 
+
+Learning Rate:		The steps taken in Gradient Descent to reach the global minima. low = more accurate but slower. If loss is increasing that means the Learning Rate is high.
 '''
 import numpy , random , keras , pandas , sklearn
 #from sklearn import model_selection
@@ -31,7 +33,7 @@ model.add(keras.layers.core.Dense(3 , activation = 'relu'))																#Hidd
 model.add(keras.layers.core.Dense(n_class , activation = 'softmax'))													#Output layer with 4 nodes (because of 4 classes) and the softmax activation function
 
 #Compile model
-model.compile(keras.optimizers.Adam() , loss = 'sparse_categorical_crossentropy' , metrics = ['accuracy'])				#Compile the model, identify here the loss function, the optimiser, and the evaluation metric
+model.compile(keras.optimizers.Adam(lr = 0.01) , loss = 'sparse_categorical_crossentropy' , metrics = ['accuracy'])			#Compile the model, identify here the loss function, the optimiser (Adam Gradient Descent with a Learning Rate of 0.01), and the evaluation metric
 
 #Train model
 model.fit(X , Y , batch_size = 8 , epochs = 50 , verbose = 2 , validation_split  = 0.25)								#Preform the network training, input the training feature and class tensors, identify the batch size (conventional to use multiples of 8 - 8 , 16 , 32 etc...), and the epoch number. Verbose 23 is best to printout the epoch cycle only. The validation split is splitting the dataset into a train/test set (0.25 = 25% for the test set), thus the final accuracy we want to use is the valication accuracy (where it is measured using the test set's preformace on the model)

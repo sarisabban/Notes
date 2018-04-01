@@ -21,7 +21,7 @@ model.add(keras.layers.LSTM(3 , activation = 'relu' , dropout = 0.25 , recurrent
 model.add(keras.layers.Dense(n_class , activation = 'softmax'))															#Output layer with 4 nodes (because of 4 classes) and the softmax activation function
 
 #Compile model
-model.compile(keras.optimizers.Adam() , loss = 'sparse_categorical_crossentropy' , metrics = ['accuracy'])				#Compile the model, identify here the loss function, the optimiser, and the evaluation metric
+model.compile(keras.optimizers.Adam(lr = 0.01) , loss = 'sparse_categorical_crossentropy' , metrics = ['accuracy'])				#Compile the model, identify here the loss function, the optimiser (Adam Gradient Descent with a Learning Rate of 0.01), and the evaluation metric
 
 #Train model
 model.fit(X , Y , batch_size = 8 , epochs = 50 , verbose = 2 , validation_split  = 0.25)								#Preform the network training, input the training feature and class tensors, identify the batch size (conventional to use multiples of 8 - 8 , 16 , 32 etc...), and the epoch number. Verbose 23 is best to printout the epoch cycle only. The validation split is splitting the dataset into a train/test set (0.25 = 25% for the test set), thus the final accuracy we want to use is the valication accuracy (where it is measured using the test set's preformace on the model)
