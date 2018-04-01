@@ -1,14 +1,16 @@
 #!/usr/bin/python3
 
 '''
-Optimisers:			Adam Gradient Descent
+Optimisers:		Adam Gradient Descent
 Loss function:		Cross-Entropy
 Activiation:		ReLU for the hidden layers and softmax for the output layer (to give probability of different classes) or linear function (for regression)
-					Leaky ReLU (small negative slope rather than 0) is sometimes used to allow better backpropagation if a certain weight have a too large of a negative weight that causes the node to never fire. Only used if large portion of the nodes are deing, other than that always use ReLU.
+			Leaky ReLU (small negative slope rather than 0) is sometimes used to allow better backpropagation if a certain weight have a too large of a negative weight that causes the node to never fire. Only used if large portion of the nodes are deing, other than that always use ReLU.
+			Always end with Softmax (for single lable classifying), because it gives probability between 0 and 1
+			Always end with Sigmoid (for multi lable classifying), because it does not give probability between 0 and 1
 Neural Networks:	Feed Forward , Recurrent , Convolutional , Unsupervised (GAN)
-Layers:				*Input layer:	1 layer , 1 node
-					*Hidden layer:	1 - 2 layers (except for convolutional networks). The starting number of nodes can be between the number of nodes in the input later and the number of nodes in the output layer
-					*Output layer:	1 layer , nodes = number of features 
+Layers:			*Input layer:	1 layer , 1 node
+			*Hidden layer:	1 - 2 layers (except for convolutional networks). The starting number of nodes can be between the number of nodes in the input later and the number of nodes in the output layer
+			*Output layer:	1 layer , nodes = number of features 
 
 Learning Rate:		The steps taken in Gradient Descent to reach the global minima. low = more accurate but slower. If loss is increasing that means the Learning Rate is high.
 '''
