@@ -88,7 +88,7 @@ keras.layers.ZeroPadding2D(padding = (1 , 1))																			#Adds zeros to r
 keras.layers.MaxPooling2D(pool_size = (2 , 2))																			#Pooling the output of a convolutional layer (in a CNN), the (2,2) indicates number of pooling window into 1 window (here it will half the original number of windows from the conv layer).
 keras.layers.Flatten()																									#Flattens only the features of a tensor into a single number (None, 64, 32, 32) ---> 64*32*32 ---> (None, 65536). This does not affect the number of examples in the tensor, only the features. It is used to bridge a CNN to a Dense layer (Conv -> Pool -> Conv -> Pool -> Conv -> Pool -> Flatten -> Dense -> Dense -> Output). Therefore combines the features into a single value afterwich it is in a shape that can enter a dense layer.
 
-The convolution window is (3,3)
+The convolution window is (3,3) also known as the kernel
 The filter increases by convention (not manditory) 16 - 32 - 64 - 128
 						X is a 224x224 pixel coloured image
 						|
@@ -96,19 +96,19 @@ The filter increases by convention (not manditory) 16 - 32 - 64 - 128
 Conv1				(224,224,16)	<--- input_shape = (224,224,3) 224x224 pixel image and channel number of 3 for RGB
 						|
 						٧
-MaxPool				(,222,222,32)	<--- we lose 2 pixels from the edge
+MaxPool				(,222,222,32)	<--- from a window of 2x2 take only the largest value
 						|
 						٧
 Conv1				(,111,111,32)	<--- smaller matrix
 						|
 						٧
-MaxPool				(,109,109,364)	<--- we lose 2 pixels from the edge
+MaxPool				(,109,109,364)	<--- from a window of 2x2 take only the largest value
 						|
 						٧
 Conv1				(,54,54,64)		<--- smaller matrix
 						|
 						٧
-MaxPool				(,52,52,128)	<--- we lose 2 pixels from the edge
+MaxPool				(,52,52,128)	<--- from a window of 2x2 take only the largest value
 						|
 						٧
 Flatten				(,26,26,128)	<--- flatten by multiplying the shapes 26*26*128
