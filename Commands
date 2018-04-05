@@ -5,11 +5,14 @@ sudo pacman -Syu && sudo pacman -S weechat vim pymol obs-studio gnuplot tmux git
 # Weechat setup
 /set buflist.look.enabled off
 /server add freenode irc.freenode.net
-/set irc.server.freenode.autoconnect on
+/server add twitch irc.chat.twitch.tv
 /set irc.server.freenode.addresses "chat.freenode.net/7000"
 /set irc.server.freenode.ssl on
+/set irc.server.twitch.autojoin "#acresearch"
 /set irc.server.freenode.sasl_username NICKNAME
 /set irc.server.freenode.sasl_password PASSWORD
+/set irc.server.twitch.username NICKNAME
+/set irc.server.twitch.password oauth:*****
 # VIM Setup
 printf ':set shiftwidth=8 noexpandtab\n:set softtabstop=8 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap' >> .vimrc.
 ----------
