@@ -11,7 +11,7 @@ sudo pacman -Syu && sudo pacman -S weechat vim pymol obs-studio gnuplot tmux git
 /set irc.server.freenode.sasl_username NICKNAME
 /set irc.server.freenode.sasl_password PASSWORD
 # VIM
-printf ':set shiftwidth=8 noexpandtab\n:set softtabstop=8 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:filetype plugin indent on\n:syntax enable' >> .vimrc.
+printf ':set shiftwidth=8 noexpandtab\n:set softtabstop=8 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable' >> .vimrc.
 ----------
 # Programs to install (Raspberry Pi)
 passwd
