@@ -14,7 +14,7 @@ sudo pacman -Syu && sudo pacman -S weechat vim pymol obs-studio gnuplot tmux git
 /set irc.server.twitch.username NICKNAME
 /set irc.server.twitch.password oauth:***** [http://www.twitchapps.com/tmi/]
 # VIM Setup
-printf ':set shiftwidth=8 noexpandtab\n:set softtabstop=8 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap' >> .vimrc.
+printf ':set shiftwidth=8 noexpandtab\n:set softtabstop=8 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap:set number' >> .vimrc.
 ----------
 # Programs to install (Raspberry Pi)
 passwd
