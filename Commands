@@ -16,18 +16,6 @@ sudo pacman -Syu && sudo pacman -S weechat vim pymol obs-studio gnuplot tmux git
 # VIM Setup
 printf ':set shiftwidth=8 noexpandtab\n:set softtabstop=8 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap:set number' >> .vimrc.
 ----------
-# Programs to install (Raspberry Pi)
-passwd
-sudo sed -i 's/XKBLAYOUT="gb"/XKBLAYOUT="us"/g' /etc/default/keyboard && sudo sed -i 's/raspberrypi/AraspPI/g' /etc/hostname && sudo sed -i 's/^exit 0/setterm -blank 0\nexit 0/g' /etc/rc.local && sudo apt update && sudo apt full-upgrade && sudo apt install weechat vim tmux git python3-pip lynx htop python-beautifulsoup4 python-lxml python-numpy && printf ':set shiftwidth=8 noexpandtab\n:set softtabstop=8 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap:set number' >> .vimrc.
-# Weechat setup
-/server add freenode irc.freenode.net
-/set irc.server.freenode.autoconnect on
-/set irc.server.freenode.addresses "chat.freenode.net/7000"
-/set irc.server.freenode.ssl on
-/set irc.server.freenode.nicks "AraspPI"
-/set irc.server.freenode.sasl_username NICKNAME
-/set irc.server.freenode.sasl_password PASSWORD
-----------
 # Live USB
 sudo fdisk -l
 sudo dd bs=4M if=FILENAME.iso of=/dev/sdb status=progress
