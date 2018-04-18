@@ -1,0 +1,139 @@
+xfconf-query -c xfce4-keyboard-shortcuts -p '/commands/custom/<Primary><Alt>t' -n -t string -s 'xfce4-terminal'
+xfconf-query -c xfce4-keyboard-shortcuts -p '/commands/custom/<Primary><Alt>f' -n -t string -s 'firefox'
+xfconf-query -c xfce4-keyboard-shortcuts -p '/commands/custom/<Primary><Alt>m' -n -t string -s 'mousepad'
+xfconf-query -c xfce4-keyboard-shortcuts -p '/xfwm4/default/<Super>Down' -n -t string -s 'tile_down_key'
+xfconf-query -c xfce4-keyboard-shortcuts -p '/xfwm4/default/<Super>Left' -n -t string -s 'tile_left_key'
+xfconf-query -c xfce4-keyboard-shortcuts -p '/xfwm4/default/<Super>Right' -n -t string -s 'tile_right_key'
+xfconf-query -c xfce4-keyboard-shortcuts -p '/xfwm4/default/<Super>Up' -n -t string -s 'maximize_window_key'
+xfconf-query -c xfce4-keyboard-shortcuts -p '/xfwm4/default/<Alt><Super>Left' -n -t string -s 'tile_up_left_key'
+xfconf-query -c xfce4-keyboard-shortcuts -p '/xfwm4/default/<Alt><Super>Right' -n -t string -s 'tile_up_right_key'
+xfconf-query -c xfce4-keyboard-shortcuts -p '/xfwm4/default/<Primary><Super>Left' -n -t string -s 'tile_down_left_key'
+xfconf-query -c xfce4-keyboard-shortcuts -p '/xfwm4/default/<Primary><Super>Right' -n -t string -s 'tile_down_right_key'
+
+Terminal:
+/home/acresearch/.config/xfce4/terminal/terminalrc
+MiscBell=True
+MiscBellUrgent=True
+MiscMenubarDefault=FALSE
+ColorForeground=#17f018
+ScrollingBar=TERMINAL_SCROLLBAR_NONE
+MiscCursorShape=TERMINAL_CURSOR_SHAPE_IBEAM
+
+Transmission:
+/home/acresearch/.config/transmission/settings.json
+    "compact-view": true,
+    "show-statusbar": true,
+    "show-toolbar": true,
+
+Files: List
+/home/acresearch/.config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml
+  <property name="last-view" type="string" value="ThunarCompactView"/>
+  <property name="last-menubar-visible" type="bool" value="false"/>
+  <property name="misc-folders-first" type="bool" value="true"/>
+
+
+
+Power:
+/home/acresearch/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-power-manager.xml
+    <property name="lock-screen-suspend-hibernate" type="bool" value="false"/>
+??? /home/acresearch/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-session.xml
+???    <property name="LockScreen" type="bool" value="false"/>
+
+Mouse: natural scrolling no tap
+/home/acresearch/.config/xfce4/xfconf/xfce-perchannel-xml/pointers.xml
+    <property name="ReverseScrolling" type="bool" value="true"/>
+
+
+
+
+
+
+
+Mousapad: Cobalt, No Word Wrap, Line Numbers no menu bar
+
+
+
+
+
+
+Theme:
+/home/acresearch/.gtkrc-2.0
+Style	Adwaita-dark
+Icons	Numix-Square
+top bar: application | firefox mousepad OBS file trash : ----------- Desk1 Desk2 | sound clock
+no bottom bar
+
+/home/acresearch/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<channel name="xfce4-panel" version="1.0">
+  <property name="configver" type="int" value="2"/>
+  <property name="panels" type="array">
+    <value type="int" value="1"/>
+    <property name="panel-1" type="empty">
+      <property name="position" type="string" value="p=6;x=0;y=0"/>
+      <property name="length" type="uint" value="100"/>
+      <property name="position-locked" type="bool" value="true"/>
+      <property name="size" type="uint" value="25"/>
+      <property name="plugin-ids" type="array">
+        <value type="int" value="1"/>
+        <value type="int" value="33"/>
+        <value type="int" value="20"/>
+        <value type="int" value="21"/>
+        <value type="int" value="35"/>
+        <value type="int" value="22"/>
+        <value type="int" value="2"/>
+        <value type="int" value="28"/>
+        <value type="int" value="24"/>
+        <value type="int" value="31"/>
+        <value type="int" value="32"/>
+        <value type="int" value="3"/>
+        <value type="int" value="5"/>
+      </property>
+      <property name="disable-struts" type="bool" value="false"/>
+      <property name="mode" type="uint" value="0"/>
+      <property name="nrows" type="uint" value="1"/>
+    </property>
+  </property>
+  <property name="plugins" type="empty">
+    <property name="plugin-1" type="string" value="applicationsmenu"/>
+    <property name="plugin-5" type="string" value="clock">
+      <property name="mode" type="uint" value="2"/>
+    </property>
+    <property name="plugin-20" type="string" value="launcher">
+      <property name="items" type="array">
+        <value type="string" value="15224914896.desktop"/>
+      </property>
+    </property>
+    <property name="plugin-21" type="string" value="launcher">
+      <property name="items" type="array">
+        <value type="string" value="15224915147.desktop"/>
+      </property>
+    </property>
+    <property name="plugin-22" type="string" value="launcher">
+      <property name="items" type="array">
+        <value type="string" value="15224916028.desktop"/>
+      </property>
+    </property>
+    <property name="plugin-24" type="string" value="separator">
+      <property name="style" type="uint" value="0"/>
+      <property name="expand" type="bool" value="true"/>
+    </property>
+    <property name="plugin-28" type="string" value="tasklist"/>
+    <property name="plugin-31" type="string" value="pager"/>
+    <property name="plugin-32" type="string" value="separator">
+      <property name="style" type="uint" value="1"/>
+    </property>
+    <property name="plugin-33" type="string" value="separator">
+      <property name="style" type="uint" value="1"/>
+    </property>
+    <property name="plugin-35" type="string" value="launcher">
+      <property name="items" type="array">
+        <value type="string" value="15225178789.desktop"/>
+      </property>
+    </property>
+    <property name="plugin-2" type="string" value="thunar-tpa"/>
+    <property name="plugin-3" type="string" value="pulseaudio">
+      <property name="enable-keyboard-shortcuts" type="bool" value="true"/>
+    </property>
+  </property>
+</channel>
