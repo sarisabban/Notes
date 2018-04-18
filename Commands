@@ -38,7 +38,7 @@ cmd.viewport (3840 , 2160)
 cmd.set('ray_trace_mode' , 0)
 cmd.mpng('./Movie/video')
 time.sleep(10)
-os.system('ffmpeg -f image2 -i Movie/video%4d.png -r 30 -vcodec libx264 -b:v 480M -pix_fmt yuv420p -profile:v high -level 4.2 video.mp4')
+os.system('ffmpeg -f image2 -i Movie/video%4d.png -r 30 -vcodec libx264 -b:v 480M -pix_fmt yuv444p -preset:v slower -level 4.2 video.mp4')
 --------------------------------------------------
 **#FFMPEG**
 # Re-encode .mkv to .mp4 to work with samsung TV
