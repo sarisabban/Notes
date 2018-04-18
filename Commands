@@ -30,15 +30,15 @@ sudo sh AnyConnect.sh
 --------------------------------------------------
 **#PyMOL**
 # Generate movies
-## 1. Make a FILENAME.py file with the following script
-cmd.load('structure.pse')
-cmd.viewport (2400 , 2400)
+# Run this script from the terminal using this command:	pymol -c Render.py
+import pymol , os , time
+os.mkdir('Movie')
+cmd.load('Presentation.pse')
+cmd.viewport (3840 , 2160)
 cmd.set('ray_trace_mode' , 0)
-cmd.mpng('video')
-## 2. Then run the script from the terminal
-pymol -c FILENAME.py
-## 3. Then convert the images to a video
-ffmpeg -f image2 -i video%4d.png -r 30 -vcodec libx264 -pix_fmt yuv420p -acodec libvo_aacenc -ab 128k -profile:v high -level 4.2 video.mp4
+cmd.mpng('./Movie/video')
+time.sleep(10)
+os.system('ffmpeg -f image2 -i Movie/video%4d.png -r 30 -vcodec libx264 -b:v 480M -pix_fmt yuv420p -profile:v high -level 4.2 video.mp4')
 --------------------------------------------------
 **#FFMPEG**
 # Re-encode .mkv to .mp4 to work with samsung TV
