@@ -1,0 +1,209 @@
+#!/bin/bash
+<<COMMENT
+Required Files:
+1. This script 
+2. The clean .pdb protein file from rosetta
+COMMENT
+#------------------------------------------------------------------
+#Prepare The Protein File
+mkdir -p Gromacs-Simulation/RawData
+mv *.pdb protein.pdb
+mv protein.pdb Gromacs-Simulation/RawData
+cd Gromacs-Simulation/RawData
+
+#Construct The .mdp Files
+echo '
+integrator	= steep
+emtol		= 1000.0
+emstep      	= 0.01
+nsteps		= 50000
+nstlist		= 1
+cutoff-scheme   = Verlet
+ns_type		= grid
+coulombtype	= PME
+rcoulomb	= 1.0
+rvdw		= 1.0
+pbc		= xyz
+'>>ions.mdp
+
+echo '
+integrator	= steep
+emtol		= 1000.0
+emstep     	= 0.01
+nsteps		= 50000
+nstlist		= 1
+cutoff-scheme   = Verlet
+ns_type		= grid
+coulombtype	= PME
+rcoulomb	= 1.0
+rvdw		= 1.0
+pbc		= xyz
+'>>minim.mdp
+
+echo '
+define			= -DPOSRES
+integrator		= md
+nsteps			= 50000
+dt			= 0.002
+nstxout			= 500
+nstvout			= 500
+nstenergy		= 500
+nstlog			= 500
+continuation	        = no
+constraint_algorithm    = lincs
+constraints		= all-bonds
+lincs_iter		= 1
+lincs_order		= 4
+cutoff-scheme   	= Verlet
+ns_type		   	= grid
+nstlist		    	= 10
+rcoulomb	    	= 1.0
+rvdw		    	= 1.0
+coulombtype	    	= PME
+pme_order	    	= 4
+fourierspacing		= 0.16
+tcoupl			= V-rescale
+tc-grps			= Protein Non-Protein
+tau_t			= 0.1	  0.1
+ref_t			= 300 	  300
+pcoupl			= no
+pbc			= xyz
+DispCorr		= EnerPres
+gen_vel			= yes
+gen_temp		= 300
+gen_seed		= -1
+'>>nvt.mdp
+
+echo '
+define			= -DPOSRES
+integrator		= md
+nsteps			= 50000
+dt		    	= 0.002
+nstxout			= 500
+nstvout			= 500
+nstenergy		= 500
+nstlog			= 500
+continuation	        = yes
+constraint_algorithm    = lincs
+constraints		= all-bonds
+lincs_iter		= 1
+lincs_order		= 4
+cutoff-scheme   	= Verlet
+ns_type		   	= grid
+nstlist		   	= 10
+rcoulomb	    	= 1.0
+rvdw		    	= 1.0
+coulombtype	    	= PME
+pme_order	    	= 4
+fourierspacing		= 0.16
+tcoupl			= V-rescale
+tc-grps			= Protein Non-Protein
+tau_t			= 0.1	  0.1
+ref_t			= 300 	  300
+pcoupl		        = Parrinello-Rahman
+pcoupltype	        = isotropic
+tau_p		        = 2.0
+ref_p		        = 1.0
+compressibility     	= 4.5e-5
+refcoord_scaling    	= com
+pbc			= xyz
+DispCorr		= EnerPres
+gen_vel			= no
+'>>npt.mdp
+
+echo '
+integrator		= md
+nsteps			= 500000
+dt		    	= 0.002
+nstxout		        = 5000
+nstvout		        = 5000
+nstenergy	        = 5000
+nstlog		        = 5000
+nstxout-compressed  	= 5000
+compressed-x-grps   	= System
+continuation	        = yes
+constraint_algorithm    = lincs
+constraints		= all-bonds
+lincs_iter		= 1
+lincs_order		= 4
+cutoff-scheme   	= Verlet
+ns_type		    	= grid
+nstlist		    	= 10
+rcoulomb	    	= 1.0
+rvdw		    	= 1.0
+coulombtype	    	= PME
+pme_order	    	= 4
+fourierspacing		= 0.16
+tcoupl			= V-rescale
+tc-grps			= Protein Non-Protein
+tau_t			= 0.1	  0.1
+ref_t			= 300 	  300
+pcoupl		        = Parrinello-Rahman
+pcoupltype	        = isotropic
+tau_p		        = 2.0
+ref_p		        = 1.0
+compressibility     	= 4.5e-5
+pbc			= xyz
+DispCorr		= EnerPres
+gen_vel			= no
+'>>md.mdp
+
+#Prepare The System
+printf %s\\n 15 | gmx pdb2gmx -f protein.pdb -o protein.gro -water spce 
+echo '---------------------------'
+echo 'Does the system have extra charge?'
+read -p 'Number of extra negative charge>' PC
+read -p 'Number of extra positive charge>' NC
+gmx editconf -f protein.gro -o protein_newbox.gro -c -d 1.0 -bt cubic
+gmx solvate -cp protein_newbox.gro -cs spc216.gro -o protein_solv.gro -p topol.top
+gmx grompp -f ions.mdp -c protein_solv.gro -p topol.top -o ions.tpr
+printf %s\\n 13 | gmx genion -s ions.tpr -o protein_solv_ions.gro -p topol.top -pname NA -nname CL -nn $NC -np $PC
+gmx grompp -f minim.mdp -c protein_solv_ions.gro -p topol.top -o em.tpr
+gmx mdrun -v -deffnm em
+gmx grompp -f nvt.mdp -c em.gro -p topol.top -o nvt.tpr
+gmx mdrun -v -deffnm nvt
+gmx grompp -f npt.mdp -c nvt.gro -t nvt.cpt -p topol.top -o npt.tpr
+gmx mdrun -v -deffnm npt
+gmx grompp -f md.mdp -c npt.gro -t npt.cpt -p topol.top -o md.tpr
+
+#Run Simulation
+echo "
+#!/bin/bash
+#PBS -N Gromacs
+#PBS -q fat
+#PBS -l select=1:ncpus=24:mpiprocs=24
+#PBS -j oe
+
+gmx mdrun -v -deffnm md
+
+printf %s\\n 0 | gmx trjconv -s em.tpr -f md_noPBC.xtc -o Simulation.pdb
+mv Simulation.pdb Gromacs-Simulation
+printf %s\\n 10 0 | gmx energy -f em.edr -o potential.xvg
+sed -i 's/@/#/g' potential.xvg
+printf %s\\n 15 0 | gmx energy -f nvt.edr -o temperature.xvg
+sed -i 's/@/#/g' temperature.xvg
+printf %s\\n 15 0 | gmx energy -f npt.edr -o pressure.xvg
+sed -i 's/@/#/g' pressure.xvg
+printf %s\\n 22 0 | gmx energy -f npt.edr -o density.xvg
+sed -i 's/@/#/g' density.xvg
+printf %s\\n 0 | gmx trjconv -s md.tpr -f md.xtc -o md_noPBC.xtc -pbc mol -ur compact
+printf %s\\n 4 \n 4 | gmx rms -s md.tpr -f md_noPBC.xtc -o rmsd.xvg -tu ns
+sed -i 's/@/#/g' rmsd.xvg
+printf %s\\n 4 \n 4 | gmx rms -s em.tpr -f md_noPBC.xtc -o rmsd_xtal.xvg -tu ns
+sed -i 's/@/#/g' rmsd_xtal.xvg
+printf %s\\n 4 | gmx gyrate -s md.tpr -f md_noPBC.xtc -o gyrate.xvg
+sed -i 's/@/#/g' gyrate.xvg
+">>simulation.pbs
+
+qsub simulation.pbs
+
+<<COMMENT
+gnuplot
+plot 'potential.xvg' w l
+plot 'temperature.xvg' w l
+plot 'pressure.xvg' w l
+plot 'density.xvg' w l
+plot 'rmsd.xvg' w l
+plot 'rmsd_xtal.xvg' w l
+plot 'gyrate.xvg' w l
+COMMENT
