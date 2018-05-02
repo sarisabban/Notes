@@ -10,7 +10,7 @@ Activiation:		ReLU for the hidden layers and softmax for the output layer (to gi
 Neural Networks:	Feed Forward , Recurrent , Convolutional , Unsupervised (GAN)
 Layers:			*Input layer:	1 layer , 1 node
 			*Hidden layer:	1 - 2 layers (except for convolutional networks). The starting number of nodes can be between the number of nodes in the input later and the number of nodes in the output layer
-			*Output layer:	1 layer , nodes = number of features 
+			*Output layer:	1 layer , nodes = number of classes 
 
 Learning Rate:		The steps taken in Gradient Descent to reach the global minima. low = more accurate but slower. If loss is increasing that means the Learning Rate is high.
 '''
