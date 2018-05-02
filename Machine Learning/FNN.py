@@ -25,6 +25,19 @@ Learning Rate:		The steps taken in Gradient Descent to reach the global minima. 
 4. @Vectorize(['float32(float32 , float32)'] , target = cuda)
 '''
 
+#Tensor Board - sudo pacman -S tensorboard
+keras.callbacks.TensorBoard(log_dir='./logs', histogram_freq=0, batch_size=32, write_graph=True, write_grads=False, write_images=False, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None)
+'''
+Important parameters to view:
+	1. Loss over epoch
+	2. Accuracy over epoch
+In python add this line:
+keras.callbacks.TensorBoard(log_dir='./logs', histogram_freq=0, batch_size=32, write_graph=True, write_grads=False, write_images=False, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None)
+
+In the terminal execute this command, then open the local URL:
+tensorboard --logdir=/full_path_to_your_logs
+'''
+
 #Import data
 data = pandas.read_csv('fruits.csv')
 X = pandas.DataFrame.as_matrix(data[['mass' , 'width', 'height' , 'color_score']])
@@ -74,14 +87,6 @@ print('Test accuracy:' , score[1])
 #Prediction
 #prediction = model.predict_classes(numpy.array([[130 , 6.0 , 8.2 , 0.71]]))
 print(prediction)
-'''
-
-#Tendor Board
-'''
-Important parameters to view:
-	1. Loss over epoch
-	2. Accuracy over epoch
-
 '''
 
 #The Shape of data
