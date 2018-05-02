@@ -2,7 +2,7 @@
 
 '''
 Optimisers:		Adam Gradient Descent
-Loss function:		Cross-Entropy
+Loss function:		Cross-Entropy (if my labels are integers use sparse_categorical_crossentropy if they are one-hot encoded use categorical_crossentropy)
 Activiation:		ReLU for the hidden layers and softmax for the output layer (to give probability of different classes) or linear function (for regression)
 			Leaky ReLU (small negative slope rather than 0) is sometimes used to allow better backpropagation if a certain weight have a too large of a negative weight that causes the node to never fire. Only used if large portion of the nodes are deing, other than that always use ReLU.
 			Always end with Softmax (for single lable classifying), because it gives probability between 0 and 1
