@@ -26,16 +26,19 @@ Learning Rate:		The steps taken in Gradient Descent to reach the global minima. 
 '''
 
 #Tensor Board - sudo pacman -S tensorboard
-keras.callbacks.TensorBoard(log_dir='./logs', histogram_freq=0, batch_size=32, write_graph=True, write_grads=False, write_images=False, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None)
+#keras.callbacks.TensorBoard(log_dir = './logs' , histogram_freq = 0 , batch_size = 32 , write_graph = True , write_grads = False , write_images = False , embeddings_freq = 0 , embeddings_layer_names = None , embeddings_metadata = None)
+tensorboard = keras.callbacks.TensorBoard(log_dir = './logs')
 '''
 Important parameters to view:
 	1. Loss over epoch
 	2. Accuracy over epoch
+
 In python add this line:
-keras.callbacks.TensorBoard(log_dir='./logs', histogram_freq=0, batch_size=32, write_graph=True, write_grads=False, write_images=False, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None)
+tensorboard = keras.callbacks.TensorBoard(log_dir = './logs')
+and add callbacks = [tensorboard] to model.fit
 
 In the terminal execute this command, then open the local URL:
-tensorboard --logdir=/full_path_to_your_logs
+tensorboard --logdir=./logs
 '''
 
 #Import data
@@ -60,7 +63,7 @@ model.compile(keras.optimizers.Adam(lr = 0.01) , loss = 'categorical_crossentrop
 model.summary()
 
 #Train model
-model.fit(X , Y , batch_size = 8 , epochs = 100 , verbose = 2 , validation_split  = 0.25)
+model.fit(X , Y , batch_size = 8 , epochs = 100 , verbose = 2 , validation_split  = 0.25 , callbacks = [tensorboard])
 
 #Save model weights to HDF5 - sudo pacman -S python-h5py
 '''
