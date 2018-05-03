@@ -42,7 +42,7 @@ tensorboard --logdir=./logs
 '''
 
 #Import data
-data = pandas.read_csv('fruits.csv')
+data = pandas.read_csv('/home/acresearch/Desktop/Notes/OLD/fruits0-3.csv')
 X = pandas.DataFrame.as_matrix(data[['mass' , 'width', 'height' , 'color_score']])
 Y = pandas.DataFrame.as_matrix(data['fruit_label'])
 n_class = 4
