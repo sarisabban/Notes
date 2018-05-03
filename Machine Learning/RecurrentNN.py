@@ -1,55 +1,75 @@
 #!/usr/bin/python3
 #https://github.com/keras-team/keras/blob/master/examples/lstm_text_generation.py
-import sys , numpy , random , keras , pandas , sklearn
+import sys , numpy , random , keras
 
 #Import text
-text = open('../OLD/nietzsche.txt').read()
+text = open('../OLD/nietzsche.txt').read().lower()
 
 #Process the text to be integer encoded
 chars = sorted(list(set(text)))					#make a list of all the different charachters in the entire text
 chars.insert(0 , '\0')						#sometimes it is useful to have a zero value as a charachter, used as padding when needed
 vocab_size = len(chars) + 1					#number of unique charachters in the text
 chars_indices = dict((c , i) for i , c in enumerate(chars))	#give every charachter a unique integer ID
-indices_chars = dict((i , c) for i , c in enumerate(chars))	#give every unique integer ID a charachter (opposite of previous line and used to check our work)
+indices_chars = dict((i , c) for i , c in enumerate(chars))	#give every unique integer ID a charachter (opposite of previous line and used to translate back to words)
 dataset = [chars_indices[c] for c in text]			#process all text charachers to be integer encoded
 
-# cut the text in semi-redundant sequences of maxlen characters
-maxlen = 40
-step = 3
-sentences = []
-next_chars = []
-for i in range(0, len(text) - maxlen, step):
-	sentences.append(text[i: i + maxlen])
-	next_chars.append(text[i + maxlen])
-print('nb sequences:', len(sentences))
-
-print('Vectorization...')
-x = numpy.zeros((len(sentences), maxlen, len(chars)), dtype=numpy.bool)
-y = numpy.zeros((len(sentences), len(chars)), dtype=numpy.bool)
-for i, sentence in enumerate(sentences):
-	for t, char in enumerate(sentence):
-		x[i, t, chars_indices[char]] = 1
-	y[i, chars_indices[next_chars[i]]] = 1
+#Cut the text into overlapping sequences
+maxlen = 40							#Max charachter length of a sequence
+step = 3							#Each sequence moves by 3 charachters relative to previous sequence
+sentences = list()
+next_chars = list()
+for i in range(0 , len(text) - maxlen , step):			#Length of text - 40 and move 3 values each loop
+	sentences.append(text[i : i + maxlen])			#Slice this range into an item and append it to the sentences list
+	next_chars.append(text[i + maxlen])			#Take the "next charachter" that comes after the sentace in the previous list and append it into a new list. That way we have a list of sentances and another list of charachters that come after each sentance
 
 
-tensorboard = keras.callbacks.TensorBoard(log_dir = './logs')
 
 
-# build the model: a single LSTM
-print('Build model...')
+
+
+#Vectorise
+X = numpy.zeros((len(sentences) , maxlen , len(chars)) , dtype = numpy.bool)
+Y = numpy.zeros((len(sentences) , len(chars)) , dtype = numpy.bool)
+for i , sentence in enumerate(sentences):
+	for t , char in enumerate(sentence):
+		X[i , t , chars_indices[char]] = 1
+	Y[i , chars_indices[next_chars[i]]] = 1
+
+
+
+
+
+#Setup neural network
 model = keras.models.Sequential()
-model.add(keras.layers.LSTM(128, input_shape=(maxlen, len(chars))))
-model.add(keras.layers.Dense(len(chars)))
-model.add(keras.layers.Activation('softmax'))
+model.add(keras.layers.LSTM(128 , input_shape = (maxlen , len(chars))))
+model.add(keras.layers.Dense(len(chars) , activation = 'softmax'))
 
-optimizer = keras.optimizers.RMSprop(lr=0.01)
-model.compile(loss='categorical_crossentropy', optimizer=optimizer)
+#Compile model
+model.compile(keras.optimizers.Adam(lr = 0.01) , loss = 'categorical_crossentropy' , metrics = ['accuracy'])
+model.summary()
+
+#Train model
+tensorboard = keras.callbacks.TensorBoard(log_dir = './logs')
+#model.fit(X , Y , batch_size = 128 , verbose = 2 , epochs = 60 , callbacks = [tensorboard])
 
 
 
 
 
-def sample(preds, temperature=1.0):
+
+
+
+
+
+
+
+
+
+
+
+
+
+def sample(preds , temperature = 1.0):
 	# helper function to sample an index from a probability array
 	preds = numpy.asarray(preds).astype('float64')
 	preds = numpy.log(preds) / temperature
@@ -59,9 +79,8 @@ def sample(preds, temperature=1.0):
 	return numpy.argmax(probas)
 
 
-def on_epoch_end(epoch, logs):
+def on_epoch_end(epoch , logs):
 	# Function invoked at end of each epoch. Prints generated text.
-	print()
 	print('----- Generating text after Epoch: %d' % epoch)
 
 	start_index = random.randint(0, len(text) - maxlen - 1)
@@ -79,7 +98,7 @@ def on_epoch_end(epoch, logs):
 			for t, char in enumerate(sentence):
 				x_pred[0, t, chars_indices[char]] = 1.
 
-			preds = model.predict(x_pred, verbose=0)[0]
+			preds = model.predict(x_pred , verbose = 0)[0]
 			next_index = sample(preds, diversity)
 			next_char = indices_chars[next_index]
 
@@ -88,8 +107,8 @@ def on_epoch_end(epoch, logs):
 
 			sys.stdout.write(next_char)
 			sys.stdout.flush()
-		print()
 
-print_callback = keras.callbacks.LambdaCallback(on_epoch_end=on_epoch_end)
 
-model.fit(x, y,batch_size=128,epochs=60,callbacks=[print_callback])
+
+
+
