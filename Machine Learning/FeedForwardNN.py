@@ -41,7 +41,7 @@ In the terminal execute this command, then open the local URL:
 tensorboard --logdir=./logs
 '''
 #Import data
-data = pandas.read_csv('MNIST.csv')
+data = pandas.read_csv('../OLD/MNIST.csv')
 X = (data.ix[:,1:].values) / 255		# Divide each vector value by 255, MinMax regularisation but for each item separatly, therefore 0-255 values become 0-1 values
 Y = data.ix[:,0].values
 X , Y = sklearn.utils.shuffle(X , Y , random_state = 0)
