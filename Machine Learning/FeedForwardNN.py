@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import keras , pandas , sklearn
+from sklearn import model_selection
 
 #Study
 '''
@@ -26,7 +27,6 @@ Learning Rate:		The steps taken in Gradient Descent to reach the global minima. 
 '''
 
 #Tensor Board - sudo pacman -S tensorboard
-#keras.callbacks.TensorBoard(log_dir = './logs' , histogram_freq = 0 , batch_size = 32 , write_graph = True , write_grads = False , write_images = False , embeddings_freq = 0 , embeddings_layer_names = None , embeddings_metadata = None)
 tensorboard = keras.callbacks.TensorBoard(log_dir = './logs')
 '''
 Important parameters to view:
@@ -40,30 +40,29 @@ and add callbacks = [tensorboard] to model.fit
 In the terminal execute this command, then open the local URL:
 tensorboard --logdir=./logs
 '''
-
 #Import data
-data = pandas.read_csv('/home/acresearch/Desktop/Notes/OLD/fruits0-3.csv')
-X = pandas.DataFrame.as_matrix(data[['mass' , 'width', 'height' , 'color_score']])
-Y = pandas.DataFrame.as_matrix(data['fruit_label'])
-n_class = 4
-n_featu = X.shape[1]
-Y = keras.utils.to_categorical(Y, n_class)
-X , Y = sklearn.utils.shuffle(X , Y , random_state = 0)
+(x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
+x_train = x_train.reshape(60000 , 784).astype('float32') / 255	#Divide each value by 255 to get MinMax regularisation
+x_test = x_test.reshape(10000 , 784).astype('float32') / 255	#Divide each value by 255 to get MinMax regularisation
+n_featu = 784
+n_class = 10
+y_train = keras.utils.to_categorical(y_train, n_class)
+y_test = keras.utils.to_categorical(y_test, n_class)
 
 #Setup neural network
 model = keras.models.Sequential()
-model.add(keras.layers.core.Dense(3 , input_shape = (n_featu,) , activation = 'relu'))
+model.add(keras.layers.core.Dense(30 , input_shape = (n_featu,) , activation = 'relu'))
 model.add(keras.layers.core.Dropout(0.2))
-model.add(keras.layers.core.Dense(3 , activation = 'relu'))
+model.add(keras.layers.core.Dense(30 , activation = 'relu'))
 model.add(keras.layers.core.Dropout(0.2))
 model.add(keras.layers.core.Dense(n_class , activation = 'softmax'))
 
 #Compile model
-model.compile(keras.optimizers.Adam(lr = 0.01) , loss = 'categorical_crossentropy' , metrics = ['accuracy'])
+model.compile(keras.optimizers.Adam(lr = 0.001) , loss = 'categorical_crossentropy' , metrics = ['accuracy'])
 model.summary()
 
 #Train model
-model.fit(X , Y , batch_size = 8 , epochs = 100 , verbose = 2 , validation_split  = 0.25 , callbacks = [tensorboard])
+model.fit(x_train , y_train , batch_size = 128 , epochs = 20 , verbose = 2 , validation_data = (x_test, y_test) , callbacks = [tensorboard])
 
 #Save model weights to HDF5 - sudo pacman -S python-h5py
 '''
