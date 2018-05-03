@@ -41,13 +41,14 @@ In the terminal execute this command, then open the local URL:
 tensorboard --logdir=./logs
 '''
 #Import data
-(x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
-x_train = x_train.reshape(60000 , 784).astype('float32') / 255	#Divide each value by 255 to get MinMax regularisation
-x_test = x_test.reshape(10000 , 784).astype('float32') / 255	#Divide each value by 255 to get MinMax regularisation
-n_featu = 784
+data = pandas.read_csv('MNIST.csv')
+X = (data.ix[:,1:].values) / 255		# Divide each vector value by 255, MinMax regularisation but for each item separatly, therefore 0-255 values become 0-1 values
+Y = data.ix[:,0].values
+X , Y = sklearn.utils.shuffle(X , Y , random_state = 0)
 n_class = 10
-y_train = keras.utils.to_categorical(y_train, n_class)
-y_test = keras.utils.to_categorical(y_test, n_class)
+n_featu = X.shape[1]
+Y = keras.utils.to_categorical(Y , n_class)	# One-hot encoding
+x_train , x_test , y_train , y_test = model_selection.train_test_split(X , Y , random_state = 0)
 
 #Setup neural network
 model = keras.models.Sequential()
@@ -63,9 +64,8 @@ model.summary()
 
 #Train model
 model.fit(x_train , y_train , batch_size = 128 , epochs = 20 , verbose = 2 , validation_data = (x_test, y_test) , callbacks = [tensorboard])
-
-#Save model weights to HDF5 - sudo pacman -S python-h5py
 '''
+#Save model weights to HDF5 - sudo pacman -S python-h5py
 import h5py
 
 model_json = model.to_json()
