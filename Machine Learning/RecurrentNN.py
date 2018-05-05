@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 #https://github.com/keras-team/keras/blob/master/examples/lstm_text_generation.py
-import sys , numpy , random , keras , io
+import sys , numpy , random , keras , io , json
 
 #Import text
 text = open('../OLD/nietzsche.txt').read().lower()
@@ -43,65 +43,53 @@ model.summary()
 
 #Train model - Accuracy is not that important in NLP because it is relative. What is more important is the language output
 tensorboard = keras.callbacks.TensorBoard(log_dir = './logs')
-#model.fit(X , Y , batch_size = 128 , verbose = 2 , epochs = 60 , callbacks = [tensorboard])
+model.fit(X , Y , batch_size = 128 , verbose = 2 , epochs = 60 , callbacks = [tensorboard])
+
+import h5py
+
+model_json = model.to_json()
+with open('model.json' , 'w') as json_file:
+	json_file.write(model_json)
+model.save_weights('model.h5')
+print('Saved model to disk')
 
 
 
 
+'''
+import h5py
+with open('model.json' , 'r') as json_file:
+	json = json_file.read()
+load_model = keras.models.model_from_json(json)
+load_model.load_weights('model.h5')
+load_model.compile(keras.optimizers.RMSprop(lr = 0.01) , loss = 'categorical_crossentropy' , metrics = ['accuracy'])
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-def sample(preds , temperature = 1.0):
-	# helper function to sample an index from a probability array
-	preds = numpy.asarray(preds).astype('float64')
-	preds = numpy.log(preds) / temperature
-	exp_preds = numpy.exp(preds)
-	preds = exp_preds / numpy.sum(exp_preds)
-	probas = numpy.random.multinomial(1, preds, 1)
-	return numpy.argmax(probas)
-
-
-def on_epoch_end(epoch , logs):
-	# Function invoked at end of each epoch. Prints generated text.
-	print('----- Generating text after Epoch: %d' % epoch)
-
-	start_index = random.randint(0, len(text) - maxlen - 1)
-	for diversity in [0.2, 0.5, 1.0, 1.2]:
-		print('----- diversity:', diversity)
-
-		generated = ''
-		sentence = text[start_index: start_index + maxlen]
-		generated += sentence
-		print('----- Generating with seed: "' + sentence + '"')
-		sys.stdout.write(generated)
-
-		for i in range(400):
-			x_pred = numpy.zeros((1, maxlen, len(chars)))
-			for t, char in enumerate(sentence):
-				x_pred[0, t, chars_indices[char]] = 1.
-
-			preds = model.predict(x_pred , verbose = 0)[0]
-			next_index = sample(preds, diversity)
-			next_char = indices_chars[next_index]
-
-			generated += next_char
-			sentence = sentence[1:] + next_char
-
-			sys.stdout.write(next_char)
-			sys.stdout.flush()
-
-
-
-
-#model.fit(x, y,batch_size=128,epochs=60,callbacks=[print_callback])
+#Generate text from the trained model- Start by randomly generate a starting sentance
+print('--------------------')
+start_index = random.randint(0 , len(text) - maxlen - 1)	#Choose a random number from 0 to length of text - max charachter length - 1. This gives a number that is that start of a poisiton in the text
+sentence = text[start_index : start_index + maxlen]		#Use that position to slice out a sentance from start_index position with a length of maxlen max charachter length. This gives a random sentance from the text
+print(sentence)							#Print the stating sentance
+for iter in range(400):						#Move 400 steps. Controls length of text
+	#One-hot encode that sentance
+	x_pred = numpy.zeros((1 , maxlen , len(chars)))		#Generate a tensor that has the same of (1 , max sentance length , number of available charachter), in our example: (1 , 40 , 58). The tensor is just filled with zeros, no other information
+	for t , char in enumerate(sentence):			#Loop through the randomly generated sentance
+		x_pred[0 , t , chars_indices[char]] = 1.0	#One-hot encode the randomly generated sentance (put a 1.0 for each charachter as available from the list of charachters)
+	#Use that tensor to make a prediction of the next charachter that comes after the randomly generated sentance
+	preds = model.predict(x_pred , verbose = 0)[0]		#Returns a vector of shape (number of available charachter,) with the values of the probability of each charachter being the next charachter after the randomly generated sentance
+	#Decode that charachter
+	temperature = 1.0					#Lower temperature = selecting only the most probable charachter, calibrate until the best temperatures is achieved
+	preds = numpy.asarray(preds).astype('float64')		#Make sure all tensor values are float64
+	preds = numpy.log(preds) / temperature			#Log each tensor value and then divide each value by the temperature
+	exp_preds = numpy.exp(preds)				#Turn each tensor value into an exponant
+	preds = exp_preds / numpy.sum(exp_preds)		#Divide the exponant values by the sum of all the values
+	probas = numpy.random.multinomial(1 , preds , 1)	#Turn the largest values into 1 and the rest into 0
+	next_index = numpy.argmax(probas)			#Choose the largest value's number location in the vector, which will correspond to the identify of the charachter from the charachter list "indices_chars"
+	next_char = indices_chars[next_index]			#Find the value's corresponding charachter
+	sentence = sentence[1 : ] + next_char			#Add new charachter to sentance and remove 1 charachter from start of the sentence to maintain its length
+	sys.stdout.write(next_char)				#Print the generated charachters from the neural network prediction
+	sys.stdout.flush()					#Flush terminal buffer, this and the previous line allows for the charachters to be printer like a type writer (one at a time)
+print('\n--------------------')
+'''
