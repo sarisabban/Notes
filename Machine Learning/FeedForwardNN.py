@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import keras , pandas , sklearn
+import keras , pandas , sklearn , h5py
 from sklearn import model_selection
 
 #Study

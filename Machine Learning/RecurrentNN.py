@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 #https://github.com/keras-team/keras/blob/master/examples/lstm_text_generation.py
-import sys , numpy , random , keras , io , json
+import sys , numpy , random , keras , io , json , h5py
 
 #Import text
 text = open('../OLD/nietzsche.txt').read().lower()
@@ -38,34 +38,26 @@ model.add(keras.layers.LSTM(128 , input_shape = (maxlen , len(chars))))
 model.add(keras.layers.Dense(len(chars) , activation = 'softmax'))
 
 #Compile model
-model.compile(keras.optimizers.RMSprop(lr = 0.01) , loss = 'categorical_crossentropy' , metrics = ['accuracy'])
+model.compile(keras.optimizers.Adam(lr = 0.0001) , loss = 'categorical_crossentropy' , metrics = ['accuracy'])
 model.summary()
 
 #Train model - Accuracy is not that important in NLP because it is relative. What is more important is the language output
 tensorboard = keras.callbacks.TensorBoard(log_dir = './logs')
-model.fit(X , Y , batch_size = 128 , verbose = 2 , epochs = 60 , callbacks = [tensorboard])
-
-import h5py
-
+#model.fit(X , Y , batch_size = 128 , verbose = 2 , epochs = 20 , callbacks = [tensorboard])
+'''
+#Save Model
 model_json = model.to_json()
 with open('model.json' , 'w') as json_file:
 	json_file.write(model_json)
 model.save_weights('model.h5')
 print('Saved model to disk')
-
-
-
-
 '''
-import h5py
+#Load Model
 with open('model.json' , 'r') as json_file:
 	json = json_file.read()
 load_model = keras.models.model_from_json(json)
 load_model.load_weights('model.h5')
 load_model.compile(keras.optimizers.RMSprop(lr = 0.01) , loss = 'categorical_crossentropy' , metrics = ['accuracy'])
-
-
-
 
 #Generate text from the trained model- Start by randomly generate a starting sentance
 print('--------------------')
@@ -92,4 +84,3 @@ for iter in range(400):						#Move 400 steps. Controls length of text
 	sys.stdout.write(next_char)				#Print the generated charachters from the neural network prediction
 	sys.stdout.flush()					#Flush terminal buffer, this and the previous line allows for the charachters to be printer like a type writer (one at a time)
 print('\n--------------------')
-'''
