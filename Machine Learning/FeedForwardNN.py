@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import keras , pandas , sklearn , h5py
+import keras , pandas , sklearn
 from sklearn import model_selection
 
 #Study
@@ -64,31 +64,22 @@ model.summary()
 
 #Train model
 model.fit(x_train , y_train , batch_size = 128 , epochs = 20 , verbose = 2 , validation_data = (x_test, y_test) , callbacks = [tensorboard])
-'''
-#Save model weights to HDF5 - sudo pacman -S python-h5py
-import h5py
 
-model_json = model.to_json()
-with open('model.json' , 'w') as json_file:
-	json_file.write(model_json)
+'''
+#Save Model
 model.save_weights('model.h5')
-print('Saved model to disk')
 
 #Load model and weights
-with open('model.json' , 'r') as json_file:
-	json = json_file.read()
-load_model = keras.models.model_from_json(json)
-load_model.load_weights('model.h5')
-print('Loaded model from disk')
-
-#Evaluate loaded model
-load_model.compile(keras.optimizers.Adam() , loss = 'sparse_categorical_crossentropy' , metrics = ['accuracy'])
-score = load_model.evaluate(test_x , test_y , verbose = 0)
-print('Test accuracy:' , score[1])
+model.load_weights('model.h5')
 
 #Prediction
 #prediction = model.predict_classes(numpy.array([[130 , 6.0 , 8.2 , 0.71]]))
 print(prediction)
+
+#Evaluate loaded model
+model.compile(keras.optimizers.Adam() , loss = 'sparse_categorical_crossentropy' , metrics = ['accuracy'])
+score = load_model.evaluate(test_x , test_y , verbose = 0)
+print('Test accuracy:' , score[1])
 '''
 
 #The Shape of data

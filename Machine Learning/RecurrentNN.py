@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 #https://github.com/keras-team/keras/blob/master/examples/lstm_text_generation.py
-import sys , numpy , random , keras , io , json , h5py
+import sys , numpy , random , keras
 
 #Import text
 text = open('../OLD/nietzsche.txt').read().lower()
@@ -38,26 +38,18 @@ model.add(keras.layers.LSTM(128 , input_shape = (maxlen , len(chars))))
 model.add(keras.layers.Dense(len(chars) , activation = 'softmax'))
 
 #Compile model
-model.compile(keras.optimizers.Adam(lr = 0.0001) , loss = 'categorical_crossentropy' , metrics = ['accuracy'])
+model.compile(keras.optimizers.Adam(lr = 0.01) , loss = 'categorical_crossentropy' , metrics = ['accuracy'])
 model.summary()
 
 #Train model - Accuracy is not that important in NLP because it is relative. What is more important is the language output
 tensorboard = keras.callbacks.TensorBoard(log_dir = './logs')
-#model.fit(X , Y , batch_size = 128 , verbose = 2 , epochs = 20 , callbacks = [tensorboard])
-'''
+model.fit(X , Y , batch_size = 128 , verbose = 2 , epochs = 1 , callbacks = [tensorboard])
+
 #Save Model
-model_json = model.to_json()
-with open('model.json' , 'w') as json_file:
-	json_file.write(model_json)
-model.save_weights('model.h5')
-print('Saved model to disk')
-'''
+model.save('model.h5')
+
 #Load Model
-with open('model.json' , 'r') as json_file:
-	json = json_file.read()
-load_model = keras.models.model_from_json(json)
-load_model.load_weights('model.h5')
-load_model.compile(keras.optimizers.RMSprop(lr = 0.01) , loss = 'categorical_crossentropy' , metrics = ['accuracy'])
+#model.load_weights('model.h5')
 
 #Generate text from the trained model- Start by randomly generate a starting sentance
 print('--------------------')
@@ -72,12 +64,12 @@ for iter in range(400):						#Move 400 steps. Controls length of text
 	#Use that tensor to make a prediction of the next charachter that comes after the randomly generated sentance
 	preds = model.predict(x_pred , verbose = 0)[0]		#Returns a vector of shape (number of available charachter,) with the values of the probability of each charachter being the next charachter after the randomly generated sentance
 	#Decode that charachter
-	temperature = 1.0					#Lower temperature = selecting only the most probable charachter, calibrate until the best temperatures is achieved
+	temperature = 0.2					#Temperature is used to make lower probabilities lower and higher probabilities higher (using Temperature < 1.0) or vise versa (using Temperature < 1.0). Calibrate until the best temperatures is achieved. Temperature of 1 does nothing
 	preds = numpy.asarray(preds).astype('float64')		#Make sure all tensor values are float64
 	preds = numpy.log(preds) / temperature			#Log each tensor value and then divide each value by the temperature
 	exp_preds = numpy.exp(preds)				#Turn each tensor value into an exponant
-	preds = exp_preds / numpy.sum(exp_preds)		#Divide the exponant values by the sum of all the values
-	probas = numpy.random.multinomial(1 , preds , 1)	#Turn the largest values into 1 and the rest into 0
+	preds = exp_preds / numpy.sum(exp_preds)		#Re-Normalise (all values add up to 1) by dividing the exponant values by the sum of all the values
+	probas = numpy.random.multinomial(1 , preds , 1)	#Randomly choose one index based on probability (most times it will choose the index with the highest probability, but sometimes it will randomly choose a slightly lower one)
 	next_index = numpy.argmax(probas)			#Choose the largest value's number location in the vector, which will correspond to the identify of the charachter from the charachter list "indices_chars"
 	next_char = indices_chars[next_index]			#Find the value's corresponding charachter
 	sentence = sentence[1 : ] + next_char			#Add new charachter to sentance and remove 1 charachter from start of the sentence to maintain its length
