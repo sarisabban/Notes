@@ -92,3 +92,79 @@ In both types the final hidden layers' nodes' weights are kept. It is just a mat
 Code:
 model.add(keras.layers.LSTM(128 , stateful = True))
 '''
+
+'''
+Batch Size:
+Strongly impacts the prediction accuracy, 60-80 is usually optimal (try to have multiples of 8).
+Training set size must be divisible by bath size without remainder because batches are smaller training units. If training set is size X what will be the batch size to become 10% of that training set but still divisile without a remainder?
+Low = longer
+High= faster
+
+Time Step:
+value of time steps in the past used to predict the same value of time in the future. And this moving window slides by only 1 time step in the future through the dataset (called striding). Just like NLP with sentences. Used with stateful LSTMs
+for i in range(timestep , len(text) + timestep):
+	X_train.append(training_set_scaled[i - timestep : i , 0])
+	Y_train.append(training_set_scaled[i : i + timestep , 0])
+Gives the shape of (number of example , timestep , parameters to predict)
+
+Epochs:
+Low = not achieve enough accuracy
+High= overfitting
+'''
+
+'''
+Embedding:
+A word embedding is a class of approaches for representing words and documents using a dense vector representation
+					input_dim	output_dim		input_length
+model.add(keras.layers.Embedding(size of vocabulary , number of sentances (also known as a vector space in which words will be embedded) , input_length = words in each sentance))
+Requires that is input text data have the words to be integer encoded (just lines 8 - 14)
+Two popular examples of methods of learning word embeddings from text:
+* Word2Vec
+* GloVe
+input_dim: This is the size of the vocabulary in the text data. For example, if your data is integer encoded to values between 0-10, then the size of the vocabulary would be 11 words
+output_dim: This is the size of the vector space in which words will be embedded. It defines the size of the output vectors from this layer for each word. For example, it could be 32 or 100 or even larger. Test different values for your problem
+input_length: This is the length of input sequences, as you would define for any input layer of a Keras model. For example, if all of your input documents are comprised of 1000 words, this would be 1000
+If you wish to connect a Dense layer directly to an Embedding layer, you must first flatten the 2D output matrix to a 1D vector using the Flatten layer
+
+https://machinelearningmastery.com/use-word-embedding-layers-deep-learning-keras/
+Let us pretend that we have 10 documents, and each documents is full of words (but here each document only has 2 words). Each document is classified as positive “1” or negative “0”
+---------
+#!/usr/bin/python3
+import sys , numpy , random , keras
+from keras.preprocessing import text
+
+# Define documents
+docs = ['Well done!',
+	'Good work',
+	'Great effort',
+	'nice work',
+	'Excellent!',
+	'Weak',
+	'Poor effort!',
+	'not good',
+	'poor work',
+	'Could have done better.']
+
+# Define class labels
+labels = numpy.array([1 , 1 , 1 , 1 , 1 , 0 , 0 , 0 , 0 , 0])
+
+# Integer encode each word in each document (making all the same words in different documents have the same integer encoding)
+vocab_size = 50						# We will estimate the vocabulary size of 50, which is much larger than needed to reduce the probability of collisions from the hash function
+encoded_docs = [text.one_hot(d , vocab_size) for d in docs]
+print(encoded_docs)
+
+#Padding - The sequences have different lengths and Keras prefers inputs to be vectorized and all inputs to have the same length, therefore here we use padding of 4 to get all document lengths into 4 maximum words long
+max_length = 4
+padded_docs = keras.preprocessing.sequence.pad_sequences(encoded_docs , maxlen = max_length , padding = 'post')
+print(padded_docs)
+
+#Setup neural network
+model = keras.models.Sequential()
+model.add(keras.layers.Embedding(vocab_size , 8 , input_length = max_length))					#The Embedding has a vocabulary of 50 (vocab_size) and an input length of 4 (max_length). We will choose a small embedding space of 8 dimensions (8 number of sentances)
+model.add(keras.layers.Flatten())										#Flatten to a one dimentional vector of 32 -> 4 x 8 matrix and this is squashed to a 32-element vector
+model.add(keras.layers.Dense(1 , activation = 'sigmoid'))							#Output is either 0 or 1
+model.compile(keras.optimizers.Adam(lr = 0.01) , loss = 'binary_crossentropy' , metrics = ['accuracy'])
+model.summary()
+model.fit(padded_docs , labels , epochs = 50, verbose = 2)
+---------
+'''
