@@ -76,3 +76,22 @@ for iter in range(400):						#Move 400 steps. Controls length of text
 	sys.stdout.write(next_char)				#Print the generated charachters from the neural network prediction
 	sys.stdout.flush()					#Flush terminal buffer, this and the previous line allows for the charachters to be printer like a type writer (one at a time)
 print('\n--------------------')
+
+
+
+'''
+Stateful: Natural Language Processing
+* Remembers information between batches
+* It memorises, it keeps the internal gates' states as they are between batches
+* Used in datasets that has all its information related to each other, in other words when two sequences in two different batches have connections, like stocks (previous price of stock affects next price of stock)
+
+Stateless: Stocks
+* Does not remember information between batches
+* It does not memorise, it resets all internet gates between batches
+* Used in datasets that has all its information not related to each other, in other words when two sequences in two different batches do not have connections, like sentances in language (previous sentance does not affects next sentance, they are indipendant of each other)
+
+In both types the final hidden layers' nodes' weights are kept. It is just a matter of whether or not the internal gates' states are kept or reset
+
+Code:
+
+'''
