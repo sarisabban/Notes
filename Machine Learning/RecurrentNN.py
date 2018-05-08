@@ -93,5 +93,5 @@ Stateless: Stocks
 In both types the final hidden layers' nodes' weights are kept. It is just a matter of whether or not the internal gates' states are kept or reset
 
 Code:
-
+model.add(keras.layers.LSTM(128 , stateful = True))
 '''
