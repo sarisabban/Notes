@@ -2,9 +2,9 @@
 #https://github.com/keras-team/keras/blob/master/examples/lstm_text_generation.py
 import sys , numpy , random , keras
 
+## Word2Vec ##
 #Import text
 text = open('../OLD/nietzsche.txt').read().lower()
-
 #Process the text to be integer encoded
 chars = sorted(list(set(text)))					#make a list of all the different charachters in the entire text
 chars.insert(0 , '\0')						#sometimes it is useful to have a zero value as a charachter, used as padding when needed
@@ -12,7 +12,6 @@ vocab_size = len(chars) + 1					#number of unique charachters in the text
 chars_indices = dict((c , i) for i , c in enumerate(chars))	#give every charachter a unique integer ID
 indices_chars = dict((i , c) for i , c in enumerate(chars))	#give every unique integer ID a charachter (opposite of previous line and used to translate back to words)
 dataset = [chars_indices[c] for c in text]			#process all text charachers to be integer encoded
-
 #Cut the text into overlapping sequences
 maxlen = 40							#Max charachter length of a sequence
 step = 3							#Each sequence moves by 3 charachters relative to previous sequence
@@ -21,11 +20,9 @@ next_chars = list()
 for i in range(0 , len(text) - maxlen , step):			#Length of text - 40 and move 3 values each loop
 	sentences.append(text[i : i + maxlen])			#Slice this range into an item and append it to the sentences list
 	next_chars.append(text[i + maxlen])			#Take the "next charachter" that comes after the sentace in the previous list and append it into a new list. That way we have a list of sentances and another list of charachters that come after each sentance
-
 #Vectorise - The dataset now has the shape (number of sentances , Maximum sentance length , number of available charachters)
 X = numpy.zeros((len(sentences) , maxlen , len(chars)) , dtype = numpy.bool)
 Y = numpy.zeros((len(sentences) , len(chars)) , dtype = numpy.bool)
-
 #One-hot encoding - True for the charachter that comes after the sequence
 for i , sentence in enumerate(sentences):
 	for t , char in enumerate(sentence):
