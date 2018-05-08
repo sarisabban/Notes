@@ -2,7 +2,7 @@
 #https://github.com/keras-team/keras/blob/master/examples/lstm_text_generation.py
 import sys , numpy , random , keras
 
-## Word2Vec ##
+## Word2Vec - Here we are vectorising charachter to predict the next charachter in a sentance, but we can vectorise words to predicts the next word in a sentace ##
 #Import text
 text = open('../OLD/nietzsche.txt').read().lower()
 #Process the text to be integer encoded
