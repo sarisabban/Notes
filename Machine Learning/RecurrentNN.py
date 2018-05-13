@@ -29,6 +29,9 @@ for i , sentence in enumerate(sentences):
 		X[i , t , chars_indices[char]] = 1
 	Y[i , chars_indices[next_chars[i]]] = 1
 
+#TensorBoard log
+tensorboard = keras.callbacks.TensorBoard(log_dir = './logs')
+
 #Setup neural network
 model = keras.models.Sequential()
 model.add(keras.layers.LSTM(128 , input_shape = (maxlen , len(chars))))
@@ -39,7 +42,6 @@ model.compile(keras.optimizers.Adam(lr = 0.01) , loss = 'categorical_crossentrop
 model.summary()
 
 #Train model - Accuracy is not that important in NLP because it is relative. What is more important is the language output
-tensorboard = keras.callbacks.TensorBoard(log_dir = './logs')
 model.fit(X , Y , batch_size = 128 , verbose = 2 , epochs = 1 , callbacks = [tensorboard])
 
 #Save Model

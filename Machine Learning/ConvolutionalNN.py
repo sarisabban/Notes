@@ -32,6 +32,9 @@ x_test /= 225
 y_train = keras.utils.to_categorical(y_train , num_classes)
 y_test = keras.utils.to_categorical(y_test , num_classes)
 
+#TensorBoard log
+tensorboard = keras.callbacks.TensorBoard(log_dir = './logs')
+
 #Setup neural network
 model = keras.models.Sequential()
 model.add(keras.layers.Conv2D(32 , (3 , 3) , input_shape = input_shape , activation = 'relu'))
@@ -48,7 +51,7 @@ model.compile(keras.optimizers.Adadelta(lr = 0.01) , loss = 'categorical_crossen
 model.summary()
 
 #Train model
-#model.fit_generator(x_train , y_train , batch_size = 128 , epochs = 12 , verbose = 1 , validation_data (x_test , y_test))
+model.fit(x_train , y_train , batch_size = 128 , epochs = 12 , verbose = 1 , callbacks = [tensorboard] , validation_data = (x_test , y_test))
 
 '''
 Standard CNN Models:
