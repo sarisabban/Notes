@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import numpy , keras , scipy
+import keras
 from keras.preprocessing.image import ImageDataGenerator
 
 '''
@@ -22,7 +22,7 @@ else:
 	x_test = x_test.reshape(x_test.shape[0] , img_rows , img_cols , 1)
 	input_shape = (img_rows , img_cols , 1)
 
-#Normalising - #(10000 , 28 , 28 , 1) - (Examples , rows , columns , colours)
+#Normalising - #(10000 , 28 , 28 , 1) - (examples , rows , columns , colours)
 x_train = x_train.astype('float32')
 x_test = x_test.astype('float32')
 x_train /= 225
@@ -59,7 +59,3 @@ keras.applications.resnet50
 VGG19
 keras.applications.vgg19
 '''
-
-
-
-
