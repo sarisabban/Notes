@@ -39,9 +39,14 @@ model.compile(keras.optimizers.Adadelta(lr = 0.01) , loss = 'categorical_crossen
 model.summary()
 
 #Train model
-model.fit_generator(train_image , steps_per_epoch = 2000 , epochs = 1 , validation_data = valid_image , validation_steps = 800 , callbacks = [tensorboard])
+#steps_per_epoch: Number of batches in an epoch. It should typically be equal to the number of samples of your dataset divided by the batch size 40/10 = 4
+#validation_steps: Same concept. It should typically be equal to the number of samples of your validation dataset divided by the batch size. 10/10 = 1
+steps_per_epoch = int(train_image.samples / train_image.next()[0].shape[0])
+validation_steps = int(tests_image.samples / tests_image.next()[0].shape[0])
+model.fit_generator(train_image , steps_per_epoch = steps_per_epoch , epochs = 10 , validation_data = tests_image , validation_steps = validation_steps , verbose = 1 , callbacks = [tensorboard])
 
-
+#Validate model
+model.predict_generator(valid_image , verbose = 1)
 
 '''
 (x_train , y_train) , (x_test , y_test) = keras.datasets.mnist.load_data()
