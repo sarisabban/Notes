@@ -98,7 +98,7 @@ model.add(keras.layers.LSTM(128 , stateful = True))
 '''
 Batch Size:
 Strongly impacts the prediction accuracy, 60-80 is usually optimal (try to have multiples of 8).
-Training set size must be divisible by bath size without remainder because batches are smaller training units. If training set is size X what will be the batch size to become 10% of that training set but still divisile without a remainder?
+Training set size must be divisible by batch size without remainder because batches are smaller training units. If training set is size X what will be the batch size to become 10% of that training set but still divisile without a remainder?
 Low = longer
 High= faster
 
