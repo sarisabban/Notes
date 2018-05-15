@@ -101,6 +101,7 @@ Strongly impacts the prediction accuracy, 60-80 is usually optimal (try to have 
 Training set size must be divisible by batch size without remainder because batches are smaller training units. If training set is size X what will be the batch size to become 10% of that training set but still divisile without a remainder?
 Low = longer
 High= faster
+for sentances that are not equal in length (for example protein sequences as sentences) we can use a batch size = 1 instead of padding the sentances to make them all the same length
 
 Time Step:
 value of time steps in the past used to predict the same value of time in the future. And this moving window slides by only 1 time step in the future through the dataset (called striding). Just like NLP with sentences. Used with stateful LSTMs
