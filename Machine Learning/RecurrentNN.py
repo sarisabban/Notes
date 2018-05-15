@@ -11,7 +11,7 @@ chars.insert(0 , '\0')						#sometimes it is useful to have a zero value as a ch
 vocab_size = len(chars) + 1					#number of unique charachters in the text
 chars_indices = dict((c , i) for i , c in enumerate(chars))	#give every charachter a unique integer ID
 indices_chars = dict((i , c) for i , c in enumerate(chars))	#give every unique integer ID a charachter (opposite of previous line and used to translate back to words)
-dataset = [chars_indices[c] for c in text]			#process all text charachers to be integer encoded
+dataset = [chars_indices[c] for c in text]			#process all text charachers to be integer encoded (not used here)
 #Cut the text into overlapping sequences
 maxlen = 40							#Max charachter length of a sequence
 step = 3							#Each sequence moves by 3 charachters relative to previous sequence
