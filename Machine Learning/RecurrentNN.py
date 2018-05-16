@@ -2,7 +2,7 @@
 #https://github.com/keras-team/keras/blob/master/examples/lstm_text_generation.py
 import sys , numpy , random , keras
 
-## Char2Vec vectorising charachter to predict the next charachter in a sentance, but we can vectorise words in Word2Vec to predicts the next word in a sentace using the same concept but slightly different script ##
+## Char2Vec vectorising character to predict the next charachter in a sentance, but we can vectorise words in Word2Vec to predicts the next word in a sentace using the same concept but slightly different script ##
 #Import text
 text = open('../OLD/nietzsche.txt').read().lower()
 #Process the text to be integer encoded
@@ -14,13 +14,13 @@ indices_chars = dict((i , c) for i , c in enumerate(chars))	#give every unique i
 dataset = [chars_indices[c] for c in text]			#process all text charachers to be integer encoded (not used here)
 #Cut the text into overlapping sequences
 maxlen = 40							#Max charachter length of a sequence
-step = 3							#Each sequence moves by 3 charachters relative to previous sequence
+step = 3							#Each sequence moves by 3 characters relative to previous sequence
 sentences = list()
 next_chars = list()
 for i in range(0 , len(text) - maxlen , step):			#Length of text - 40 and move 3 values each loop
 	sentences.append(text[i : i + maxlen])			#Slice this range into an item and append it to the sentences list
 	next_chars.append(text[i + maxlen])			#Take the "next charachter" that comes after the sentace in the previous list and append it into a new list. That way we have a list of sentances and another list of charachters that come after each sentance
-#Vectorise - The dataset now has the shape (number of sentances , Maximum sentance length , number of available charachters)
+#Vectorise - The dataset now has the shape (number of sentances , Maximum sentance length , number of available characters)
 X = numpy.zeros((len(sentences) , maxlen , len(chars)) , dtype = numpy.bool)
 Y = numpy.zeros((len(sentences) , len(chars)) , dtype = numpy.bool)
 #One-hot encoding - True for the charachter that comes after the sequence
@@ -59,7 +59,7 @@ for iter in range(400):						#Move 400 steps. Controls length of text
 	#One-hot encode that sentance
 	x_pred = numpy.zeros((1 , maxlen , len(chars)))		#Generate a tensor that has the same of (1 , max sentance length , number of available charachter), in our example: (1 , 40 , 58). The tensor is just filled with zeros, no other information
 	for t , char in enumerate(sentence):			#Loop through the randomly generated sentance
-		x_pred[0 , t , chars_indices[char]] = 1.0	#One-hot encode the randomly generated sentance (put a 1.0 for each charachter as available from the list of charachters)
+		x_pred[0 , t , chars_indices[char]] = 1.0	#One-hot encode the randomly generated sentance (put a 1.0 for each charachter as available from the list of characters)
 	#Use that tensor to make a prediction of the next charachter that comes after the randomly generated sentance
 	preds = model.predict(x_pred , verbose = 0)[0]		#Returns a vector of shape (number of available charachter,) with the values of the probability of each charachter being the next charachter after the randomly generated sentance
 	#Decode that character
@@ -72,8 +72,8 @@ for iter in range(400):						#Move 400 steps. Controls length of text
 	next_index = numpy.argmax(probas)			#Choose the largest value's number location in the vector, which will correspond to the identify of the charachter from the charachter list "indices_chars"
 	next_char = indices_chars[next_index]			#Find the value's corresponding charachter
 	sentence = sentence[1 : ] + next_char			#Add new charachter to sentance and remove 1 charachter from start of the sentence to maintain its length
-	sys.stdout.write(next_char)				#Print the generated charachters from the neural network prediction
-	sys.stdout.flush()					#Flush terminal buffer, this and the previous line allows for the charachters to be printer like a type writer (one at a time)
+	sys.stdout.write(next_char)				#Print the generated characters from the neural network prediction
+	sys.stdout.flush()					#Flush terminal buffer, this and the previous line allows for the characters to be printer like a type writer (one at a time)
 print('\n--------------------')
 
 
