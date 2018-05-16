@@ -1,9 +1,15 @@
 <h1>Setup Gmail Account</h1>
+
 * Go to Google Drive
+
 * Make a directory
+
 * Open directory > right click > +more > search > Colaboratory > connect
+
 * On directory again > right click > creat new Colaboratory
+
 * Rename notebook
+
 * Edit > Notebook Settings > python3 and GPU
 
 Execute the following code:
