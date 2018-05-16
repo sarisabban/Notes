@@ -14,7 +14,7 @@
 
 
 
-* Execute the following code:
+<h2>Execute the following code:</h2>
 
 `!apt update`
 
