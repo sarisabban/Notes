@@ -1,6 +1,6 @@
 <h1>Use a GPU with Google</h1>
 
-* Setup Gmail Account
+<h2>Setup Gmail Account</h2>
 
 * Go to Google Drive
 
@@ -16,7 +16,7 @@
 
 
 
-<h2>Execute the following code:</h2>
+<h2>Execute the following code</h2>
 
 `!apt update`
 
