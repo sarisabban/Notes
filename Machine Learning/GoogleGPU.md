@@ -1,4 +1,6 @@
-<h1>Setup Gmail Account</h1>
+<h1>Use a GPU with Google</h1>
+
+* Setup Gmail Account
 
 * Go to Google Drive
 
