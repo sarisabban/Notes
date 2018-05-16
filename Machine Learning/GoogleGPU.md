@@ -12,7 +12,9 @@
 
 * Edit > Notebook Settings > python3 and GPU
 
-Execute the following code:
+
+
+* Execute the following code:
 
 `!apt update`
 
