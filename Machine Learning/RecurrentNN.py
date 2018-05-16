@@ -62,7 +62,7 @@ for iter in range(400):						#Move 400 steps. Controls length of text
 		x_pred[0 , t , chars_indices[char]] = 1.0	#One-hot encode the randomly generated sentance (put a 1.0 for each charachter as available from the list of charachters)
 	#Use that tensor to make a prediction of the next charachter that comes after the randomly generated sentance
 	preds = model.predict(x_pred , verbose = 0)[0]		#Returns a vector of shape (number of available charachter,) with the values of the probability of each charachter being the next charachter after the randomly generated sentance
-	#Decode that charachter
+	#Decode that character
 	temperature = 0.2					#Temperature is used to make lower probabilities lower and higher probabilities higher (using Temperature < 1.0) or vise versa (using Temperature < 1.0). Calibrate until the best temperatures is achieved. Temperature of 1 does nothing
 	preds = numpy.asarray(preds).astype('float64')		#Make sure all tensor values are float64
 	preds = numpy.log(preds) / temperature			#Log each tensor value and then divide each value by the temperature
