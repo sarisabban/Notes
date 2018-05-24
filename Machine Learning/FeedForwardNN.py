@@ -20,15 +20,11 @@ Learning Rate:		The steps taken in Gradient Descent to reach the global minima. 
 
 #To run computation on a GPU
 '''
-#Ubuntu 16.04 GPU Setup https://yangcha.github.io/CUDA90/
-1. Install CUDA: sudo pacman -S cuda
-2. Install NUMBA: pip3 install numba
-3. from numba import vectorize , cuda
-4. @Vectorize(['float32(float32 , float32)'] , target = cuda)
-
-#Check to see if TensorFlow is using the GPU
-from tensorflow.python.client import device_lib
-print(device_lib.list_local_devices())
+#Ubuntu 16.04 GPU Setup:	https://yangcha.github.io/CUDA90/
+#Arch Linux:			Install CUDA: sudo pacman -S cuda
+#Check to see if Keras on TensorFlow is using the GPU (last line should give the GPU brand)
+from keras import backend as K
+K.tensorflow_backend._get_available_gpus()
 '''
 
 #Tensor Board - sudo pacman -S tensorboard
