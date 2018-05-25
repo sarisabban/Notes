@@ -28,18 +28,18 @@ K.tensorflow_backend._get_available_gpus()
 '''
 
 #Tensor Board - sudo pacman -S tensorboard
-tensorboard = keras.callbacks.TensorBoard(log_dir = './logs')
+tensorboard = keras.callbacks.TensorBoard(log_dir = './')
 '''
 Important parameters to view:
 	1. Loss over epoch
 	2. Accuracy over epoch
 
 In python add this line:
-tensorboard = keras.callbacks.TensorBoard(log_dir = './logs')
+tensorboard = keras.callbacks.TensorBoard(log_dir = './')
 and add callbacks = [tensorboard] to model.fit
 
 In the terminal execute this command, then open the local URL:
-tensorboard --logdir=./logs
+tensorboard --logdir=./
 '''
 #Import data
 data = pandas.read_csv('../OLD/MNIST.csv')
