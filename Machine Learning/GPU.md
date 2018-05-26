@@ -1,6 +1,6 @@
-<h1>Use a GPU with Google in Colaboratory (Colab)</h1>
-
-<h2>Setup Gmail Account</h2>
+<h1>GPU Setup For Deep Learning</h1>
+<h2>Use a GPU with Google in Colaboratory (Colab)</h2>
+<h3>Setup Gmail Account</h3>
 
 * Go to Google Drive
 
@@ -13,7 +13,7 @@
 * Edit > Notebook Settings > python3 and GPU
 
 
-<h2>Get a file from Google</h2>
+<h3>Get a file from Google</h3>
 * Run the following python script
 
 `!pip install -U -q PyDrive`
@@ -41,3 +41,6 @@
 `uploaded.Upload()`
 
 Find the file in Google Drive
+
+
+<h2>Setup on server with a GPU</h2>
