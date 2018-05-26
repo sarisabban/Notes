@@ -1439,3 +1439,11 @@ sudo sed -i 's/XKBLAYOUT="gb"/XKBLAYOUT="us"/g' /etc/default/keyboard && sudo se
 /set irc.server.freenode.sasl_username NICKNAME
 /set irc.server.freenode.sasl_password PASSWORD
 ----------
+# PyRosetta on an Ubuntu 18.04 server
+apt update && apt full-upgrade && apt install git tmux htop python3-pip python3-distutils virtualenv
+wget --user USERNAME --password PASSWORD https://graylab.jhu.edu/download/PyRosetta4/archive/release/PyRosetta4.Release.python36.ubuntu/PyRosetta4.Release.python36.ubuntu.release-180.tar.bz2
+tar -vjxf {PYROSETTA}.tar.bz2
+mv {PYROSETTA} PyRosetta && rm {PYROSETTA}.tar.bz2
+virtualenv -p python3 PyROS
+PyROS/bin/python -m pip install ./PyRosetta/setup/
+PyROS/bin/python3 script.py
