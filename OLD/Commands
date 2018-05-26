@@ -758,13 +758,21 @@ ffmpeg -f x11grab -s 1280x800 -framerate 30 -i :0.0 -c:v libx264rgb X.mkv
 #Convert audio files into video files with a background image and an audio waveform
 for f in *.mp3; do ffmpeg -y -i "$f" -i background.jpg -filter_complex "showwaves=s=3000x3000:mode=cline:colors=blue[wv];[1:v][wv]overlay" "${f%.mp3}.mkv"; done
 
-
-#Editing anf removing scens from a video
+#Editing and removing scens from a video (but very bad - try to avoid)
 ffmpeg -i Podcasting.mkv -to 00:24:40 -c copy cut1.mkv
 ffmpeg -i Podcasting.mkv -ss 00:25:10 -to 00:36:48 -c copy cut2.mkv
 ffmpeg -i Podcasting.mkv -ss 00:42:46 -to 00:53:05 -c copy cut3.mkv
 ffmpeg -i Podcasting.mkv -ss 00:53:41 -c copy cut4.mkv
-ffmpeg -i "concat:cut1.mkv|cut2.mkv|cut3.mkv|cut4.mkv" -c copy output.mkv
+or this format
+ffmpeg -ss 00:53:41 -i Podcasting.mkv -c copy cut4.mkv
+
+vim 1.txt
+file 'cut1.mkv'
+file 'cut2.mkv'
+file 'cut3.mkv'
+file 'cut4.mkv'
+
+ffmpeg -f concat -safe 0 -i 1.txt -c copy output.mkv
 --------------------------------------------------
 **#Python**
 
