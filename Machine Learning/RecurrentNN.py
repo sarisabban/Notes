@@ -192,4 +192,7 @@ def Stats(CSV_filename):
 			print('New Line {}%'.format(int(round(percent , 0))))
 		else:
 			print('{} {}%'.format(char , int(round(percent , 0))))
+'''
+If Accuracy suddenly drops after several epochs (13 - 100), try removing the Dropouts and replacing them with Batch Normalisation which prevents large weights to be used in the Dense layers. You see Dropout is random regularisation technique thus can cause issues of loosing accuracy at different epochs. Batch Normalisation on the otherhand is another form of regularisation but not random, it just makes sure large weights are not used in any Dense node.
 
+'''
