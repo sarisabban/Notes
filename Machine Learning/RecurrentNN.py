@@ -171,3 +171,25 @@ model.summary()
 model.fit(padded_docs , labels , epochs = 50, verbose = 2)
 ---------
 '''
+
+def Stats(CSV_filename):
+	'''
+	It is always good to count the number (%) of different
+	charachters in a dataset so as to determine whether or not
+	there is charachter bias (one charachter is repeated
+	more than the others). Because if there is an an unequal
+	charachter count the neural network will not be able to
+	generalise very well
+	'''
+	data = pandas.read_csv(CSV_filename , sep = ';')
+	column = data['Secondary_Structures']
+	text = '\n'.join(column)
+	numbers = collections.Counter(text)
+	total = sum(numbers.values())
+	for char , numb in numbers.items():
+		percent = (100*numb)/total
+		if char == '\n':
+			print('New Line {}%'.format(int(round(percent , 0))))
+		else:
+			print('{} {}%'.format(char , int(round(percent , 0))))
+
