@@ -58,6 +58,9 @@ su
 lsblk
 dd if=/home/acresearch/Desktop/ubuntu-gnome-16.04.2-desktop-amd64.iso of=/dev/sdb
 --------------------------------------------------
+**#Watch GPU**
+watch -n 1 nvidia-smi
+--------------------------------------------------
 **#MARKDOWN.md**
 
 #Header1
