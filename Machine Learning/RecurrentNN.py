@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 #https://github.com/keras-team/keras/blob/master/examples/lstm_text_generation.py
+#http://colah.github.io/posts/2015-08-Understanding-LSTMs/
 import sys , numpy , random , keras
 
 ## Char2Vec vectorising character to predict the next charachter in a sentance, but we can vectorise words in Word2Vec to predicts the next word in a sentace using the same concept but slightly different script ##
