@@ -72,9 +72,9 @@ for epoch in range(epochs):
 	print ('{} [D loss: {}, accuracy: {}] [G loss: {}]'.format(epoch, D_loss, D_accu, A_loss))
 
 #Save Model
-model.save_weights('GAN.h5')
+G.save_weights('GAN.h5')
 #Load model and weights
-#model.load_weights('GAN.h5')
+#G.load_weights('GAN.h5')
 
 #Generate Image
 r, c = 5, 5									# 
