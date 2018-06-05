@@ -76,18 +76,30 @@ G.save_weights('GAN.h5')
 #Load model and weights
 #G.load_weights('GAN.h5')
 
-#Generate Image
-r, c = 5, 5									# 
-noise = numpy.random.normal(0, 1, (r * c, 100))					# 
-gen_imgs = G.predict(noise)							# Generate a image (predition) from the neural network
-gen_imgs = 0.5 * gen_imgs + 0.5							# Rescale images 0 - 1
-fig, axs = matplotlib.pyplot.subplots(r, c)					# 
-cnt = 0										# 
-for i in range(r):								# 
-	for j in range(c):							# 
-		axs[i,j].imshow(gen_imgs[cnt, :,:,0], cmap='gray')		# 
-		axs[i,j].axis('off')						# 
-		cnt += 1							# 
-fig.savefig('generated.png')							# Save image
+#Generate 25 Images
+r, c = 5, 5									# Rows, columns number of images (5 images by 5 images = 25 images)
+noise = numpy.random.normal(0, 1, (r * c, 100))					# Generate a noise matrix, with a shape of (number of images , number of noise items per image), and values between -1 and 1, because loc = 0 (center of distribution) and scale = 1 (standard deviation, i.e: +1 and -1 from 0), the size will be 25 images (5*5) each with 100 items of noise
+gen_imgs = G.predict(noise)							# Generate an image (predition) from the neural network using the noise matrix as input (number of images , rows of each image , columns of each image , channels)
+gen_imgs = 0.5 * gen_imgs + 0.5							# Rescale images from -1.0-1.0 to 0.0-1.0
+fig, axs = matplotlib.pyplot.subplots(r, c)					# Setup a subplot [25 plots (images) within a plot]
+cnt = 0										# Count images
+for i in range(r):								# For number of row images
+	for j in range(c):							# For number of column images
+		axs[i,j].imshow(gen_imgs[cnt, :,:,0], cmap='gray')		# Plot tensors
+		axs[i,j].axis('off')						# Remove plot axis
+		cnt += 1							# Add count for image number
+matplotlib.pyplot.show()							# Show the plot with the images
+#fig.savefig('generated.png')							# Save plot as a .png image file
 matplotlib.pyplot.close()							# Close plot
-from IPython.display import Image ; Image("generated.png")			# Show Image in Jupyter Notebook
+#from IPython.display import Image ; Image("generated.png")			# Show Image in Jupyter Notebook
+'''
+#Generate an Image
+noise = numpy.random.normal(0, 1, (1, 100))					# Generate a noise matrix, with a shape of (number of images , number of noise items per image), and values between -1 and 1, because loc = 0 (center of distribution) and scale = 1 (standard deviation, i.e: +1 and -1 from 0), the size will be 1 image with 100 items of noise
+gen_imgs = G.predict(noise)							# Generate an image (predition) from the neural network using the noise matrix as input (number of images , rows of each image , columns of each image , channels)
+gen_imgs = 0.5 * gen_imgs + 0.5							# Rescale images from -1.0-1.0 to 0.0-1.0
+gen_imgs = gen_imgs.reshape([28, 28])						# remove batch number and channels (only keep rows and columns)
+matplotlib.pyplot.imshow(gen_imgs, cmap='gray')					# Plot tensor with gray scale rather than colours
+matplotlib.pyplot.axis('off')							# Remove plot axis 
+matplotlib.pyplot.show()							# Show the plot with the image
+#matplotlib.pyplot.savefig('generated.png')					# Save plot as a .png image file
+'''
