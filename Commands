@@ -8,7 +8,7 @@ sudo pacman -Syu && sudo pacman -S weechat vim pymol openconnect audacity obs-st
 /server add twitch irc.chat.twitch.tv
 /set irc.server.freenode.addresses "chat.freenode.net/7000"
 /set irc.server.freenode.ssl on
-/set irc.server.twitch.autojoin "#acresearch"
+/set irc.server.twitch.autojoin "#sari.sabban"
 /set irc.server.freenode.sasl_username NICKNAME
 /set irc.server.freenode.sasl_password PASSWORD
 /set irc.server.twitch.username NICKNAME
