@@ -1464,5 +1464,6 @@ wget --user USERNAME --password PASSWORD https://graylab.jhu.edu/download/PyRose
 tar -vjxf {PYROSETTA}.tar.bz2
 mv {PYROSETTA} PyRosetta && rm {PYROSETTA}.tar.bz2
 virtualenv -p python3 PyROS
-PyROS/bin/python -m pip install ./PyRosetta/setup/
-PyROS/bin/python3 script.py
+PyROS/bin/python -m pip install PyRosetta/setup/
+#Run your script as follows:
+PyROS/bin/python3 SCRIPT.py
