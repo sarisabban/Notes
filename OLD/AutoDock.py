@@ -1,13 +1,33 @@
 #!/usr/bin/python
 
 '''
-Required programs to install:
-Debian:		sudo apt-get install autodock-vina openbabel
-Arch:		sudo pacman -S openbabel && yaourt -S autodock-vina
+# Required programs to install:
+Debian:
+sudo apt-get install autodock-vina openbabel
 
-Run using these commands:
-* To run script and docking protocol:
-python AutoDock.py PROTEIN.pdb LIGAND.sdf CX CY CZ LX LY LZ
+Arch:
+sudo pacman -S openbabel && yaourt -S autodock-vina
+
+
+
+# Run using these commands:
+* To download the ligand database from ChemDB (http://cdb.ics.uci.edu/):
+python AutoDock.py download
+
+** To setup multiple ligands:
+python AutoDock.py ligand miltiple LIGAND.sdf
+
+* To setup a single ligand:
+python AutoDock.py ligand single LIGAND.sdf
+
+* To setup the protein:
+python AutoDock.py protein PROTEIN.pdb CX CY CZ LX LY LZ
+
+* To run the docking protocol on multiple ligands:
+python AutoDock.py dock multiple LIGAND_DIRECTORY
+
+* To run the docking protocol on a single ligand:
+python AutoDock.py dock single
 '''
 
 import os
@@ -17,6 +37,11 @@ from pymol.cgo import *
 
 #-------------------------------------------------------------------------------
 def Box(pX, pY, pZ, x, y, z):
+	'''
+	Sets up the search box within the protein, the dimentions are then
+	added to a file named setup.config which is used in the docking
+	protocol
+	'''
 	pymol.cmd.pseudoatom('Position', pos=[pX, pY, pZ])
 	([X, Y, Z], [a, b, c]) = pymol.cmd.get_extent('Position')
 	pymol.cmd.show('spheres', 'Position')
@@ -68,14 +93,39 @@ def Box(pX, pY, pZ, x, y, z):
 	pymol.cmd.load_cgo(boundingBox, boxName)
 	return(boxName)
 
-def ligand(filename):
+def download(items):
+	'''
+	Downloads around 4,000,000+ small molecules form the ChemDB databse
+	(http://cdb.ics.uci.edu/), then combines all the downloaded files into
+	one large .sdf file
+	'''
+	count = items
+	while count != 0:
+		numb = '{0:02d}'.format(count)
+		URL = 'ftp://ftp.ics.uci.edu/pub/baldig/cdbDownload'
+		os.system('wget {}/isomer3d.{}00000.sdf.gz'.format(URL, numb))
+		os.system('gzip -d isomer3d.{}00000.sdf.gz'.format(numb))
+		count -= 1
+	os.system('cat isomer3d.* > Molecules.sdf')
+	os.system('rm isomer3d.*')
+
+def ligand(filename, protocol):
 	'''
 	Prepares the ligand by converting the .sdf or .pdb molecule file
 	into a .pdbqt file
 	'''
-	os.system('babel {} ligand.pdbqt -p'.format(filename))
+	if protocol == 'single':
+		os.system('babel {} ligand.pdbqt -p'.format(filename))
+	elif protocol == 'multiple':
+		os.mkdir('ligands')
+		os.system('babel {} ligands.pdbqt -p'.format(filename))
+		command = 'vina_split --input ligands.pdbqt --ligand'
+		os.system('{} ligands/ligand_'.format(command))
+		os.remove('ligands.pdbqt')
+	else:
+		print('Error: bad command argument')
 
-def receptor(filename, CX, CY, CZ, LX, LY, LZ):
+def protein(filename, CX, CY, CZ, LX, LY, LZ):
 	'''
 	Prepares the protein by first removing all the water molecules from
 	the protein's structure, then adds only the polar hydrogens, then
@@ -101,16 +151,35 @@ def receptor(filename, CX, CY, CZ, LX, LY, LZ):
 	os.remove('receptor.pdb')
 
 def main():
-	ligand(sys.argv[2])
-	CX = 11#sys.argv[3]
-	CY = 90.5#sys.argv[4]
-	CZ = 57.5#sys.argv[5]
-	LX = 15#sys.argv[6]
-	LY = 15#sys.argv[7]
-	LZ = 15#sys.argv[8]
-	receptor(sys.argv[1], CX, CY, CZ, LX, LY, LZ)
-	os.system('vina --config setup.config > dock.log')
-	os.system('pymol protein.pdbqt dock.pdbqt')
+	if sys.argv[1] == 'download':
+		download(72)
+
+	elif sys.argv[1] == 'ligand' and sys.argv[2] == 'single':
+		ligand(sys.argv[3], 'single')
+
+	elif sys.argv[1] == 'ligand':
+		ligand(sys.argv[3], 'multiple')
+
+	elif sys.argv[1] == 'protein':
+		CX = 11#sys.argv[3]
+		CY = 90.5#sys.argv[4]
+		CZ = 57.5#sys.argv[5]
+		LX = 15#sys.argv[6]
+		LY = 15#sys.argv[7]
+		LZ = 15#sys.argv[8]
+		protein(sys.argv[2], CX, CY, CZ, LX, LY, LZ)
+
+	elif sys.argv[1] == 'dock' and sys.argv[2] == 'single':
+		os.system('vina --config setup.config 2>&1 | tee dock.log')
+		os.system('pymol protein.pdbqt dock.pdbqt')
+
+	elif sys.argv[1] == 'dock' and sys.argv[2] == 'multiple':
+		directory = sys.argv[3]
+		
+		os.system('pymol protein.pdbqt dock.pdbqt')
+
+	else:
+		print('Error: bad command argument')
 
 if __name__ == '__main__':
 	main()
