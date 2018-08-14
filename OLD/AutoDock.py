@@ -14,7 +14,7 @@ sudo pacman -S openbabel && yaourt -S autodock-vina
 * To download the ligand database from ChemDB (http://cdb.ics.uci.edu/):
 python AutoDock.py download
 
-** To setup multiple ligands:
+* To setup multiple ligands:
 python AutoDock.py ligand miltiple LIGAND.sdf
 
 * To setup a single ligand:
