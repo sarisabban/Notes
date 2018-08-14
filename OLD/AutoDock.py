@@ -29,7 +29,7 @@ python AutoDock.py dock multiple LIGAND_DIRECTORY
 * To run the docking protocol on a single ligand:
 python AutoDock.py dock single
 '''
-
+import re
 import os
 import sys
 import pymol
@@ -175,11 +175,44 @@ def main():
 
 	elif sys.argv[1] == 'dock' and sys.argv[2] == 'multiple':
 		directory = sys.argv[3]
-		
-		os.system('pymol protein.pdbqt dock.pdbqt')
+		ligcommand = "sed -i 's|ligand.pdbqt|{}/*|g'".format(directory)
+		dokcommand = "sed -i 's|dock.pdbqt|%|g'"
+		os.system('{} setup.config'.format(ligcommand))
+		os.system('{} setup.config'.format(dokcommand))
+		liglist = os.listdir(directory)
+		for ligand in liglist:
+			dk = ligand.split('_')[1].split('.')[0]
+			newligcom = "sed -i 's|*|{}|g'".format(ligand)
+			bakligcom = "sed -i 's|{}|*|g'".format(ligand)
+			newdokcom = "sed -i 's|%|dock_{}.pdbqt|g'".format(dk)
+			bakdokcom = "sed -i 's|dock_{}.pdbqt|%|g'".format(dk)
+			dkcm = 'vina --config setup.config 2>&1 |'
+			os.system('{} setup.config'.format(newligcom))
+			os.system('{} setup.config'.format(newdokcom))
+			os.system('cat setup.config')
+			os.system('{} tee dock_{}.log'.format(dkcm, dk))
+			os.system('{} setup.config'.format(bakligcom))
+			os.system('{} setup.config'.format(bakdokcom))
+
+
+
 
 	else:
 		print('Error: bad command argument')
 
 if __name__ == '__main__':
 	main()
+
+'''
+print('Molecule        |Mode |  Affinity  | Dist from| Best mode')
+print('                |     | (kcal/mol) | RMSD l.b.| RMSD u.b.')
+print('----------------+-----+------------+----------+----------')
+
+dockfile = open('dock_1.log', 'r')
+for line in dockfile:
+	if re.search('^\s.*\d', line):
+		line = line.split()
+		newline = '{:16} {:5} {:12} {:10} {:10}'.format('ligand_4000000', line[0], line[1], line[2], line[3])
+		print(newline)
+
+'''
