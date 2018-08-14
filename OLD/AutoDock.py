@@ -161,12 +161,12 @@ def main():
 		ligand(sys.argv[3], 'multiple')
 
 	elif sys.argv[1] == 'protein':
-		CX = 11#sys.argv[3]
-		CY = 90.5#sys.argv[4]
-		CZ = 57.5#sys.argv[5]
-		LX = 15#sys.argv[6]
-		LY = 15#sys.argv[7]
-		LZ = 15#sys.argv[8]
+		CX = sys.argv[3]
+		CY = sys.argv[4]
+		CZ = sys.argv[5]
+		LX = sys.argv[6]
+		LY = sys.argv[7]
+		LZ = sys.argv[8]
 		protein(sys.argv[2], CX, CY, CZ, LX, LY, LZ)
 
 	elif sys.argv[1] == 'dock' and sys.argv[2] == 'single':
