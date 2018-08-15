@@ -174,6 +174,11 @@ def main():
 		os.system('pymol protein.pdbqt dock.pdbqt')
 
 	elif sys.argv[1] == 'dock' and sys.argv[2] == 'multiple':
+		results = open('Results', 'a')
+		results.write('Molecule           |Mode |  Affinity  | Dist from| Best mode\n')
+		results.write('                   |     | (kcal/mol) | RMSD l.b.| RMSD u.b.\n')
+		results.write('-------------------+-----+------------+----------+----------\n')
+		results.close()
 		directory = sys.argv[3]
 		ligcommand = "sed -i 's|ligand.pdbqt|{}/*|g'".format(directory)
 		dokcommand = "sed -i 's|dock.pdbqt|%|g'"
@@ -189,30 +194,29 @@ def main():
 			dkcm = 'vina --config setup.config 2>&1 |'
 			os.system('{} setup.config'.format(newligcom))
 			os.system('{} setup.config'.format(newdokcom))
-			os.system('cat setup.config')
 			os.system('{} tee dock_{}.log'.format(dkcm, dk))
 			os.system('{} setup.config'.format(bakligcom))
 			os.system('{} setup.config'.format(bakdokcom))
-
-
-
+			docklog = 'dock_{}.log'.format(dk)
+			dockfile = open(docklog, 'r')
+			value = 1000
+			for line in dockfile:
+				if re.search('^\s.*\d', line):
+					line = line.split()
+					if float(line[1]) < value:
+						best = line
+						value = float(line[1])
+					else:
+						continue
+					newline = '{:19} {:5} {:12} {:10} {:10}\n'.format(ligand, best[0], best[1], best[2], best[3])
+					results = open('Results', 'a')
+					results.write(newline)
+					results.close()
+					os.remove(docklog)
+					os.remove('dock_{}.pdbqt'.format(dk))
 
 	else:
 		print('Error: bad command argument')
 
 if __name__ == '__main__':
 	main()
-
-'''
-print('Molecule        |Mode |  Affinity  | Dist from| Best mode')
-print('                |     | (kcal/mol) | RMSD l.b.| RMSD u.b.')
-print('----------------+-----+------------+----------+----------')
-
-dockfile = open('dock_1.log', 'r')
-for line in dockfile:
-	if re.search('^\s.*\d', line):
-		line = line.split()
-		newline = '{:16} {:5} {:12} {:10} {:10}'.format('ligand_4000000', line[0], line[1], line[2], line[3])
-		print(newline)
-
-'''
