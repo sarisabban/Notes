@@ -8,14 +8,12 @@ sudo apt-get install autodock-vina openbabel
 Arch:
 sudo pacman -S openbabel && yaourt -S autodock-vina
 
-
-
 # Run using these commands:
 * To download the ligand database from ChemDB (http://cdb.ics.uci.edu/):
 python AutoDock.py download
 
 * To setup multiple ligands:
-python AutoDock.py ligand miltiple LIGAND.sdf
+python AutoDock.py ligand multiple LIGAND.sdf
 
 * To setup a single ligand:
 python AutoDock.py ligand single LIGAND.sdf
@@ -29,13 +27,13 @@ python AutoDock.py dock multiple LIGAND_DIRECTORY
 * To run the docking protocol on a single ligand:
 python AutoDock.py dock single
 '''
+
 import re
 import os
 import sys
 import pymol
 from pymol.cgo import *
 
-#-------------------------------------------------------------------------------
 def Box(pX, pY, pZ, x, y, z):
 	'''
 	Sets up the search box within the protein, the dimentions are then
