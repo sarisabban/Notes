@@ -55,4 +55,7 @@ def Box(pX, pY, pZ, x, y, z):
 	pymol.cmd.load_cgo(boundingBox, boxName)
 	return(boxName)
 
-pymol.cmd.extend('Box', Box)
+
+
+pymol.cmd.import('C3e.pdb')
+#pymol.cmd.extend('Box', Box)

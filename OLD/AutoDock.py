@@ -91,6 +91,51 @@ def Box(pX, pY, pZ, x, y, z):
 	pymol.cmd.load_cgo(boundingBox, boxName)
 	return(boxName)
 
+def Box2(pX, pY, pZ, x, y, z):
+	'''
+	Sets up the search box within the protein, the dimentions are then
+	not added to a file named setup.config, unlike the previous
+	function
+	'''
+	pymol.cmd.pseudoatom('Position', pos=[pX, pY, pZ])
+	([X, Y, Z], [a, b, c]) = pymol.cmd.get_extent('Position')
+	pymol.cmd.show('spheres', 'Position')
+	minX = X+float(x)
+	minY = Y+float(y)
+	minZ = Z+float(z)
+	maxX = X-float(x)
+	maxY = Y-float(y)
+	maxZ = Z-float(z)
+	boundingBox = [BEGIN, LINES,
+		VERTEX, minX, minY, minZ,
+		VERTEX, minX, minY, maxZ,
+		VERTEX, minX, maxY, minZ,
+		VERTEX, minX, maxY, maxZ,
+		VERTEX, maxX, minY, minZ,
+		VERTEX, maxX, minY, maxZ,
+		VERTEX, maxX, maxY, minZ,
+		VERTEX, maxX, maxY, maxZ,
+		VERTEX, minX, minY, minZ,
+		VERTEX, maxX, minY, minZ,
+		VERTEX, minX, maxY, minZ,
+		VERTEX, maxX, maxY, minZ,
+		VERTEX, minX, maxY, maxZ,
+		VERTEX, maxX, maxY, maxZ,
+		VERTEX, minX, minY, maxZ,
+		VERTEX, maxX, minY, maxZ,
+		VERTEX, minX, minY, minZ,
+		VERTEX, minX, maxY, minZ,
+		VERTEX, maxX, minY, minZ,
+		VERTEX, maxX, maxY, minZ,
+		VERTEX, minX, minY, maxZ,
+		VERTEX, minX, maxY, maxZ,
+		VERTEX, maxX, minY, maxZ,
+		VERTEX, maxX, maxY, maxZ,
+		END]
+	boxName = 'Box'
+	pymol.cmd.load_cgo(boundingBox, boxName)
+	return(boxName)
+
 def download(items):
 	'''
 	Downloads around 4,000,000+ small molecules form the ChemDB databse
@@ -213,8 +258,14 @@ def main():
 					os.remove(docklog)
 					os.remove('dock_{}.pdbqt'.format(dk))
 
+	if sys.argv[1] == 'box':
+		filename = sys.argv[2]
+		pymol.finish_launching(['pymol', '-q'])
+		pymol.cmd.load(filename)
+		pymol.cmd.extend('box', Box2)
+
 	else:
-		print('Error: bad command argument')
+		print('[-] Error: bad command argument')
 
 if __name__ == '__main__':
 	main()
