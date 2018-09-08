@@ -26,7 +26,7 @@ sudo dd bs=4M if=FILENAME.iso of=/dev/sdb status=progress
 # Environment setups
 tmux new -s aziz -n aziz \; split-window -h -p25 \; split-window -v -p50
 tmux new -s Twitch -n Twitch \; split-window -d -t 0 -v -p35 \; split-window -h -p35 htop \; split-window -v -p70
-tmux new \; split-window -h -p41 \; split-window -v -p75
+tmux new \; split-window -h -p41 htop \; split-window -v -p75
 sudo pacman -S pangox-compat
 https:// KAU VPN -> download linux client
 sudo sh AnyConnect.sh
