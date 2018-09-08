@@ -211,7 +211,7 @@ def Move(directory, divide):
 	for i in drct:
 		if cntF == 0:
 			print(cntD)
-			os.mkdir(str(cntD))
+			os.mkdir('{}_new/{}'.format(directory, str(cntD)))
 			cntD += 1
 			cntF = divide
 		print(i)
