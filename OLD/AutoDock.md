@@ -19,16 +19,28 @@ sudo pacman -S openbabel && yaourt -S autodock-vina
 10. From the terminal:			`pymol receptor.pdb`
 11. From PyMol:				`run Box.py`
 12. From PyMol:				`Box Center_X, Center_Y, Center_Z, Length_X, Length_Y, Length_Z`
-# Required Computation Files:
+## Required Computation Files:
 * receptor.pdbqt
 * ligand.pdbqt
 * conf.txt
-# The Run Computation:
-vina --config config.txt
-# Analysis
-13. To view result			`pymol receptor.pdbqt dock.pdbqt` 
-14. Lowest kcal and usually the first structure is the best binding structure.
-# Example:
+## The Run Computation:
+13. vina --config config.txt
+or without the config.txt file
+vina --receptor receptor.pdbqt --ligand ligand.pdbqt --out dock.pdbqt --exhaustiveness 10 --seed 1991540417 --center_x 8 --center_y -19 --center_z -7 --size_x 18 --size_y 9 --size_z 17
+## Analysis
+14. To view result			`pymol receptor.pdbqt dock.pdbqt` 
+15. Lowest kcal and usually the first structure is the best binding structure.
+## Example:
 * ligand:	STI.sdf
 * protein:	1OPJ.pdb
 * Box.py:	Box 11, 90.5, 57.5, 15, 15, 15
+
+## Loop:
+To loop over many ligands:
+for i in 'ls ligands'; do
+	echo $i
+	~/vina --receptor protein.pdbqt --ligand ligands/$i --out docked_$i --exhaustiveness 10 --seed 1991540417 --center_x 8 --center_y -19 --center_z -7 --size_x 18 --size_y 9 --size_z 17
+	rm docked_$i
+	echo ''
+	echo ''
+done
