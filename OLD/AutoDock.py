@@ -193,6 +193,77 @@ def protein(filename, CX, CY, CZ, LX, LY, LZ):
 	pymol.cmd.extend('Box', Box(CX, CY, CZ, LX, LY, LZ))
 	os.remove('receptor.pdb')
 
+# Other useful functions:
+def sort(l):
+	convert = lambda text:int(text) if text.isdigit() else text.lower()
+	num_key = lambda key:[convert(c) for c in re.split('([0-9]+)', key)]
+	return sorted(l, key=num_key)
+
+def Move(directory, divide):
+	'''
+	This script takes a directory with files (ligands) and segments it
+	into different directories to make it easy to setup a HPC array
+	'''
+	drct = sort(os.listdir(directory))
+	cntF = 0
+	cntD = 1
+	for i in drct:
+		if cntF == 0:
+			print(cntD)
+			os.mkdir(str(cntD))
+			cntD += 1
+			cntF = divide
+		print(i)
+		command = 'cp {}/{} {}'.format(directory, i, str(cntD-1))
+		cntF -= 1
+
+def Count(filename):
+	'''
+	Useful function used as follows: run the docking protocol for only
+	24 hours on a HPC. The count the number of structures analysed 
+	using this script. That way you can determine aproximalty how many
+	structures can be docked within 24 hours. Remember to always round
+	down to make sure you accomodate for slow computations
+	'''
+	dockfile = open(filename, 'r')
+	count = 0
+	for line in dockfile:
+		line = line.split('_')
+		if line[0] == 'ligand':
+			count += 1
+	print(count)
+
+def Analyse(filename):
+	'''
+	This script takes the output docking log file and organises it by
+	collecting only the names and docking information of each ligand
+	then sorts the ligands by the lowest docked energy
+	'''
+	dockfile = open(filename, 'r')
+	results = open('Results', 'a')
+	results.write('Molecule           |Mode |  Affinity  | Dist from| Best mode\n')
+	results.write('                   |     | (kcal/mol) | RMSD l.b.| RMSD u.b.\n')
+	results.write('-------------------+-----+------------+----------+----------\n')
+	results.close()
+	value = 1000
+	for line in dockfile:
+		ligands = line.strip().split('_')
+		if ligands[0] == 'ligand':
+			value = 1000
+			ligand = line.strip().split('.')[0]
+		elif re.search('^\s.*\d', line):
+			docks = line.split()
+			if float(docks[1]) < value:
+				value = float(docks[1])
+				d = docks
+				newline = '{:19} {:5} {:12} {:10} {:10}\n'.format(ligand, d[0], d[1], d[2], d[3])
+				results = open('temp', 'a')
+				results.write(newline)
+				results.close()
+				#print(newline)
+	os.system('cat temp | sort -nk 3 >> Results')
+	os.remove('temp')
+
 def main():
 	if sys.argv[1] == 'download':
 		download(72)
