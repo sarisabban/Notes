@@ -204,7 +204,7 @@ def Move(directory, divide):
 	This script takes a directory with files (ligands) and segments it
 	into different directories to make it easy to setup a HPC array
 	'''
-	os.mkdir('{}_new.format(directory))
+	os.mkdir('{}_new'.format(directory))
 	drct = sort(os.listdir(directory))
 	cntF = 0
 	cntD = 1
