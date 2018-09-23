@@ -25,6 +25,7 @@ Settings>Mouse and Touchpad>Devices>[/ Reverse scrol direction]
 Settings>Power Manager>General>Laptop Lid>On Battery:[Turn off display] Plugged In:[Turn off display] System tray icon:[OFF]
 Settings>Power Manager>Display>Display power management:[OFF]
 Settings>Power Manager>Security>[X Lock screen when system is going for sleep]
+Settings>Power Manager>Security>Automatically lock the session:[Never]
 /set buflist.look.enabled off
 /server add freenode irc.freenode.net
 /set irc.server.freenode.addresses "chat.freenode.net/7000"
