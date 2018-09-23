@@ -1,31 +1,12 @@
 **#Linux Setup**
 ----------
-# Programs to install (PacMan)
-sudo pacman -Syu && sudo pacman -S weechat vim pymol openconnect audacity obs-studio gnuplot tmux git python-pip yaourt python-lxml python-numpy python-biopython python-scipy python-matplotlib python-pandas python-beautifulsoup4 python-scikit-learn python-tensorflow b43-firmware && sudo pip install keras && yaourt -S dssp
-# Weechat setup
-/set buflist.look.enabled off
-/server add freenode irc.freenode.net
-/server add twitch irc.chat.twitch.tv
-/set irc.server.freenode.addresses "chat.freenode.net/7000"
-/set irc.server.freenode.ssl on
-/set irc.server.twitch.autojoin "#sari.sabban"
-/set irc.server.freenode.sasl_username NICKNAME
-/set irc.server.freenode.sasl_password PASSWORD
-/set irc.server.twitch.username NICKNAME
-/set irc.server.twitch.password oauth:***** [http://www.twitchapps.com/tmi/]
-# Terminal Setup
-n="$(awk '/PS1=/ { $0 = "PS1=\x27\\[\\033[0;33m\\][\\W]\\$ \\[\\033[0m\\]\x27" } 1' bashrc)"; echo "$n" >.bashrc
-# VIM Setup
-printf ':set shiftwidth=8 noexpandtab\n:set softtabstop=8 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap\n:set number' >> ~/.vimrc
-
-
-XFCE Environment:
+Manjaro XFCE Environment:
 sudo pacman -Syu && sudo pacman -S numix-manjaro-themes numix-reborn-icon-themes firefox weechat vim pymol openconnect audacity obs-studio gnuplot tmux git python-pip yaourt python-lxml python-numpy python-biopython python-scipy python-matplotlib python-pandas python-beautifulsoup4 python-scikit-learn python-tensorflow && sudo pip install keras && yaourt -S dssp
 && printf ':set shiftwidth=8 noexpandtab\n:set softtabstop=8 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap\n:set number' >> ~/.vimrc
 && n="$(awk '/PS1=/ { $0 = "PS1=\x27\\[\\033[0;33m\\][\\W]\\$ \\[\\033[0m\\]\x27" } 1' bashrc)"; echo "$n" >.bashrc
 
 Settings>Appearance>Style>Adawaita-dark
-*Settings>Appearance>Icons>Numix-Reborn-Circle
+Settings>Appearance>Icons>Numix-Reborn-Circle
 Settings>Desktop>Background>Change Background
 Settings>Desktop>Icons> X Home  X Filesystem   X Wastebasket    / Removable Devices
 Settings>File Manager>Display>Detailed List View
@@ -44,11 +25,33 @@ Terminal>Preferences>Appearance>Background opacity 1.0
 Terminal>Preferences>Appearance>Opening new windows X Display menu bar
 File Manager>Preferences>view X menu bar
 
+
+
 Panel:
 time>preferences>LCD
 Bluetooth>Off
 
 
+
+
+----------
+# Programs to install (PacMan)
+sudo pacman -Syu && sudo pacman -S weechat vim pymol openconnect audacity obs-studio gnuplot tmux git python-pip yaourt python-lxml python-numpy python-biopython python-scipy python-matplotlib python-pandas python-beautifulsoup4 python-scikit-learn python-tensorflow b43-firmware && sudo pip install keras && yaourt -S dssp
+# Weechat setup
+/set buflist.look.enabled off
+/server add freenode irc.freenode.net
+/server add twitch irc.chat.twitch.tv
+/set irc.server.freenode.addresses "chat.freenode.net/7000"
+/set irc.server.freenode.ssl on
+/set irc.server.twitch.autojoin "#sari.sabban"
+/set irc.server.freenode.sasl_username NICKNAME
+/set irc.server.freenode.sasl_password PASSWORD
+/set irc.server.twitch.username NICKNAME
+/set irc.server.twitch.password oauth:***** [http://www.twitchapps.com/tmi/]
+# Terminal Setup
+n="$(awk '/PS1=/ { $0 = "PS1=\x27\\[\\033[0;33m\\][\\W]\\$ \\[\\033[0m\\]\x27" } 1' bashrc)"; echo "$n" >.bashrc
+# VIM Setup
+printf ':set shiftwidth=8 noexpandtab\n:set softtabstop=8 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap\n:set number' >> ~/.vimrc
 ----------
 # Live USB
 sudo fdisk -l
