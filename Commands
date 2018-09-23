@@ -2,7 +2,8 @@
 ----------
 Manjaro XFCE Environment:
 sudo pacman -Syu && sudo pacman -S numix-manjaro-themes numix-reborn-icon-themes firefox weechat vim pymol openconnect audacity obs-studio gnuplot tmux git python-pip yaourt python-lxml python-numpy python-biopython python-scipy python-matplotlib python-pandas python-beautifulsoup4 python-scikit-learn python-tensorflow && sudo pip install keras && yaourt -S dssp && printf ':set shiftwidth=8 noexpandtab\n:set softtabstop=8 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap\n:set number' >> ~/.vimrc && n="$(awk '/PS1=/ { $0 = "PS1=\x27\\[\\033[0;33m\\][\\W]\\$ \\[\\033[0m\\]\x27" } 1' .bashrc)"; echo "$n" > .bashrc
-File Manager>Edit>Preferences>View>[X menu bar]
+File Manager>View>[X menu bar]
+Mousepad>View>[X menu bar]
 Firefox>Customise>[Organise bar][Theme:Dark]
 Firefox>Preferences>Home>[Homepage and new windows:Google.com]
 Mousepad>Edit>Preferences>[/ Line numbers][Color:Cobalt]
@@ -18,12 +19,18 @@ Settings>Window Manager>Advanced>Wrap workspaces when reaching the screen edge:[
 Settings>Window Manager Tweeks>Workspaces>[X Use the mouse wheel on the desktop to switch workspaces]
 Settings>Terminal>General>Scrolling bar is:[disabled]
 Settings>Terminal>Appearance>Background>opacity:[1.0] Opening New Windows:[X Display menu bar]
-Settings>Keyboard>Application Shortcuts>[X whiskers menu Super+R][X whiskers menu Super+L][mousepad Crtl+Clt+G][firefox Ctrl+Alt+W][xfce4-terminal --drop-down -> xfce4-terminal]
+Settings>Terminal>Appearance>Colours>Preset:[Green on Black]
+Settings>Keyboard>Application Shortcuts>[X xfce4-popup-whiskers menu Super+R][X xfce4-popup-whiskers menu Super+L][mousepad Crtl+Clt+G][firefox Ctrl+Alt+W][xfce4-terminal --drop-down -> xfce4-terminal]
 Settings>Mouse and Touchpad>Devices>[/ Reverse scrol direction]
-Settings>Power Manager>General>When laptop lid is closed:[Lock screen] System tray icon:[OFF]
+Settings>Power Manager>General>Laptop Lid>On Battery:[Turn off display] Plugged In:[Turn off display] System tray icon:[OFF]
 Settings>Power Manager>Display>Display power management:[OFF]
 Settings>Power Manager>Security>[X Lock screen when system is going for sleep]
-
+/set buflist.look.enabled off
+/server add freenode irc.freenode.net
+/set irc.server.freenode.addresses "chat.freenode.net/7000"
+/set irc.server.freenode.ssl on
+/set irc.server.freenode.sasl_username NICKNAME
+/set irc.server.freenode.sasl_password PASSWORD
 Panel:
 time>preferences>LCD
 Bluetooth>Off
