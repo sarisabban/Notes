@@ -3,7 +3,7 @@
 Manjaro XFCE Environment:
 sudo pacman -Syu && sudo pacman -S numix-manjaro-themes numix-reborn-icon-themes firefox weechat vim pymol openconnect audacity obs-studio gnuplot tmux git python-pip yaourt python-lxml python-numpy python-biopython python-scipy python-matplotlib python-pandas python-beautifulsoup4 python-scikit-learn python-tensorflow && sudo pip install keras && yaourt -S dssp
 && printf ':set shiftwidth=8 noexpandtab\n:set softtabstop=8 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap\n:set number' >> ~/.vimrc
-&& n="$(awk '/PS1=/ { $0 = "PS1=\x27\\[\\033[0;33m\\][\\W]\\$ \\[\\033[0m\\]\x27" } 1' bashrc)"; echo "$n" > .bashrc
+&& n="$(awk '/PS1=/ { $0 = "PS1=\x27\\[\\033[0;33m\\][\\W]\\$ \\[\\033[0m\\]\x27" } 1' .bashrc)"; echo "$n" > .bashrc
 
 Settings>Appearance>Style>Adawaita-dark
 Settings>Appearance>Icons>Numix-Reborn-Circle
