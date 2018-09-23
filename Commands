@@ -1,30 +1,25 @@
 **#Linux Setup**
 ----------
 Manjaro XFCE Environment:
-sudo pacman -Syu && sudo pacman -S numix-manjaro-themes numix-reborn-icon-themes firefox weechat vim pymol openconnect audacity obs-studio gnuplot tmux git python-pip yaourt python-lxml python-numpy python-biopython python-scipy python-matplotlib python-pandas python-beautifulsoup4 python-scikit-learn python-tensorflow && sudo pip install keras && yaourt -S dssp
-&& printf ':set shiftwidth=8 noexpandtab\n:set softtabstop=8 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap\n:set number' >> ~/.vimrc
-&& n="$(awk '/PS1=/ { $0 = "PS1=\x27\\[\\033[0;33m\\][\\W]\\$ \\[\\033[0m\\]\x27" } 1' .bashrc)"; echo "$n" > .bashrc
-
-Settings>Appearance>Style>Adawaita-dark
-Settings>Appearance>Icons>Numix-Reborn-Circle
-Settings>Desktop>Background>Change Background
-Settings>Desktop>Icons> X Home  X Filesystem   X Wastebasket    / Removable Devices
-Settings>File Manager>Display>Detailed List View
-Settings>Window Manager>Style>Numix-Manjaro-Straight
-Settings>Window Manager>Keyboard>Tile window to right Super+Right     Tile window to left Super+Left
-Settings>Window Manager>Advanced>Window Snapping /To screen boarder   /TO other windows
-Settings>Window Manager>Advanced>Wrap workspaces X with a dragged window
-Settings>Window Manager Tweeks>Workspaces>X use the mouse
-Settings>Keyboard>Application Shortcut    remove whiskers menu Super+R and Super+L    mousepad crt+alt+g    firefox ctl+alt+w     xfce4-terminal --drop-down   ->   xfce4-terminal
-Settings>Mouse and Touchpad>Devices>Reverse scrol direction
-Settings>Power Manager>General>Laptop lid (Lock screen) System tray icon (Off)
-Settings>Power Manager>Display>
-Settings>Power Manager>Security>X Lock screen
-Terminal>Preferences>Appearance>General>Scrolling bar is (disabled)
-Terminal>Preferences>Appearance>Background opacity 1.0
-Terminal>Preferences>Appearance>Opening new windows X Display menu bar
-File Manager>Preferences>view X menu bar
-
+sudo pacman -Syu && sudo pacman -S numix-manjaro-themes numix-reborn-icon-themes firefox weechat vim pymol openconnect audacity obs-studio gnuplot tmux git python-pip yaourt python-lxml python-numpy python-biopython python-scipy python-matplotlib python-pandas python-beautifulsoup4 python-scikit-learn python-tensorflow && sudo pip install keras && yaourt -S dssp && printf ':set shiftwidth=8 noexpandtab\n:set softtabstop=8 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap\n:set number' >> ~/.vimrc && n="$(awk '/PS1=/ { $0 = "PS1=\x27\\[\\033[0;33m\\][\\W]\\$ \\[\\033[0m\\]\x27" } 1' .bashrc)"; echo "$n" > .bashrc
+Settings>Appearance>Style>[Adawaita-dark]
+Settings>Appearance>Icons>[Numix-Reborn-Circle]
+Settings>Desktop>Background>[Change Background Picture]
+Settings>Desktop>Icons>[X Home][X Filesystem][X Wastebasket][/ Removable Devices]
+Settings>File Manager>Display>View new folders using:[Detailed List View]
+Settings>Window Manager>Style>[Numix-Manjaro-Straight]
+Settings>Window Manager>Keyboard>[Tile window to the left Super+Left][Tile window to the right Super+Right]
+Settings>Window Manager>Advanced>Window Snapping:[/ To screen boarders][/ To other windows]
+Settings>Window Manager>Advanced>Wrap workspaces when reaching the screen edge:[X With a dragged window]
+Settings>Window Manager Tweeks>Workspaces>[X Use the mouse wheel on the desktop to switch workspaces]
+Settings>Terminal>General>Scrolling bar is:[disabled]
+Settings>Terminal>Appearance>Background>opacity:[1.0] Opening New Windows:[X Display menu bar]
+Settings>Keyboard>Application Shortcuts>[X whiskers menu Super+R][X whiskers menu Super+L][mousepad Crtl+Clt+G][firefox Ctrl+Alt+W][xfce4-terminal --drop-down -> xfce4-terminal]
+Settings>Mouse and Touchpad>Devices>[/ Reverse scrol direction]
+Settings>Power Manager>General>When laptop lid is closed:[Lock screen] System tray icon:[OFF]
+Settings>Power Manager>Display>Display power management:[OFF]
+Settings>Power Manager>Security>[X Lock screen when system is going for sleep]
+File Manager>Preferences>View>[X menu bar]
 
 
 Panel:
