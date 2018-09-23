@@ -24,7 +24,7 @@ sudo pacman -Syu && sudo pacman -S firefox weechat vim pymol openconnect audacit
 
 XFCE Environment:
 Settings>Appearance>Style>Adawaita-dark
-Settings>Appearance>Icons>Vertex-Maia
+*Settings>Appearance>Icons>Vertex-Maia [Numix-Square]
 Settings>Desktop>Background>Change Background
 Settings>Desktop>Icons> X Home  X Filesystem   X Wastebasket    / Removable Devices
 Settings>File Manager>Display>Detailed List View
@@ -33,7 +33,7 @@ Settings>Window Manager>Keyboard>Tile window to right Super+Right     Tile windo
 Settings>Window Manager>Advanced>Window Snapping /To screen boarder   /TO other windows
 Settings>Window Manager>Advanced>Wrap workspaces X with a dragged window
 Settings>Window Manager Tweeks>Workspaces>X use the mouse
-Settings>Keyboard>Application Shortcut    remove whiskers menu Super+R and Super+L    mousepad crt+alt+g    firefox ctl+alt+w
+Settings>Keyboard>Application Shortcut    remove whiskers menu Super+R and Super+L    mousepad crt+alt+g    firefox ctl+alt+w     xfce4-terminal --drop-down   ->   xfce4-terminal
 Settings>Mouse and Touchpad>Devices>Reverse scrol direction
 Settings>Power Manager>General>Laptop lid (Lock screen) System tray icon (Off)
 Settings>Power Manager>Display>
@@ -41,6 +41,8 @@ Settings>Power Manager>Security>X Lock screen
 Bluetooth adapter > off
 
 Panel:
+
+
 
 ----------
 # Live USB
