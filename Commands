@@ -39,6 +39,10 @@ Settings>Power Manager>General>Laptop lid (Lock screen) System tray icon (Off)
 Settings>Power Manager>Display>
 Settings>Power Manager>Security>X Lock screen
 Bluetooth adapter > off
+Terminal>Preferences>Appearance>General>Scrolling bar is (disabled)
+Terminal>Preferences>Appearance>Background opacity 1.0
+Terminal>Preferences>Appearance>Opening new windows X Display menu bar
+
 
 Panel:
 
