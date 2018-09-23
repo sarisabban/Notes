@@ -33,8 +33,19 @@ Settings>Power Manager>Security>Automatically lock the session:[Never]
 /set irc.server.freenode.sasl_username NICKNAME
 /set irc.server.freenode.sasl_password PASSWORD
 Panel:
-time>preferences>LCD
+Panel:
+Time>Properties>LCD
 Bluetooth>Off
+Panel Preferences... Unlock-Move Up-Lock
+Add launcher - Firefox
+Add launcher - Audacity
+Add launcher - OBS
+Window BUttons
+Separator [Expand]
+Workspace Switcher
+Clock
+*PulseAudio Plugin
+*Notification Area
 ----------
 # Programs to install (PacMan)
 sudo pacman -Syu && sudo pacman -S weechat vim pymol openconnect audacity obs-studio gnuplot tmux git python-pip yaourt python-lxml python-numpy python-biopython python-scipy python-matplotlib python-pandas python-beautifulsoup4 python-scikit-learn python-tensorflow b43-firmware && sudo pip install keras && yaourt -S dssp
