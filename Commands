@@ -33,14 +33,14 @@ Settings>Power Manager>Security>Automatically lock the session:[Never]
 /set irc.server.freenode.sasl_username NICKNAME
 /set irc.server.freenode.sasl_password PASSWORD
 Panel:
-Panel:
 Time>Properties>LCD
 Bluetooth>Off
 Panel Preferences... Unlock-Move Up-Lock
 Add launcher - Firefox
 Add launcher - Audacity
 Add launcher - OBS
-Window BUttons
+Trash
+Window Buttons
 Separator [Expand]
 Workspace Switcher
 PulseAudio Plugin
