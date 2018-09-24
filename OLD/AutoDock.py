@@ -1,104 +1,47 @@
 #!/usr/bin/python
 
-'''
-# Required programs to install:
-Debian:
-sudo apt-get install autodock-vina openbabel
+"""
+INSTRUCTIONS:
+* Install programs: sudo pacman -S openbabel pymol
+* Download receptor
+* Choose receptor search box: pymol AutoDock.py FILENAME.pdb
+* Export receptor as .pdbqt file: python AutoDock.py receptor FILENAME.pdb
+* Download ligand database from ZINC15 website [zinc15.dock.com]
+* Segment ligands into individual files: python AutoDock.py segment DIRECTORY
+* Run docking:
+	#!/bin/bash
+	#PBS -N dock
+	#PBS -q thin_1m
+	#PBS -l select=1:ncpus=24:mpiprocs=24
+	#PBS -j oe
+	#PBS -J 1-82
+	cd $PBS_O_WORKDIR
+	for i in `ls -lv ../Ligands/${PBS_ARRAY_INDEX}`; do
+		echo $i
+		./vina --receptor receptor.pdbqt --ligand ../Ligands/${PBS_ARRAY_INDEX}/$i --out docked_$i --exhaustiveness 10 --seed 1991540417 --center_x 8 --center_y -19 --center_z -7 --size_x 18 --size_y 9 --size_z 17
+		echo ''
+		echo ''
+	done
+	echo '--------------------------------------------------'
+	echo 'DONE'
+* Analyse output: python AutoDock.py analyse DIRECTORY
+"""
 
-Arch:
-sudo pacman -S openbabel && yaourt -S autodock-vina
-
-# Run using these commands:
-* To download the ligand database from ChemDB (http://cdb.ics.uci.edu/):
-python AutoDock.py download
-
-* To setup multiple ligands:
-python AutoDock.py ligand multiple LIGAND.sdf
-
-* To setup a single ligand:
-python AutoDock.py ligand single LIGAND.sdf
-
-* To setup the protein:
-python AutoDock.py protein PROTEIN.pdb CX CY CZ LX LY LZ
-
-* To run the docking protocol on multiple ligands:
-python AutoDock.py dock multiple LIGAND_DIRECTORY
-
-* To run the docking protocol on a single ligand:
-python AutoDock.py dock single
-'''
-
-import re
 import os
 import sys
+import time
 import pymol
+import pathlib
+import itertools
 from pymol.cgo import *
 
 def Box(pX, pY, pZ, x, y, z):
 	'''
-	Sets up the search box within the protein, the dimentions are then
-	added to a file named setup.config which is used in the docking
-	protocol
+	Sets up the search box within the protein, which is
+	used in the docking protocol
 	'''
 	pymol.cmd.pseudoatom('Position', pos=[pX, pY, pZ])
-	([X, Y, Z], [a, b, c]) = pymol.cmd.get_extent('Position')
-	pymol.cmd.show('spheres', 'Position')
-	minX = X+float(x)
-	minY = Y+float(y)
-	minZ = Z+float(z)
-	maxX = X-float(x)
-	maxY = Y-float(y)
-	maxZ = Z-float(z)
-	CONFIG = open('setup.config', 'w')
-	CONFIG.write('receptor =\t\tprotein.pdbqt\n')
-	CONFIG.write('ligand =\t\tligand.pdbqt\n')
-	CONFIG.write('out =\t\t\tdock.pdbqt\n')
-	CONFIG.write('exhaustiveness =\t10\n')
-	CONFIG.write('center_x =\t\t'+pX+'\n')
-	CONFIG.write('center_y =\t\t'+pY+'\n')
-	CONFIG.write('center_z =\t\t'+pZ+'\n')
-	CONFIG.write('size_x =\t\t'+x+'\n')
-	CONFIG.write('size_y =\t\t'+y+'\n')
-	CONFIG.write('size_z =\t\t'+z+'\n')
-	CONFIG.close()
-	boundingBox = [BEGIN, LINES,
-		VERTEX, minX, minY, minZ,
-		VERTEX, minX, minY, maxZ,
-		VERTEX, minX, maxY, minZ,
-		VERTEX, minX, maxY, maxZ,
-		VERTEX, maxX, minY, minZ,
-		VERTEX, maxX, minY, maxZ,
-		VERTEX, maxX, maxY, minZ,
-		VERTEX, maxX, maxY, maxZ,
-		VERTEX, minX, minY, minZ,
-		VERTEX, maxX, minY, minZ,
-		VERTEX, minX, maxY, minZ,
-		VERTEX, maxX, maxY, minZ,
-		VERTEX, minX, maxY, maxZ,
-		VERTEX, maxX, maxY, maxZ,
-		VERTEX, minX, minY, maxZ,
-		VERTEX, maxX, minY, maxZ,
-		VERTEX, minX, minY, minZ,
-		VERTEX, minX, maxY, minZ,
-		VERTEX, maxX, minY, minZ,
-		VERTEX, maxX, maxY, minZ,
-		VERTEX, minX, minY, maxZ,
-		VERTEX, minX, maxY, maxZ,
-		VERTEX, maxX, minY, maxZ,
-		VERTEX, maxX, maxY, maxZ,
-		END]
-	boxName = 'Box'
-	pymol.cmd.load_cgo(boundingBox, boxName)
-	return(boxName)
-
-def Box2(pX, pY, pZ, x, y, z):
-	'''
-	Sets up the search box within the protein, the dimentions are then
-	not added to a file named setup.config, unlike the previous
-	function
-	'''
-	pymol.cmd.pseudoatom('Position', pos=[pX, pY, pZ])
-	([X, Y, Z], [a, b, c]) = pymol.cmd.get_extent('Position')
+	([X, Y, Z],[a, b, c]) = pymol.cmd.get_extent('Position')
 	pymol.cmd.show('spheres', 'Position')
 	minX = X+float(x)
 	minY = Y+float(y)
@@ -136,208 +79,134 @@ def Box2(pX, pY, pZ, x, y, z):
 	pymol.cmd.load_cgo(boundingBox, boxName)
 	return(boxName)
 
-def download(items):
+def protein(filename):
 	'''
-	Downloads around 4,000,000+ small molecules form the ChemDB databse
-	(http://cdb.ics.uci.edu/), then combines all the downloaded files into
-	one large .sdf file
-	'''
-	count = items
-	while count != 0:
-		numb = '{0:02d}'.format(count)
-		URL = 'ftp://ftp.ics.uci.edu/pub/baldig/cdbDownload'
-		os.system('wget {}/isomer3d.{}00000.sdf.gz'.format(URL, numb))
-		os.system('gzip -d isomer3d.{}00000.sdf.gz'.format(numb))
-		count -= 1
-	os.system('cat isomer3d.* > Molecules.sdf')
-	os.system('rm isomer3d.*')
-
-def ligand(filename, protocol):
-	'''
-	Prepares the ligand by converting the .sdf or .pdb molecule file
-	into a .pdbqt file
-	'''
-	if protocol == 'single':
-		os.system('babel {} ligand.pdbqt -p'.format(filename))
-	elif protocol == 'multiple':
-		os.mkdir('ligands')
-		os.system('babel {} ligands.pdbqt -p'.format(filename))
-		command = 'vina_split --input ligands.pdbqt --ligand'
-		os.system('{} ligands/ligand_'.format(command))
-		os.remove('ligands.pdbqt')
-	else:
-		print('Error: bad command argument')
-
-def protein(filename, CX, CY, CZ, LX, LY, LZ):
-	'''
-	Prepares the protein by first removing all the water molecules from
-	the protein's structure, then adds only the polar hydrogens, then
-	it exports the resulting structure and converts it to a .pdbqt file. It
-	also preps the search location box and generates the setup.config file
-	that will be used to run the docking algorithm.
+	Prepares the protein by first removing all the water
+	molecules from the protein's structure, then adds only
+	the polar hydrogens, then it exports the resulting
+	structure and converts it to a .pdbqt file
 	'''
 	cmd.load(filename)
 	cmd.remove('resn HOH')
 	cmd.h_add(selection='acceptors or donors')
 	cmd.save('receptor.pdb')
 	os.system('babel receptor.pdb temp.pdbqt -xh')
-	os.system('grep ATOM temp.pdbqt > protein.pdbqt')
+	os.system('grep ATOM temp.pdbqt > receptor.pdbqt')
 	os.remove('temp.pdbqt')
-	CX = str(CX)
-	CY = str(CY)
-	CZ = str(CZ)
-	LX = str(LX)
-	LY = str(LY)
-	LZ = str(LZ)
-	cmd.load('receptor.pdb')
-	pymol.cmd.extend('Box', Box(CX, CY, CZ, LX, LY, LZ))
 	os.remove('receptor.pdb')
 
-# Other useful functions:
-def sort(l):
-	convert = lambda text:int(text) if text.isdigit() else text.lower()
-	num_key = lambda key:[convert(c) for c in re.split('([0-9]+)', key)]
-	return sorted(l, key=num_key)
+def ligand(filename):
+	'''
+	Prepares a single ligand by converting the .sdf file or
+	.pdb file into a .pdbqt file
+	'''
+	os.system('babel {} ligand.pdbqt -p'.format(filename))
 
-def Move(directory, divide):
+def analyse(filename):
 	'''
-	This script takes a directory with files (ligands) and segments it
-	into different directories to make it easy to setup a HPC array
-	'''
-	os.mkdir('{}_new'.format(directory))
-	drct = sort(os.listdir(directory))
-	cntF = 0
-	cntD = 1
-	for i in drct:
-		if cntF == 0:
-			print(cntD)
-			os.mkdir('{}_new/{}'.format(directory, str(cntD)))
-			cntD += 1
-			cntF = divide
-		print(i)
-		command = 'cp {}/{} {}/{}'.format(directory, i, directory, str(cntD-1))
-		cntF -= 1
-
-def Count(filename):
-	'''
-	Useful function used as follows: run the docking protocol for only
-	24 hours on a HPC. The count the number of structures analysed 
-	using this script. That way you can determine aproximalty how many
-	structures can be docked within 24 hours. Remember to always round
-	down to make sure you accomodate for slow computations
+	Extracts the lowest binding affinity from the .pdbqt
+	file that results from a docking run
 	'''
 	dockfile = open(filename, 'r')
-	count = 0
+	check = False
 	for line in dockfile:
-		line = line.split('_')
-		if line[0] == 'ligand':
-			count += 1
-	print(count)
+		if line.split(':')[0] == 'REMARK VINA RESULT'\
+				and check is False:
+			check = True
+			d = line.split()
+			f = filename.split('_')[0]
+			newline = '{:19} {:10} {:9} {:10}'\
+				.format(f, d[3], d[4], d[5])
+			return(newline)
 
-def Analyse(filename):
+def analyse_run(directory):
 	'''
-	This script takes the output docking log file and organises it by
-	collecting only the names and docking information of each ligand
-	then sorts the ligands by the lowest docked energy
+	This function analyses multiple docking output collected
+	in a directory then organises all the binding affinities
+	into a file and sorts them from lowest values to largest
 	'''
-	dockfile = open(filename, 'r')
+	thefiles = sorted(os.listdir(directory))
+	for f in thefiles:
+		print('Analysed {}'.format(f))
+		line = analyse('{}/{}'.format(directory, f))
+		temp = open('temp', 'a')
+		temp.write(line)
+		temp.write('\n')
+		temp.close()
 	results = open('Results', 'a')
-	results.write('Molecule           |Mode |  Affinity  | Dist from| Best mode\n')
-	results.write('                   |     | (kcal/mol) | RMSD l.b.| RMSD u.b.\n')
-	results.write('-------------------+-----+------------+----------+----------\n')
+	results.write('Molecule           |Affinity  |Dist from|Best mode\n')
+	results.write('                   |(kcal/mol)|RMSD l.b.|RMSD u.b.\n')
+	results.write('-------------------+----------+---------+---------\n')
 	results.close()
-	value = 1000
-	for line in dockfile:
-		ligands = line.strip().split('_')
-		if ligands[0] == 'ligand':
-			value = 1000
-			ligand = line.strip().split('.')[0]
-		elif re.search('^\s.*\d', line):
-			docks = line.split()
-			if float(docks[1]) < value:
-				value = float(docks[1])
-				d = docks
-				newline = '{:19} {:5} {:12} {:10} {:10}\n'.format(ligand, d[0], d[1], d[2], d[3])
-				results = open('temp', 'a')
-				results.write(newline)
-				results.close()
-				#print(newline)
-	os.system('cat temp | sort -nk 3 >> Results')
-	os.remove('temp')
+	os.system('cat temp | sort -nk 2 >> Results')
+	os.system('rm temp')
+
+def prep(directory):
+	'''
+	This function collects all the downloaded structures from
+	the ZINC15 database and unzipps them in preparation for
+	parsing and segmentation by split_multi()
+	'''
+	os.mkdir('ligs')
+	os.system("find %s -name '*.gz' -exec mv {} ligs \;" % directory)
+	dr = os.listdir('ligs')
+	for f in dr:
+		print(f)
+		os.system('gunzip ligs/{}'.format(f))
+
+def lines_from_files(names):
+	''' Function for split_multi() '''
+	for name in names:
+		with open(str(name)) as f:
+			yield from f
+
+def split_multi(lines, dire, prefix):
+	'''
+	This function loops through a directory with multiple
+	.pdbqt files each with multiple molecules and separates
+	each file's molecules into a single directory.
+	'''
+	count = 0
+	in_dir_count = 0
+	limit = 100
+	dircount = 0
+	for dircount in itertools.count():
+		for line in lines:
+			x = line.split()
+			if len(x) == 2 and x[0] == 'MODEL' and x[1].isdigit():
+				directory = os.path.join(dire, '{}'.format(dircount+1))
+				os.makedirs(directory, exist_ok=True)
+				out = os.path.join(directory, '{}_{}.pdbqt'.format(prefix, count+1))
+				with open(out, 'w') as outfile:
+					for line in lines:
+						if line.strip() == 'ENDMDL':
+							break
+						outfile.write(line)
+				count += 1
+				in_dir_count += 1
+				if in_dir_count >= limit:
+					in_dir_count = 0
+					print('Finished directory {}'.format(directory))
+					break
+		else:
+			break
+	print('----------\nDone')
 
 def main():
-	if sys.argv[1] == 'download':
-		download(72)
-
-	elif sys.argv[1] == 'ligand' and sys.argv[2] == 'single':
-		ligand(sys.argv[3], 'single')
-
+	if sys.argv[1] == 'receptor':
+		protein(str(sys.argv[2]))
 	elif sys.argv[1] == 'ligand':
-		ligand(sys.argv[3], 'multiple')
+		ligand(str(sys.argv[2]))
+	elif sys.argv[1] == 'analyse':
+		analyse_run(sys.argv[2])
+	elif sys.argv[1] == 'segment':
+		prep(sys.argv[2])
+		time.sleep(1)
+		lines = lines_from_files(pathlib.Path.cwd().glob('ligs/*.pdbqt'))
+		split_multi(lines, 'Ligands', 'ligand')
 
-	elif sys.argv[1] == 'protein':
-		CX = sys.argv[3]
-		CY = sys.argv[4]
-		CZ = sys.argv[5]
-		LX = sys.argv[6]
-		LY = sys.argv[7]
-		LZ = sys.argv[8]
-		protein(sys.argv[2], CX, CY, CZ, LX, LY, LZ)
+if __name__ != "__main__":
+	pymol.cmd.load(str(sys.argv[2]))
+	pymol.cmd.extend('Box', Box)
 
-	elif sys.argv[1] == 'dock' and sys.argv[2] == 'single':
-		os.system('vina --config setup.config 2>&1 | tee dock.log')
-		os.system('pymol protein.pdbqt dock.pdbqt')
-
-	elif sys.argv[1] == 'dock' and sys.argv[2] == 'multiple':
-		results = open('Results', 'a')
-		results.write('Molecule           |Mode |  Affinity  | Dist from| Best mode\n')
-		results.write('                   |     | (kcal/mol) | RMSD l.b.| RMSD u.b.\n')
-		results.write('-------------------+-----+------------+----------+----------\n')
-		results.close()
-		directory = sys.argv[3]
-		ligcommand = "sed -i 's|ligand.pdbqt|{}/*|g'".format(directory)
-		dokcommand = "sed -i 's|dock.pdbqt|%|g'"
-		os.system('{} setup.config'.format(ligcommand))
-		os.system('{} setup.config'.format(dokcommand))
-		liglist = os.listdir(directory)
-		for ligand in liglist:
-			dk = ligand.split('_')[1].split('.')[0]
-			newligcom = "sed -i 's|*|{}|g'".format(ligand)
-			bakligcom = "sed -i 's|{}|*|g'".format(ligand)
-			newdokcom = "sed -i 's|%|dock_{}.pdbqt|g'".format(dk)
-			bakdokcom = "sed -i 's|dock_{}.pdbqt|%|g'".format(dk)
-			dkcm = 'vina --config setup.config 2>&1 |'
-			os.system('{} setup.config'.format(newligcom))
-			os.system('{} setup.config'.format(newdokcom))
-			os.system('{} tee dock_{}.log'.format(dkcm, dk))
-			os.system('{} setup.config'.format(bakligcom))
-			os.system('{} setup.config'.format(bakdokcom))
-			docklog = 'dock_{}.log'.format(dk)
-			dockfile = open(docklog, 'r')
-			value = 1000
-			for line in dockfile:
-				if re.search('^\s.*\d', line):
-					line = line.split()
-					if float(line[1]) < value:
-						best = line
-						value = float(line[1])
-					else:
-						continue
-					newline = '{:19} {:5} {:12} {:10} {:10}\n'.format(ligand, best[0], best[1], best[2], best[3])
-					results = open('Results', 'a')
-					results.write(newline)
-					results.close()
-					os.remove(docklog)
-					os.remove('dock_{}.pdbqt'.format(dk))
-
-	if sys.argv[1] == 'box':
-		filename = sys.argv[2]
-		pymol.finish_launching(['pymol', '-q'])
-		pymol.cmd.load(filename)
-		pymol.cmd.extend('box', Box2)
-
-	else:
-		print('[-] Error: bad command argument')
-
-if __name__ == '__main__':
-	main()
+if __name__ == "__main__": main()
