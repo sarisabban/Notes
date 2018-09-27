@@ -1037,6 +1037,18 @@ iterate n. CA, print ss
 `ATOM is for DNA or Protein atoms`
 `HETATM is for small molicule atoms such as ligands ions etc...`
 `TER separates chains to indicate they are not physically connected`
+
+## Nice PyMOL preset for small molecule docking [select all and paste in PyMOL terminal]:
+preset.ball_and_stick("ligand")
+set_bond stick_color, 0xffff44, ligand
+set_bond stick_transparency, 0.35, ligand
+color grey, ligand_1 and e. C
+set valence, 1, ligand
+ramp_new pRamp, ligand, selection=receptor, range=[5,30], color=sludge
+set surface_color, pRamp, poly
+disable pRamp
+show surface, receptor
+set surface_quality, 2
 --------------------------------------------------
 **#PYROSETTA**
 #Download
