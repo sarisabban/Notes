@@ -1,7 +1,7 @@
 **#Linux Setup**
 ----------
-Manjaro XFCE Environment:
-sudo pacman -Syu && sudo pacman -S rtorrent gnome-disk-utility numix-manjaro-themes numix-reborn-icon-themes firefox weechat vim pymol openconnect audacity obs-studio gnuplot tmux git python-pip yaourt python-lxml python-numpy python-biopython python-scipy python-matplotlib python-pandas python-beautifulsoup4 python-scikit-learn python-tensorflow && sudo pip install keras && yaourt -S dssp && printf ':set shiftwidth=8 noexpandtab\n:set softtabstop=8 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap\n:set number' >> ~/.vimrc && n="$(awk '/PS1=/ { $0 = "PS1=\x27\\[\\033[0;33m\\][\\W]\\$ \\[\\033[0m\\]\x27" } 1' .bashrc)"; echo "$n" > .bashrc
+Antergos XFCE Environment:
+sudo pacman -Syu && sudo pacman -S weechat vim pymol openconnect audacity obs-studio gnuplot tmux git python-pip yaourt python-lxml python-numpy python-biopython python-scipy python-matplotlib python-pandas python-beautifulsoup4 python-scikit-learn python-tensorflow && pip install keras && yaourt -S dssp && printf ':set shiftwidth=8 noexpandtab\n:set softtabstop=8 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap\n:set number' >> ~/.vimrc && n="$(awk '/PS1=/ { $0 = "PS1=\x27\\[\\033[0;33m\\][\\W]\\$ \\[\\033[0m\\]\x27" } 1' .bashrc)"; echo "$n" > .bashrc
 File Manager>View>[X menu bar]
 Mousepad>View>[X menu bar]
 Firefox>Customise>[Organise bar][Theme:Dark]
@@ -14,6 +14,7 @@ Settings>Desktop>Icons>[X Home][X Filesystem][X Wastebasket][/ Removable Devices
 Settings>File Manager>Display>View new folders using:[Compact List View]
 Settings>Window Manager>Style>[Numix-Manjaro-Straight]
 Settings>Window Manager>Keyboard>[Tile window to the left Super+Left][Tile window to the right Super+Right]
+Settings>Window Manager>Window operations menu>[Clear]
 Settings>Window Manager>Advanced>Window Snapping:[/ To screen boarders][/ To other windows]
 Settings>Window Manager>Advanced>Wrap workspaces when reaching the screen edge:[X With a dragged window]
 Settings>Window Manager Tweeks>Workspaces>[X Use the mouse wheel on the desktop to switch workspaces]
@@ -21,6 +22,8 @@ Settings>Terminal>General>Scrolling bar is:[disabled]
 Settings>Terminal>Appearance>Background>opacity:[1.0] Opening New Windows:[X Display menu bar]
 Settings>Terminal>Appearance>Colours>Preset:[Green on Black]
 Settings>Keyboard>Application Shortcuts>[X xfce4-popup-whiskers menu Super+R][X xfce4-popup-whiskers menu Super+L][mousepad Crtl+Clt+G][firefox Ctrl+Alt+W][xfce4-terminal --drop-down -> xfce4-terminal]
+Settings>Keyboard>Layout>Change layout option>Win+Space
+Settings>Keyboard>Layout>[Add Arabic(Macintosh)]
 Settings>Mouse and Touchpad>Devices>[/ Reverse scrol direction]
 Settings>Power Manager>General>Laptop Lid>On Battery:[Turn off display] Plugged In:[Turn off display] System tray icon:[OFF]
 Settings>Power Manager>Display>Display power management:[OFF]
@@ -78,11 +81,11 @@ tmux new \; split-window -h -p41 htop \; split-window -v -p75
 **#PyMOL**
 # Generate movies
 # Run this script from the terminal using this command:	pymol -c Render.py
-import pymol , os , time
+import pymol, os, time
 os.mkdir('Movie')
 cmd.load('Presentation.pse')
-cmd.viewport (3840 , 2160)
-cmd.set('ray_trace_mode' , 0)
+cmd.viewport (3840, 2160)
+cmd.set('ray_trace_mode', 0)
 cmd.mpng('./Movie/video')
 time.sleep(10)
 os.system('ffmpeg -f image2 -i Movie/video%4d.png -r 30 -vcodec libx264 -b:v 480M -pix_fmt yuv420p -preset:v slower -level 4.2 video.mp4')
