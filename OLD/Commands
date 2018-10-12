@@ -36,7 +36,7 @@ sudo apt install gnome-shell
 * tty-clock
 * whois
 * xscreensaver xscreensaver-gl-extra xscreensaver-data-extra
-* flowblade
+* flowblade -> kdenlive is better
 
 ##For Debian
 su
