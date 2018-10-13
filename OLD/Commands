@@ -57,6 +57,74 @@ Creat Live Install USB:
 su
 lsblk
 dd if=/home/acresearch/Desktop/ubuntu-gnome-16.04.2-desktop-amd64.iso of=/dev/sdb
+----------
+Antergos XFCE Environment:
+sudo pacman -Syu && sudo pacman -S weechat vim pymol openconnect audacity obs-studio gnuplot tmux git python-pip yaourt python-lxml python-numpy python-biopython python-scipy python-matplotlib python-pandas python-beautifulsoup4 python-scikit-learn python-tensorflow && pip install keras && yaourt -S dssp && printf ':set shiftwidth=8 noexpandtab\n:set softtabstop=8 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap\n:set number' >> ~/.vimrc && n="$(awk '/PS1=/ { $0 = "PS1=\x27\\[\\033[0;33m\\][\\W]\\$ \\[\\033[0m\\]\x27" } 1' .bashrc)"; echo "$n" > .bashrc
+File Manager>View>[X menu bar]
+Mousepad>View>[X menu bar]
+Firefox>Customise>[Organise bar][Theme:Dark]
+Firefox>Preferences>Home>[Homepage and new windows:Google.com]
+Mousepad>Edit>Preferences>[/ Line numbers][Color:Cobalt]
+Settings>Appearance>Style>[Adawaita-dark]
+Settings>Appearance>Icons>[Numix-Reborn-Circle]
+Settings>Desktop>Background>[Change Background Picture]
+Settings>Desktop>Icons>[X Home][X Filesystem][X Wastebasket][/ Removable Devices]
+Settings>File Manager>Display>View new folders using:[Compact List View]
+Settings>Window Manager>Style>[Numix-Manjaro-Straight]
+Settings>Window Manager>Keyboard>[Tile window to the left Super+Left][Tile window to the right Super+Right]
+Settings>Window Manager>Window operations menu>[Clear]
+Settings>Window Manager>Advanced>Window Snapping:[/ To screen boarders][/ To other windows]
+Settings>Window Manager>Advanced>Wrap workspaces when reaching the screen edge:[X With a dragged window]
+Settings>Window Manager Tweeks>Workspaces>[X Use the mouse wheel on the desktop to switch workspaces]
+Settings>Terminal>General>Scrolling bar is:[disabled]
+Settings>Terminal>Appearance>Background>opacity:[1.0] Opening New Windows:[X Display menu bar]
+Settings>Terminal>Appearance>Colours>Preset:[Green on Black]
+Settings>Keyboard>Application Shortcuts>[X xfce4-popup-whiskers menu Super+R][X xfce4-popup-whiskers menu Super+L][mousepad Crtl+Clt+G][firefox Ctrl+Alt+W][xfce4-terminal --drop-down -> xfce4-terminal]
+Settings>Keyboard>Layout>Change layout option>Win+Space
+Settings>Keyboard>Layout>[Add Arabic(Macintosh)]
+Settings>Mouse and Touchpad>Devices>[/ Reverse scrol direction]
+Settings>Power Manager>General>Laptop Lid>On Battery:[Turn off display] Plugged In:[Turn off display] System tray icon:[OFF]
+Settings>Power Manager>Display>Display power management:[OFF]
+Settings>Power Manager>Security>[X Lock screen when system is going for sleep]
+Settings>Power Manager>Security>Automatically lock the session:[Never]
+/set buflist.look.enabled off
+/server add freenode irc.freenode.net
+/set irc.server.freenode.addresses "chat.freenode.net/7000"
+/set irc.server.freenode.ssl on
+/set irc.server.freenode.sasl_username NICKNAME
+/set irc.server.freenode.sasl_password PASSWORD
+Panel:
+Time>Properties>LCD
+Bluetooth>Off
+Panel Preferences... Unlock-Move Up-Lock
+Add launcher - Firefox
+Add launcher - Audacity
+Add launcher - OBS
+Trash
+Window Buttons
+Separator [Expand]
+Workspace Switcher
+PulseAudio Plugin
+Notification Area:[X Show Frame][Hide all][Show Network Maneger Applet]
+Clock
+----------
+# Programs to install (PacMan)
+sudo pacman -Syu && sudo pacman -S weechat vim pymol openconnect audacity obs-studio gnuplot tmux git python-pip yaourt python-lxml python-numpy python-biopython python-scipy python-matplotlib python-pandas python-beautifulsoup4 python-scikit-learn python-tensorflow b43-firmware && sudo pip install keras && yaourt -S dssp
+# Weechat setup
+/set buflist.look.enabled off
+/server add freenode irc.freenode.net
+/server add twitch irc.chat.twitch.tv
+/set irc.server.freenode.addresses "chat.freenode.net/7000"
+/set irc.server.freenode.ssl on
+/set irc.server.twitch.autojoin "#sari.sabban"
+/set irc.server.freenode.sasl_username NICKNAME
+/set irc.server.freenode.sasl_password PASSWORD
+/set irc.server.twitch.username NICKNAME
+/set irc.server.twitch.password oauth:***** [http://www.twitchapps.com/tmi/]
+# Terminal Setup
+n="$(awk '/PS1=/ { $0 = "PS1=\x27\\[\\033[0;33m\\][\\W]\\$ \\[\\033[0m\\]\x27" } 1' .bashrc)"; echo "$n" > .bashrc
+# VIM Setup
+printf ':set shiftwidth=8 noexpandtab\n:set softtabstop=8 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap\n:set number' >> ~/.vimrc
 --------------------------------------------------
 **#Watch GPU**
 watch -n 1 nvidia-smi
