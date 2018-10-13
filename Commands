@@ -1,8 +1,8 @@
 **#Linux Setup**
 ----------
-# Programs to install (APT)
-sudo apt update && sudo apt full-upgrade && sudo apt install weechat vim pymol openconnect audacity obs-studio gnuplot tmux htop git dssp ffmpeg python3-pip python3-lxml python3-numpy python3-biopython python3-scipy python3-matplotlib python3-pandas python3-bs4 python3-sklearn python3-keras && n="$(awk '/PS1=/ { $0 = "PS1=\x27\\[\\033[0;33m\\][\\W]\\$ \\[\\033[0m\\]\x27" } 1' .bashrc)"; echo "$n" > .bashrc && printf ':set shiftwidth=8 noexpandtab\n:set softtabstop=8 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap\n:set number' >> ~/.vimrc
-# Weechat setup
+## Programs to install (APT)
+sudo apt update && sudo apt full-upgrade && sudo apt install weechat vim pymol openconnect audacity obs-studio gnuplot tmux htop git dssp ffmpeg gnome-tweak-tool python3-pip python3-lxml python3-numpy python3-biopython python3-scipy python3-matplotlib python3-pandas python3-bs4 python3-sklearn python3-keras -y && n="$(awk '/PS1=/ { $0 = "PS1=\x27\\[\\033[0;33m\\][\\W]\\$ \\[\\033[0m\\]\x27" } 1' .bashrc)"; echo "$n" > .bashrc && printf ':set shiftwidth=8 noexpandtab\n:set softtabstop=8 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap\n:set number' >> ~/.vimrc
+## Weechat setup
 /set buflist.look.enabled off
 /server add freenode irc.freenode.net
 /set irc.server.freenode.addresses "chat.freenode.net/7000"
@@ -13,18 +13,20 @@ sudo apt update && sudo apt full-upgrade && sudo apt install weechat vim pymol o
 /set irc.server.twitch.autojoin "#sari.sabban"
 /set irc.server.twitch.username NICKNAME
 /set irc.server.twitch.password oauth:***** [http://www.twitchapps.com/tmi/]
-#Desktop environment setup
+## Desktop environment setup
 * Settings>Bluetooth>OFF
 * Settings>Background>Change background
 * Settings>Language>[Language UK][Format UK][Input Sources Arabic(Macintosh)]
 * Settings>Privacy>[X]Screen lock
 * Settings>Devices>Mouse>[X]Tap to click
 * Settings>Details>Users>Image
+* Files>Preferences>[List View][Allow folders for be expanded][]
 * Text Editor>Preferences>[/]Display line numbers [x]Display statusbar [x] Enable text wrapping [Cobalt colours]
 * Terminal>Preferences>[X]Show scroll bar [x]Show menubar by default in new terminals
+* Tweek Tools>[Remove Trash from Desktop][Adwaita-dark]
 * FireFox setup
 ----------
-# Live USB
+## Live USB
 sudo fdisk -l
 sudo dd bs=4M if=FILENAME.iso of=/dev/sdb status=progress
 --------------------------------------------------
