@@ -10,7 +10,7 @@ sudo apt update && sudo apt full-upgrade && sudo apt install weechat vim pymol o
 /set irc.server.freenode.sasl_username NICKNAME
 /set irc.server.freenode.sasl_password PASSWORD
 /server add twitch irc.chat.twitch.tv
-/set irc.server.twitch.autojoin "#sari.sabban"
+/set irc.server.twitch.autojoin "#sarisabban"
 /set irc.server.twitch.username NICKNAME
 /set irc.server.twitch.password oauth:***** [http://www.twitchapps.com/tmi/]
 ## Desktop environment setup
