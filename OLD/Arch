@@ -1,0 +1,94 @@
+# Arch Linux Installation for HP Pavillion LapTop
+# Download [https://www.archlinux.org/download/]
+# Installation Wiki [https://wiki.archlinux.org/index.php/Installation_guide]
+==========================================================================================================================================
+# 1. Verify the boot mode (just to make sure the directory exists):
+ls /sys/firmware/efi/efivars
+
+# 2. Connect to the Internet (ping google.com to verify connection first)
+dhcpcd
+
+# 3. Update the system clock
+timedatectl set-ntp true
+
+# 4. Partition the disks (UEFI/GPT Layout)
+	/boot	sda1	550MB
+	/		sda2	Everything else
+	[SWAP]	sda3	4GB
+lsblk											# To see the partitions under sda
+cfdisk	/dev/sda									# GUI method to delete and re-partition the HDD
+	Select each partition and [Delete]
+	Move down to free space: [New] 550MB	[Type] EFI System	<-- /boot
+	Move down to free space: [New] 4GB	[Type] Linux swap	<-- [SWAP]
+	Move down to free space: [New] Rest	[Type] Linux filesystem	<-- /
+	[Write] yes
+	[Quit]
+
+# 5. Format the partitions
+mkfs.fat -F32 /dev/sda1
+mkswap /dev/sda2
+swapon /dev/sda2
+mkfs.ext4 /dev/sda3
+lsblk											# To check everything
+fdisk -l /dev/sda									# To check everything
+
+# 6. Mount the file systems
+mount /dev/sda3 /mnt
+mkdir /mnt/boot
+mount /dev/sda1 /mnt/boot
+
+# 7. Select the mirrors (Comment out far geographic locations)
+vim /etc/pacman.d/mirrorlist
+
+# 8. Install the base packages
+pacstrap /mnt base base-devel
+
+# 9. Configure the system
+genfstab -U /mnt >> /mnt/etc/fstab							# Generate a file system table
+arch-chroot /mnt									# Change root into computer system
+ln -sf /usr/share/zoneinfo/Asia/Riyadh /etc/localtime && hwclock --systohc		# Setup timezone
+echo hp > /etc/hostname									# Setup computer hostname
+nano /etc/hosts
+	127.0.0.1	localhost
+	::1		localhost
+	127.0.0.1	hp.localdomain	hp
+pacman -S networkmanager								# Install network manager
+systemctl enable NetworkManager
+passwd											# Setup root password
+pacman -S grub efibootmgr								# Install bootloader (GRUB)
+grub-install --target=x86_64-efi --efi-directory=/boot
+grub-mkconfig -o /boot/grub/grub.cfg
+exit
+umount -a
+reboot
+
+# 10. Further Setup (log in as root + password)
+useradd -m -g users -G audio,video,network,wheel,storage -s /bin/bash hp		# Make a user
+passwd hp										# Make password for user
+EDITOR=nano visudo
+	%wheel ALL=(ALL) ALL								# Uncomment this line to make this user admin
+sudo pacman -S xorg-server xorg-apps xorg-xinit xterm					# Install display server (choose default all)
+lspci | grep -e VGA -e 3D								# What graphics card in computer
+sudo pacman -S xf86-video-intel								# Install graphic driver
+sudo pacman -S lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings			# Install display manager
+sudo systemctl enable lightdm.service
+sudo pacman -S xfce4 xfce4-goodies							# Install desktop environment
+sudo pacman -Syu									# Update system
+sudo pacman -S htop weechat git firefox vim tmux openconnect gnome-disk-utility		# Install other programs
+n="$(awk '/PS1=/ { $0 = "PS1=\x27\\[\\033[0;33m\\][\\W]\\$ \\[\\033[0m\\]\x27" } 1' .bashrc)"; echo "$n" > .bashrc
+printf ':set shiftwidth=8 noexpandtab\n:set softtabstop=8 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap\n:set number' >> ~/.vimrc
+weechat
+	/set buflist.look.enabled off
+sudo pacman -S pulseaudio								# Install sound server
+lspci -v   										# No kernel driver = driver not installed
+sudo pacman -S broadcom-wl								# Install driver
+sudo reboot										# Must reboot to activate wifi driver
+ip link 										# To must see wlp2s0: if wifi is active
+nmcli device wifi list									# In root
+nmcli device wifi connect WIFINAME password PASSWORD
+
+
+
+#PROBLEMS
+sudo netctl enable wpl2s0-myconnection						# Auto join wifi
+sudo pacman -S udisks2									# Automount USBs
