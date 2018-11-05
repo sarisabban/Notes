@@ -110,6 +110,13 @@ def draw_boxes(image, boxes, labels):
 					(0,255,0), 2)
 	return(image)
 
+def _softmax(x, axis=-1, t=-100.):
+	x = x - np.max(x)
+	if np.min(x) < t:
+		x = x/np.min(x)*t
+	e_x = np.exp(x)
+	return(e_x / e_x.sum(axis, keepdims=True))
+
 def decode_netout(netout, anchors, nb_class, obj_threshold=0.3, nms_threshold=0.3):
 	grid_h, grid_w, nb_box = netout.shape[:3]
 	boxes = []
@@ -179,11 +186,6 @@ def _interval_overlap(interval_a, interval_b):
 
 def _sigmoid(x):
 	return(1. / (1. + np.exp(-x)))
-
-def _softmax(x, axis=-1, t=-100.):
-	x = x - np.max(x)
-	if np.min(x) < t:
-		x = x/np.min(x)*t
 
 def normal(image): return image/255.
 
