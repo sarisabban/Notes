@@ -21,7 +21,7 @@ sudo apt update && sudo apt full-upgrade && sudo apt install weechat vim pymol o
 * Settings>Devices>Mouse>[X]Tap to click
 * Settings>Details>Users>Image
 * Files>Preferences>[List View][Allow folders for be expanded][]
-* Text Editor>Preferences>[/]Display line numbers [x]Display statusbar [x] Enable text wrapping [Cobalt colours]
+* Text Editor>Preferences>[/]Display line numbers [/]Display right margin [/]Tab width 4 [x]Display statusbar [x] Enable text wrapping [Cobalt colours]
 * Terminal>Preferences>[X]Show scroll bar [x]Show menubar by default in new terminals
 * Tweek Tools>[Remove Trash from Desktop][Adwaita-dark]
 * FireFox setup
