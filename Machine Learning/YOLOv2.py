@@ -43,7 +43,7 @@ OBJECT_SCALE		= 5.0
 COORD_SCALE			= 1.0
 CLASS_SCALE			= 1.0
 BATCH_SIZE			= 16
-WARM_UP_BATCHES		= 100
+WARM_UP_BATCHES		= 3
 TRUE_BOX_BUFFER		= 50
 GenConf 			= {	'IMAGE_H'			: IMAGE_H,
 						'IMAGE_W'			: IMAGE_W,
@@ -380,7 +380,7 @@ for img in all_imgs: img['filename'] = img['filename'] + '.jpg'
 batches = BatchGenerator(all_imgs, GenConf)
 image = batches[0][0][0][0]
 train_valid_split = int(0.8*len(all_imgs))
-train_batch = BatchGenerator(all_imgs[:train_valid_split], GenConf)
+train_batch = BatchGenerator(all_imgs[:train_valid_split], GenConf, norm=normal)
 valid_batch = BatchGenerator(all_imgs[train_valid_split:], GenConf, norm=normal)
 input_image = keras.layers.Input(shape=(IMAGE_H, IMAGE_W, 3))
 true_boxes  = keras.layers.Input(shape=(1, 1, 1, TRUE_BOX_BUFFER, 4))
