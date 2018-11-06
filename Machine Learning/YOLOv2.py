@@ -577,7 +577,7 @@ def custom_loss(y_true, y_pred):
 	return(loss)
 
 early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0.001, patience=3, mode='min', verbose=1)
-checkpoint = keras.callbacks.ModelCheckpoint('weights.h5', monitor='val_loss', verbose=0, save_best_only=True, mode='min', period=1)
+checkpoint = keras.callbacks.ModelCheckpoint('weights.h5', monitor='val_loss', verbose=1, save_best_only=True, mode='min', period=1)
 tb_counter = len([log for log in os.listdir(os.path.expanduser('./logs/')) if 'cell' in log]) + 1
 tensorboard = keras.callbacks.TensorBoard(log_dir=os.path.expanduser ('./logs/') + 'cell' + '_' + str(tb_counter), histogram_freq=0, write_graph=True, write_images=False)
 optimizer = Adam(lr=1e-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.0)
