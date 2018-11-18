@@ -14,16 +14,17 @@ sudo apt update && sudo apt full-upgrade && sudo apt install weechat vim pymol o
 /set irc.server.twitch.username NICKNAME
 /set irc.server.twitch.password oauth:***** [http://www.twitchapps.com/tmi/]
 ## Desktop environment setup
-* Settings>Bluetooth>OFF
-* Settings>Background>Change background
-* Settings>Language>[Language UK][Format UK][Input Sources Arabic(Macintosh)]
-* Settings>Privacy>[X]Screen lock
-* Settings>Devices>Mouse>[X]Tap to click
-* Settings>Details>Users>Image
-* Files>Preferences>[List View][Allow folders for be expanded][]
-* Text Editor>Preferences>[/]Display line numbers [/]Display right margin [/]Tab width 4 [x]Display statusbar [x] Enable text wrapping [Cobalt colours]
-* Terminal>Preferences>[X]Show scroll bar [x]Show menubar by default in new terminals
-* Tweek Tools>[Remove Trash from Desktop][Adwaita-dark]
+* Settings>Bluetooth>         OFF
+* Settings>Background>        Change background
+* Settings>Language>          [Language UK][Format UK][Input Sources Arabic(Macintosh)]
+* Settings>Privacy>           [X]Screen lock
+* Settings>Devices>Mouse>     [X]Tap to click
+* Settings>Details>Users>     Image
+* Settings>Keyboard>Shortcuts (home ctrl-alt-F [sh -c 'setsid xdg-open "$HOME" &']) (text ctrl-alt-G [gedit]) (firefox ctrl-alt-W [firefox])
+* Files>Preferences>          [/]List View [/]Allow folders for be expanded
+* Text Editor>Preferences>    [/]Display line numbers [/]Tab width 4 [x]Display statusbar [x] Enable text wrapping [Cobalt colours]
+* Terminal>Preferences>       [X]Show scroll bar [x]Show menubar by default in new terminals
+* Tweek Tools>                [Remove Trash from Desktop][Adwaita-dark]
 * FireFox setup
 ----------
 ## Live USB
