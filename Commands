@@ -69,7 +69,7 @@ module use /app/utils/modules && module load python-2.7.9 gcc-5.3.0
 --------------------------------------------------
 **#PYROSETTA**
 # Download
-[http://graylab.jhu.edu/download/PyRosetta4/archive/release/PyRosetta4.Release.python36.linux/latest.html]
+[https://graylab.jhu.edu/download/PyRosetta4/archive/release/PyRosetta4.Release.python37.ubuntu/latest.html]
 # Compile
 tar -vjxf {PYROSETTA}.tar.bz2
 mv {PYROSETTA} PyRosetta && rm -r {PYROSETTA} && mv PyRosetta ~/ && sudo python3 PyRosetta/setup/setup.py install
