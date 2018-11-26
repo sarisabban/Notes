@@ -11,7 +11,7 @@ import biotite.structure.io as strucio
 
 def Nano(angstrom):
 	'''Convert angstrom to nanometer'''
-	nano = angstrom/10
+	nano = angstrom / 10
 	return(nano)
 
 def DiameterA(TheFile):
@@ -63,13 +63,10 @@ def main():
 		try:
 			diameter = DiameterA('{}/{}'.format(directory, File))
 			diameternano = round(Nano(diameter), 3)
-			print('{} = {} A\t{} nm'.format(File,
-						diameter, diameternano))
+			print('{} = {} A\t{} nm'.format(File, diameter, diameternano))
 		except:
 			diameter = Diameter('{}/{}'.format(directory, File))
 			diameternano = round(Nano(diameter), 3)
-			print('{} = {} A\t{} nm'.format(File,
-						diameter, diameternano))
+			print('{} = {} A\t{} nm'.format(File, diameter, diameternano))
 
-if __name__ == '__main__':
-	main()
+if __name__ == '__main__': main()
