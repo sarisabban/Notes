@@ -1,12 +1,60 @@
 #!/usr/bin/python
 
+'''
+Instructions:
+-------------
+
+sudo update && sudo full-upgrade && sudo apt install openbabel
+
+This script uses Python 3 and requires openbabel and PyMOL version 2.
+
+1. Prep and convert the protein receptor from PDB to PDBQT using this command:
+	python3 AutoDock.py -r FILENAME.pdb
+2. Choose search space, using the following command:
+	python3 AutoDock.py -b Center_X Center_X Center_X Center_X Center_X Center_X FILENAME.pdbqt
+3. Get Ligands from ZINC15 database
+4. Download the ligands and combine them into a file using this command:
+	python3 AutoDock.py -d FILENAME.wget
+5. Split ligands file for virtual screaning using this command:
+	python3 AutoDock.py -s FILENAME.pdbqt
+6. Generate a PSB or SLURM job submission file for a high performance computer:
+	python3 AutoDock.py -j Center_X Center_X Center_X Center_X Center_X Center_X Seed Exhaustiveness Array Email
+7. Download Autodock vina from the following link: http://vina.scripps.edu/download.html
+
+Use the command python3 AutoDock.py -h for the help menu.
+
+Here is a video explaning how to perform virtual screaning using AutoDock Vina
+and how to use this script: 
+
+MIT License
+
+Copyright (c) 2018 Sari Sabban
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+'''
 
 import os
 import sys
-#import pymol
+import pymol
 import argparse
 import itertools
-#from pymol.cgo import *
+from pymol.cgo import *
 
 def Box(pX, pY, pZ, x, y, z):
 	'''
@@ -87,6 +135,21 @@ def download(filename):
 	os.remove('temp')
 	os.rename('temp2', 'ZINC15.pdbqt')
 
+def receptor(filename):
+	'''
+	Prepares the receptor by first removing all the water molecules from
+	the protein's structure, then adds only the polar hydrogens, then
+	it exports the resulting structure and converts it to a .pdbqt file.
+	'''
+	cmd.load(filename)
+	cmd.remove('resn HOH')
+	cmd.h_add(selection='acceptors or donors')
+	cmd.save('receptor.pdb')
+	os.system('babel receptor.pdb temp.pdbqt -xh')
+	os.system('grep ATOM temp.pdbqt > protein.pdbqt')
+	os.remove('temp.pdbqt')
+	os.remove('receptor.pdb')
+
 def split(filename, direct, prefix, limit):
 	'''
 	Separates a .pdbqt file with multiple molecules into separate files with
@@ -160,6 +223,10 @@ def PBS(pX, pY, pZ, x, y, z, seed, exhaust, array, email):
 		TheFile.write('''find ../Ligands/${PBS_ARRAY_INDEX}/ -type f -print0 | xargs -0 -P 24 -I{} bash -c 'process "$1"' _ {}''')
 
 parser = argparse.ArgumentParser(description='Prep ligands for AutoDock Vina')
+parser.add_argument('-r',
+					'--receptor',
+					nargs='+',
+					help='Prep and convert protein receptor from PDB to PDBQT')
 parser.add_argument('-b',
 					'--box',
 					nargs='+',
@@ -173,8 +240,8 @@ parser.add_argument('-s',
 					nargs='+',
 					help='Split a file with multiple models into single files\
 							segmented into directories')
-parser.add_argument('-p',
-					'--pbs',
+parser.add_argument('-j',
+					'--job',
 					nargs='+',
 					help='Write the PBS file for HPC virtual screaning')
 parser.add_argument('-c',
@@ -184,14 +251,16 @@ parser.add_argument('-c',
 args = parser.parse_args()
 
 def main():
-	if args.box:
+	if args.receptor:
+		receptor(sys.argv[2])
+	elif args.box:
 		pymol.cmd.load(str(sys.argv[2]))
 		pymol.cmd.extend('Box', Box)
 	elif args.download:
 		download(sys.argv[2])
 	elif args.split:
 		split(sys.argv[3], 'Ligands', 'model', int(sys.argv[2]))
-	elif args.pbs:
+	elif args.job:
 		PBS(sys.argv[2],	# pX
 			sys.argv[3],	# pY
 			sys.argv[4],	# pZ
