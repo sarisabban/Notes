@@ -6,12 +6,15 @@ Instructions:
 
 sudo update && sudo full-upgrade && sudo apt install openbabel
 
-This script uses Python 3 and requires openbabel and PyMOL version 2.
+This script uses Python 3.6+ and requires openbabel and PyMOL version 2.2 (but can work with 2.1).
 
-1. Prep and convert the protein receptor from PDB to PDBQT using this command:
-	python3 AutoDock.py -r FILENAME.pdb
+1. Prep and convert the protein receptor from PDB to PDBQT using this command (uses python 2 only):
+	python2 AutoDock.py -r FILENAME.pdb (for PyMOL 2.1)
+	python3 AutoDock.py -r FILENAME.pdb (for PyMOL 2.2)
 2. Choose search space, using the following command:
-	python3 AutoDock.py -b Center_X Center_X Center_X Center_X Center_X Center_X FILENAME.pdbqt
+	pymol AutoDock.py -b FILENAME.pdb
+	in PyMOL command terminal type Box(0,0,0,1,1,1) then adjust numbers to get search box
+	You have to delete the Box and Position objects before adjusting the numbers.
 3. Get Ligands from ZINC15 database
 4. Download the ligands and combine them into a file using this command:
 	python3 AutoDock.py -d FILENAME.wget
@@ -144,11 +147,11 @@ def receptor(filename):
 	cmd.load(filename)
 	cmd.remove('resn HOH')
 	cmd.h_add(selection='acceptors or donors')
-	cmd.save('receptor.pdb')
-	os.system('babel receptor.pdb temp.pdbqt -xh')
-	os.system('grep ATOM temp.pdbqt > protein.pdbqt')
+	cmd.save('protein.pdb')
+	os.system('babel protein.pdb temp.pdbqt -xh')
+	os.system('grep ATOM temp.pdbqt > receptor.pdbqt')
 	os.remove('temp.pdbqt')
-	os.remove('receptor.pdb')
+	os.remove('protein.pdb')
 
 def split(filename, direct, prefix, limit):
 	'''
