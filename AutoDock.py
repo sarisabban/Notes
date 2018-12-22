@@ -21,7 +21,8 @@ This script uses Python 3.6+ and requires openbabel and PyMOL version 2.2 (but c
 5. Split ligands file for virtual screaning using this command:
 	python3 AutoDock.py -s FILENAME.pdbqt
 6. Generate a PSB or SLURM job submission file for a high performance computer:
-	python3 AutoDock.py -j Center_X Center_X Center_X Center_X Center_X Center_X Seed Exhaustiveness Array Email
+	python3 AutoDock.py -j Center_X Center_X Center_X Center_X Center_X Center_X Seed Exhaustiveness Output CPUs Array Email
+
 7. Download Autodock vina from the following link: http://vina.scripps.edu/download.html
 
 Use the command python3 AutoDock.py -h for the help menu.
@@ -188,7 +189,7 @@ def split(filename, direct, prefix, limit):
 			else: break
 	print('----------\n[+] Done')
 
-def PBS(pX, pY, pZ, x, y, z, seed, exhaust, out, array, email):
+def PBS(pX, pY, pZ, x, y, z, seed, exhaust, out, CPU, array, email):
 	'''
 	Write a PBS file for HPC virtual screening
 	'''
@@ -214,7 +215,7 @@ def PBS(pX, pY, pZ, x, y, z, seed, exhaust, out, array, email):
 		TheFile.write('\t\t--out {} \\\n'.format(output))
 		TheFile.write('\t\t--log "log_$n" \\\n')
 		TheFile.write('\t\t--exhaustiveness {} \\\n'.format(exhaust))
-		TheFile.write('\t\t--cpu 1 \\\n')
+		TheFile.write('\t\t--cpu {} \\\n'.format(CPU))
 		TheFile.write('\t\t--seed {} \\\n'.format(seed))
 		TheFile.write('\t\t--center_x {} \\\n'.format(pX))
 		TheFile.write('\t\t--center_y {} \\\n'.format(pY))
@@ -277,8 +278,9 @@ def main():
 			sys.argv[8],	# Seed
 			sys.argv[9],	# Exhaustiveness
 			sys.argv[10],	# Output
-			sys.argv[11],	# Array
-			sys.argv[12])	# Email
+			sys.argv[11],	# CPUs			
+			sys.argv[12],	# Array
+			sys.argv[13])	# Email
 	elif args.combine:
 		os.system('{}/cat Docks_* | sort -nk 3 > temp'.format(sys.argv[2]))
 
