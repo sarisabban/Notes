@@ -54,10 +54,10 @@ SOFTWARE.
 
 import os
 import sys
-import pymol
+#import pymol
 import argparse
 import itertools
-from pymol.cgo import *
+#from pymol.cgo import *
 
 def Box(pX, pY, pZ, x, y, z):
 	'''
@@ -188,10 +188,14 @@ def split(filename, direct, prefix, limit):
 			else: break
 	print('----------\n[+] Done')
 
-def PBS(pX, pY, pZ, x, y, z, seed, exhaust, array, email):
+def PBS(pX, pY, pZ, x, y, z, seed, exhaust, out, array, email):
 	'''
 	Write a PBS file for HPC virtual screening
 	'''
+	if out == 'True' or out == 'true':
+		output = '"out_$n"'
+	elif out == 'False' or out == 'false':
+		output = '/dev/null'
 	with open('dock.pbs', 'w') as TheFile:
 		TheFile.write('#!/bin/bash\n\n')
 		TheFile.write('#PBS -N Docking\n')
@@ -207,7 +211,7 @@ def PBS(pX, pY, pZ, x, y, z, seed, exhaust, array, email):
 		TheFile.write('\t./vina \\\n')
 		TheFile.write('\t\t--receptor receptor.pdbqt \\\n')
 		TheFile.write('\t\t--ligand "$1" \\\n')
-		TheFile.write('\t\t--out /dev/null \\\n')
+		TheFile.write('\t\t--out {} \\\n'.format(output))
 		TheFile.write('\t\t--log "log_$n" \\\n')
 		TheFile.write('\t\t--exhaustiveness {} \\\n'.format(exhaust))
 		TheFile.write('\t\t--cpu 1 \\\n')
@@ -272,8 +276,9 @@ def main():
 			sys.argv[7],	# z
 			sys.argv[8],	# Seed
 			sys.argv[9],	# Exhaustiveness
-			sys.argv[10],	# Array
-			sys.argv[11])	# Email
+			sys.argv[10],	# Output
+			sys.argv[11],	# Array
+			sys.argv[12])	# Email
 	elif args.combine:
 		os.system('{}/cat Docks_* | sort -nk 3 > temp'.format(sys.argv[2]))
 
