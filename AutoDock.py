@@ -55,10 +55,10 @@ SOFTWARE.
 
 import os
 import sys
-import pymol
+#import pymol
 import argparse
 import itertools
-from pymol.cgo import *
+#from pymol.cgo import *
 
 def Box(pX, pY, pZ, x, y, z):
 	'''
@@ -135,7 +135,7 @@ def download(filename):
 					outfile.write('MODEL {:15}\n'.format(count))
 				else:
 					outfile.write(line)
-	os.system('rm *.pdbqt')
+	os.system('ls *.pdbqt | grep -v receptor.pdbqt | xargs rm')
 	os.remove('temp')
 	os.rename('temp2', 'ZINC15.pdbqt')
 
