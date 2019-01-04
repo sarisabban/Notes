@@ -267,7 +267,7 @@ def main():
 	elif args.download:
 		download(sys.argv[2])
 	elif args.split:
-		split(sys.argv[3], 'Ligands', 'model', int(sys.argv[2]))
+		split(sys.argv[2], 'Ligands', 'model', int(sys.argv[3]))
 	elif args.job:
 		PBS(sys.argv[2],	# pX
 			sys.argv[3],	# pY
