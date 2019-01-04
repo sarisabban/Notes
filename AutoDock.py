@@ -19,7 +19,7 @@ This script uses Python 3.6+ and requires openbabel and PyMOL version 2.2 (but c
 4. Download the ligands and combine them into a file using this command:
 	python3 AutoDock.py -d FILENAME.wget
 5. Split ligands file for virtual screaning using this command:
-	python3 AutoDock.py -s FILENAME.pdbqt
+	python3 AutoDock.py -s FILENAME.pdbqt 300000
 6. Generate a PSB or SLURM job submission file for a high performance computer:
 	python3 AutoDock.py -j Center_X Center_X Center_X Center_X Center_X Center_X Seed Exhaustiveness Output CPUs Array Email
 
