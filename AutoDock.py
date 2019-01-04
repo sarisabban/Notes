@@ -22,8 +22,9 @@ This script uses Python 3.6+ and requires openbabel and PyMOL version 2.2 (but c
 	python3 AutoDock.py -s FILENAME.pdbqt 300000
 6. Generate a PSB or SLURM job submission file for a high performance computer:
 	python3 AutoDock.py -j Center_X Center_X Center_X Center_X Center_X Center_X Seed Exhaustiveness Output CPUs Array Email
-
-7. Download Autodock vina from the following link: http://vina.scripps.edu/download.html
+7. Combine computed files and sort them to see which ligand binds strongest
+	python3 AutoDock.py -c DIRECTORY
+8. Download Autodock vina from the following link: http://vina.scripps.edu/download.html
 
 Use the command python3 AutoDock.py -h for the help menu.
 
