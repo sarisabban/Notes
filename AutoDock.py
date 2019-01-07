@@ -283,6 +283,6 @@ def main():
 			sys.argv[12],	# Array
 			sys.argv[13])	# Email
 	elif args.combine:
-		os.system('{}/cat Docks_* | sort -nk 3 > temp'.format(sys.argv[2]))
+		os.system('cat {}/Docks_* | sort -nk 3 > Result'.format(sys.argv[2]))
 
 if __name__ == "__main__": main()
