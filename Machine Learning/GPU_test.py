@@ -1,9 +1,5 @@
 import tensorflow as tf
 import timeit
-import os
-
-os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"]="0"
 
 def Find():
 	''' FIND GPU '''
