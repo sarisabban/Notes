@@ -9,7 +9,7 @@ def Find():
 	''' FIND GPU '''
 	device_name = tf.test.gpu_device_name()
 	if device_name != '/device:GPU:0': raise SystemError('GPU device not found')
-	print('Found GPU at: {}'.format(device_name))
+	print('\x1b[31mFound GPU at: {}\x1b[0m'.format(device_name))
 
 def Test():
 	''' TEST CPU/GPU SPEED '''
@@ -24,23 +24,16 @@ def Test():
 		net_gpu = tf.layers.conv2d(random_image_gpu, 32, 7)
 		net_gpu = tf.reduce_sum(net_gpu)
 	sess = tf.Session(config=config)
-	try:
-		sess.run(tf.global_variables_initializer())
-	except tf.errors.InvalidArgumentError:
-		print(
-		'\n\nThis error most likely means that this notebook is not '
-		'configured to use a GPU.  Change this in Notebook Settings via the '
-		'command palette (cmd/ctrl-shift-P) or the Edit menu.\n\n')
-		raise
+	sess.run(tf.global_variables_initializer())
 	def cpu(): sess.run(net_cpu)
 	def gpu(): sess.run(net_gpu)
-	print('Time (s) to convolve 32x7x7x3 filter over random 100x100x100x3 images '
+	print('Time(s) to convolve 32x7x7x3 filter over random 100x100x100x3 images'
 		'(batch x height x width x channel). Sum of ten runs.')
-	print('CPU (s):')
-	cpu_time = timeit.timeit('cpu()', number=10, setup="from __main__ import cpu")
+	print('CPU(s):')
+	cpu_time = timeit.timeit('cpu()',number=10,setup="from __main__ import cpu")
 	print(cpu_time)
-	print('GPU (s):')
-	gpu_time = timeit.timeit('gpu()', number=10, setup="from __main__ import gpu")
+	print('GPU(s):')
+	gpu_time = timeit.timeit('gpu()',number=10,setup="from __main__ import gpu")
 	print(gpu_time)
 	print('GPU speedup over CPU: {}x'.format(int(cpu_time/gpu_time)))
 	sess.close()
