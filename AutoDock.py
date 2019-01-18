@@ -4,33 +4,34 @@
 Instructions:
 -------------
 
-sudo update && sudo full-upgrade && sudo apt install openbabel
+This script uses Python 3.6+ and requires openbabel and PyMOL 2.2.
 
-This script uses Python 3.6+ and requires openbabel and PyMOL version 2.2 (but can work with 2.1).
-
-1. Prep and convert the protein receptor from PDB to PDBQT using this command (uses python 2 only):
-	python2 AutoDock.py -r FILENAME.pdb (for PyMOL 2.1)
-	python3 AutoDock.py -r FILENAME.pdb (for PyMOL 2.2)
-2. Choose search space, using the following command:
+1. Update system and install required programs:
+	sudo update && sudo full-upgrade && sudo apt install openbabel pymol
+1. Prepare and convert the protein receptor from PDB to PDBQT:
+	python3 AutoDock.py -r FILENAME.pdb
+2. Choose the search space:
 	pymol AutoDock.py -b FILENAME.pdb
-	in PyMOL command terminal type Box(0,0,0,1,1,1) then adjust numbers to get search box
-	You have to delete the Box and Position objects before adjusting the numbers.
-3. Get Ligands from ZINC15 database
-4. Download the ligands and combine them into a file using this command:
+	in PyMOL command terminal type Box(0,0,0,1,1,1) then adjust numbers
+	to get the search box. You have to delete the Box and Position objects
+	before adjusting the numbers.
+3. Get Ligands from ZINC15 database.
+4. Download the ligands and combine them into a file:
 	python3 AutoDock.py -d FILENAME.wget
-5. Split ligands file for virtual screaning using this command:
+5. Split ligands file for virtual screaning:
 	python3 AutoDock.py -s FILENAME.pdbqt 300000
-6. Generate a PSB or SLURM job submission file for a high performance computer:
-	python3 AutoDock.py -j Center_X Center_X Center_X Center_X Center_X Center_X Seed Exhaustiveness Output CPUs Array Email
+6. Generate a PBS job submission file for a high performance computer:
+	python3 AutoDock.py -j Center_X Center_Y Center_Z Size_X Size_Y Size_Z Seed Exhaustiveness Output CPUs Array Email
+8. Download Autodock vina from the following link
+	http://vina.scripps.edu/download.html
 7. Combine computed files and sort them to see which ligand binds strongest
 	python3 AutoDock.py -c DIRECTORY
-8. Download Autodock vina from the following link: http://vina.scripps.edu/download.html
 
 Use the command python3 AutoDock.py -h for the help menu.
 
 Here is a video explaning how to perform virtual screaning using AutoDock Vina
-and how to use this script: 
-
+and how to use this script:
+--------------------------------------------------------------------------------
 MIT License
 
 Copyright (c) 2018 Sari Sabban
@@ -198,38 +199,38 @@ def PBS(pX, pY, pZ, x, y, z, seed, exhaust, out, CPU, array, email):
 		output = '"out_$n"'
 	elif out == 'False' or out == 'false':
 		output = '/dev/null'
-	with open('dock.pbs', 'w') as TheFile:
-		TheFile.write('#!/bin/bash\n\n')
-		TheFile.write('#PBS -N Docking\n')
-		TheFile.write('#PBS -m e\n')
-		TheFile.write('#PBS -M {}\n'.format(email))
-		TheFile.write('#PBS -q thin_1m\n')
-		TheFile.write('#PBS -l select=1:ncpus=24:ompthreads=24\n')
-		TheFile.write('#PBS -j oe\n')
-		TheFile.write('#PBS -J 1-{}\n\n'.format(array))
-		TheFile.write('cd $PBS_O_WORKDIR\n\n')
-		TheFile.write('mkdir -p ../Ligands_Completed/${PBS_ARRAY_INDEX}\n')
-		TheFile.write('process() { local n=${1##*/}\n')
-		TheFile.write('\t./vina \\\n')
-		TheFile.write('\t\t--receptor receptor.pdbqt \\\n')
-		TheFile.write('\t\t--ligand "$1" \\\n')
-		TheFile.write('\t\t--out {} \\\n'.format(output))
-		TheFile.write('\t\t--log "log_$n" \\\n')
-		TheFile.write('\t\t--exhaustiveness {} \\\n'.format(exhaust))
-		TheFile.write('\t\t--cpu {} \\\n'.format(CPU))
-		TheFile.write('\t\t--seed {} \\\n'.format(seed))
-		TheFile.write('\t\t--center_x {} \\\n'.format(pX))
-		TheFile.write('\t\t--center_y {} \\\n'.format(pY))
-		TheFile.write('\t\t--center_z {} \\\n'.format(pZ))
-		TheFile.write('\t\t--size_x {} \\\n'.format(x))
-		TheFile.write('\t\t--size_y {} \\\n'.format(y))
-		TheFile.write('\t\t--size_z {} \\\n'.format(z))
-		TheFile.write('''\t\t| awk -v name="$n" '$1 == "1" {print name "\\t" $0;exit}' >> Docks_${PBS_ARRAY_INDEX} \\\n''')
-		TheFile.write('\t\t&& rm log_$n \\\n')
-		TheFile.write('\t\t&& mv "$1" ../Ligands_Completed/${PBS_ARRAY_INDEX}\n')
-		TheFile.write('}\n')
-		TheFile.write('export -f process\n')
-		TheFile.write('''find ../Ligands/${PBS_ARRAY_INDEX}/ -type f -print0 | xargs -0 -P 24 -I{} bash -c 'process "$1"' _ {}''')
+	with open('dock.pbs', 'w') as dock:
+		dock.write('#!/bin/bash\n\n')
+		dock.write('#PBS -N Docking\n')
+		dock.write('#PBS -m e\n')
+		dock.write('#PBS -M {}\n'.format(email))
+		dock.write('#PBS -q thin_1m\n')
+		dock.write('#PBS -l select=1:ncpus=24:ompthreads=24\n')
+		dock.write('#PBS -j oe\n')
+		dock.write('#PBS -J 1-{}\n\n'.format(array))
+		dock.write('cd $PBS_O_WORKDIR\n\n')
+		dock.write('mkdir -p ../Ligands_Completed/${PBS_ARRAY_INDEX}\n')
+		dock.write('process() { local n=${1##*/}\n')
+		dock.write('\t./vina \\\n')
+		dock.write('\t\t--receptor receptor.pdbqt \\\n')
+		dock.write('\t\t--ligand "$1" \\\n')
+		dock.write('\t\t--out {} \\\n'.format(output))
+		dock.write('\t\t--log "log_$n" \\\n')
+		dock.write('\t\t--exhaustiveness {} \\\n'.format(exhaust))
+		dock.write('\t\t--cpu {} \\\n'.format(CPU))
+		dock.write('\t\t--seed {} \\\n'.format(seed))
+		dock.write('\t\t--center_x {} \\\n'.format(pX))
+		dock.write('\t\t--center_y {} \\\n'.format(pY))
+		dock.write('\t\t--center_z {} \\\n'.format(pZ))
+		dock.write('\t\t--size_x {} \\\n'.format(x))
+		dock.write('\t\t--size_y {} \\\n'.format(y))
+		dock.write('\t\t--size_z {} \\\n'.format(z))
+		dock.write('''\t\t| awk -v name="$n" '$1 == "1" {print name "\\t" $0;exit}' >> Docks_${PBS_ARRAY_INDEX} \\\n''')
+		dock.write('\t\t&& rm log_$n \\\n')
+		dock.write('\t\t&& mv "$1" ../Ligands_Completed/${PBS_ARRAY_INDEX}\n')
+		dock.write('}\n')
+		dock.write('export -f process\n')
+		dock.write('''find ../Ligands/${PBS_ARRAY_INDEX}/ -type f -print0 | xargs -0 -P 24 -I{} bash -c 'process "$1"' _ {}''')
 
 parser = argparse.ArgumentParser(description='Prep ligands for AutoDock Vina')
 parser.add_argument('-r',
@@ -285,4 +286,4 @@ def main():
 	elif args.combine:
 		os.system('cat {}/Docks_* | sort -nk 3 > Result'.format(sys.argv[2]))
 
-if __name__ == "__main__": main()
+if __name__ == '__main__': main()
