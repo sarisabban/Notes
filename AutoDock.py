@@ -57,6 +57,8 @@ SOFTWARE.
 
 import os
 import sys
+import math
+import numpy
 #import pymol
 import argparse
 import itertools
@@ -232,6 +234,16 @@ def PBS(pX, pY, pZ, x, y, z, seed, exhaust, out, CPU, array, email):
 		dock.write('export -f process\n')
 		dock.write('''find ../Ligands/${PBS_ARRAY_INDEX}/ -type f -print0 | xargs -0 -P 24 -I{} bash -c 'process "$1"' _ {}''')
 
+def Kd_to_dG(Kd):
+	Kd = float(Kd)
+	dG = 0.0019872036*298*numpy.log(Kd)
+	print('{} Kcal/mol'.format(round(dG, 2)))
+
+def dG_to_Kd(dG):
+	dG = float(dG)
+	Kd = math.e**(dG/(0.0019872036*298))
+	print('{:0.2e} dG'.format(Kd))
+
 parser = argparse.ArgumentParser(description='Prep ligands for AutoDock Vina')
 parser.add_argument('-r',
 					'--receptor',
@@ -258,6 +270,14 @@ parser.add_argument('-c',
 					'--combine',
 					nargs='+',
 					help='Sort and combine the docking results into a file')
+parser.add_argument('-Kd',
+					'--Kd_to_dG',
+					nargs='+',
+					help='Convert Kd to delta G')
+parser.add_argument('-dG',
+					'--dG_to_Kd',
+					nargs='+',
+					help='Convert delta G to Kd')
 args = parser.parse_args()
 
 def main():
@@ -285,5 +305,9 @@ def main():
 			sys.argv[13])	# Email
 	elif args.combine:
 		os.system('cat {}/Docks_* | sort -nk 3 > Result'.format(sys.argv[2]))
+	elif args.Kd_to_dG:
+		Kd_to_dG(sys.argv[2])
+	elif args.dG_to_Kd:
+		dG_to_Kd(sys.argv[2])
 
 if __name__ == '__main__': main()
