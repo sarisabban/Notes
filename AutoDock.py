@@ -8,29 +8,32 @@ This script uses Python 3.6+ and requires openbabel and PyMOL 2.2.
 
 1. Update system and install required programs:
 	sudo update && sudo full-upgrade && sudo apt install openbabel pymol
-1. Prepare and convert the protein receptor from PDB to PDBQT:
+2. Prepare and convert the protein receptor from PDB to PDBQT:
 	python3 AutoDock.py -r FILENAME.pdb
-2. Choose the search space:
+3. Choose the search space:
 	pymol AutoDock.py -b FILENAME.pdb
 	in PyMOL command terminal type Box(0,0,0,1,1,1) then adjust numbers
 	to get the search box. You have to delete the Box and Position objects
 	before adjusting the numbers.
-3. Get Ligands from ZINC15 database.
-4. Download the ligands and combine them into a file:
+4. Get Ligands from ZINC15 database.
+5. Download the ligands and combine them into a file:
 	python3 AutoDock.py -d FILENAME.wget
-5. Split ligands file for virtual screaning:
+6. Split ligands file for virtual screaning:
 	python3 AutoDock.py -s FILENAME.pdbqt 300000
-6. Generate a PBS job submission file for a high performance computer:
+7. Generate a PBS job submission file for a high performance computer:
 	python3 AutoDock.py -j Center_X Center_Y Center_Z Size_X Size_Y Size_Z Seed Exhaustiveness Output CPUs Array Email
 8. Download Autodock vina from the following link
 	http://vina.scripps.edu/download.html
-7. Combine computed files and sort them to see which ligand binds strongest
+9. Combine computed files and sort them to see which ligand binds strongest
 	python3 AutoDock.py -c DIRECTORY
 
 Use the command python3 AutoDock.py -h for the help menu.
 
 Here is a video explaning how to perform virtual screaning using AutoDock Vina
 and how to use this script:
+
+For running on a local computer use this command:
+for file in ./Ligands/*/*; do tmp=${file%.pdbqt}; name="${tmp##*/}"; ./vina --receptor receptor.pdbqt --ligand "$file" --out $name.out --log $name.log --exhaustiveness 10 --center_x 0 --center_y 0 --center_z 10 --size_x 15 --size_y 15 --size_z 15; awk '/^[-+]+$/{getline;print FILENAME,$0}' $name.log >> temp; done; sort temp -nk 3 > Results; rm temp; mkdir logs; mv *.log *.out logs
 --------------------------------------------------------------------------------
 MIT License
 
