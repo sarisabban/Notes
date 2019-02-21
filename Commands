@@ -18,7 +18,7 @@ sudo apt update && sudo apt full-upgrade && sudo apt install transmission weecha
 * Settings>Background>        Change background
 * Settings>Language>          [Language UK][Format UK][Input Sources Arabic(Macintosh)]
 * Settings>Privacy>           [X]Screen lock
-* Settings>Power              [X]Dim screen [X]Blank screen
+* Settings>Power              [X]Automatic brightness [X]Dim screen [X]Blank screen
 * Settings>Devices>Keyboard>Shortcuts (Home ctrl-alt-F [sh -c 'setsid xdg-open "$HOME" &']) (Text ctrl-alt-G [gedit]) (Firefox ctrl-alt-W [firefox])
 * Settings>Devices>Mouse>     [X]Tap to click
 * Settings>Details>Users>     Image
