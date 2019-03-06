@@ -80,4 +80,4 @@ module use /app/utils/modules && module load python-2.7.9 gcc-5.3.0
 # Compile
 tar -vjxf {PYROSETTA}.tar.bz2
 mv {PYROSETTA} PyRosetta && rm -r {PYROSETTA} && mv PyRosetta ~/ && sudo python3 PyRosetta/setup/setup.py install
-for server use this command only: apt install python3-setuptools && pip3 PyRosetta/setup
+for server use this command only: apt install python3-setuptools && pip3 install PyRosetta/setup
