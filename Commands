@@ -60,8 +60,7 @@ ffmpeg -f x11grab -s 1280x800 -framerate 30 -i :0.0 -c:v libx264rgb Screen.mkv
 pip3 install virtualenv
 mkdir env
 python3 -m venv env
-
-./env/bin/pip3 install PyRosetta/setup/setup.py
+./env/bin/pip3 install PyRosetta/setup
 --------------------------------------------------
 **#Rosetta**
 # Download
@@ -81,3 +80,4 @@ module use /app/utils/modules && module load python-2.7.9 gcc-5.3.0
 # Compile
 tar -vjxf {PYROSETTA}.tar.bz2
 mv {PYROSETTA} PyRosetta && rm -r {PYROSETTA} && mv PyRosetta ~/ && sudo python3 PyRosetta/setup/setup.py install
+for server use this command only: pip3 PyRosetta/setup
