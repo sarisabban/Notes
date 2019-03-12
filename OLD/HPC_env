@@ -23,8 +23,8 @@ ln -s ninja Ninja
 export PATH=/fefs1/generic/ssabban/ninja:${PATH}
 tar -zxvf cmake-3.5.0-Linux-x86_64.tar.gz
 export PATH=/fefs1/generic/ssabban/cmake-3.5.0-Linux-x86_64/bin:${PATH}
-export CC=/usr/bin/gcc
-export CXX=/usr/bin/gcc
+export CC=/app/utils/gcc-5.3.0/bin/gcc
+export CXX=/app/utils/gcc-5.3.0/bin/gcc
 tar -xvzf {ROSETTA}
 cd {ROSETTA}/main/source/src/python/PyRosetta
 
