@@ -17,15 +17,15 @@ python3 ./virtualenv-master/virtualenv.py env_1
 env_1/bin/pip3 install Cython---.whl
 env_1/bin/pip3 install numpy---.whl
 env_1/bin/pip3 install biopython---.whl
-
-tar -xvzf {ROSETTA}
-cd {ROSETTA}/main/source/src/python/PyRosetta
-mkdir /.local/bin
-mv ninja /.local/bin
+mkdir .local
+mkdir .local/bin
+mv ninja .local/bin
 touch .bashrc
 # Add export PATH=/${HOME}/.local/bin:${PATH} to .bashrc
+tar -xvzf {ROSETTA}
+cd {ROSETTA}/main/source/src/python/PyRosetta
 
-python3 build.py -j24 --create-package PyRosetta       path to ninja
+python3 build.py -j24 --create-package PyRosetta
 ####env_1/bin/python3.6 PyRosetta/setup.py install
 rm -r /.local/bin .bashrc
 
