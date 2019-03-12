@@ -3,6 +3,8 @@ ON LOCAL COMPUTER:
 pip3 download cython numpy biopython
 # Do not rename files
 git clone https://github.com/pypa/virtualenv.git
+https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-linux.zip
+unzip ninja-linux.zip
 # Download Rosetta
 # Upload to HPC
 
@@ -18,6 +20,6 @@ env_1/bin/pip3 install biopython---.whl
 tar -xvzf {ROSETTA}
 cd {ROSETTA}/main/source/src/python/PyRosetta
 
-python build.py -j24 --create-package PyRosetta
+python build.py -j24 --create-package PyRosetta       path to ninja
 ####env_1/bin/python3.6 PyRosetta/setup.py install
 env_1/bin/python3.6 FILENAME.py
