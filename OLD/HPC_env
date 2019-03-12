@@ -28,7 +28,9 @@ export CXX=/app/utils/gcc-5.3.0/bin/gcc
 tar -xvzf {ROSETTA}
 cd {ROSETTA}/main/source/src/python/PyRosetta
 
-python3 build.py -j24 --python-lib /app/utils/python3/Python-3.6.1/bin/python3 --create-package PyRosetta
-env_1/bin/python3.6 PyRosetta/setup.py install
+python3 build.py -j24 --python-lib /app/utils/python3/Python-3.6.1/lib/libpython3.6m.a --python-include-dir /app/utils/python3/Python-3.6.1/include/python3.6m/ --create-package PyRosetta
 
+
+
+env_1/bin/python3.6 PyRosetta/setup.py install
 env_1/bin/python3.6 FILENAME.py
