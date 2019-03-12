@@ -4,6 +4,7 @@ pip3 download cython numpy biopython
 # Do not rename files
 git clone https://github.com/pypa/virtualenv.git
 git clone https://github.com/ninja-build/ninja
+https://cmake.org/files/v3.5/cmake-3.5.0-Linux-x86_64.tar.gz
 # Download Rosetta
 # Upload to HPC
 
@@ -20,6 +21,8 @@ cd ninja
 ./configure.py --bootstrap
 ln -s ninja Ninja
 export PATH=/fefs1/generic/ssabban/ninja:${PATH}
+tar -zxvf cmake-3.5.0-Linux-x86_64.tar.gz
+export PATH=/fefs1/generic/ssabban/cmake-3.5.0-Linux-x86_64/bin:${PATH}
 tar -xvzf {ROSETTA}
 cd {ROSETTA}/main/source/src/python/PyRosetta
 
