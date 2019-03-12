@@ -20,8 +20,10 @@ env_1/bin/pip3 install biopython---.whl
 mkdir .local
 mkdir .local/bin
 mv ninja .local/bin
-touch .bashrc
-# Add export PATH=/${HOME}/.local/bin:${PATH} to .bashrc
+chmod +x .local/bin/ninja
+export PATH=/fefs1/generic/ssabban/.local/bin:${PATH}
+
+
 tar -xvzf {ROSETTA}
 cd {ROSETTA}/main/source/src/python/PyRosetta
 
