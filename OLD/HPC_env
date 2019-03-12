@@ -1,0 +1,28 @@
+ON LOCAL COMPUTER:
+------------------
+pip3 download cython numpy biopython # DO NOT RENAME THEM
+git clone https://github.com/pypa/virtualenv.git
+download Rosetta
+Upload to HPC
+
+ON HPC COMPUTER:
+----------------
+module use /app/utils/modules
+module load Python3/3.6.1
+module load gcc-5.3.0
+python3 ./virtualenv-master/virtualenv.py env_1
+env_1/bin/pip3 install Cython---.whl
+env_1/bin/pip3 install numpy---.whl
+env_1/bin/pip3 install biopython---.whl
+
+
+
+tar -xvzf {ROSETTA}
+cd {ROSETTA}/main/source/src/python/PyRosetta
+python build.py -j24 --create-package PyRosetta
+
+####env_1/bin/python3.6 PyRosetta/setup.py install
+
+
+
+env_1/bin/python3.6 FILENAME.py
