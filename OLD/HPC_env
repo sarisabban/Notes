@@ -18,13 +18,12 @@ env_1/bin/pip3 install numpy---.whl
 env_1/bin/pip3 install biopython---.whl
 cd ninja
 ./configure.py --bootstrap
+ln -s ninja Ninja
 export PATH=/fefs1/generic/ssabban/ninja:${PATH}
 tar -xvzf {ROSETTA}
-
 cd {ROSETTA}/main/source/src/python/PyRosetta
-python3 build.py -j24 --create-package PyRosetta
-####env_1/bin/python3.6 PyRosetta/setup.py install
-rm -r /.local/bin
 
+python3 build.py -j24 --create-package PyRosetta
+env_1/bin/python3.6 PyRosetta/setup.py install
 
 env_1/bin/python3.6 FILENAME.py
