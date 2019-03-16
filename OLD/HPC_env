@@ -56,3 +56,8 @@ pyinstaller --onefile --windowed test.py
 staticx ./test ./test2
 
 # But now the issue is with older kernel versions, the script will not work with older versions
+
+kernel 2.6.32-358.23.2.el6.x86_64
+
+# Install ubuntu linux with kernel 2.6 - list of linux kernels: https://kernel.ubuntu.com/~kernel-ppa/mainline/
+https://kernel.ubuntu.com/~kernel-ppa/mainline/v2.6.32-lucid/
