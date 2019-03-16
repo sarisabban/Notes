@@ -43,3 +43,16 @@ make
 # or
 conda install -c salilab dssp
 # Keep DSSP on the same directory as Biopython and it should work
+
+
+
+
+GLIBC problems:
+---------------
+# Compiling using pyinstaller allows the binary to be use anywhere given that the kernel and GLIBC are up-to-date or higher, future compatible, but not backward compatible, so we cannot execute the binary on older systems with older GLIBC.
+# Solution is to use staticx to make the the binary work with older GLIBC versions
+pip3 install pyinstaller staticx patchelf-wrapper
+pyinstaller --onefile --windowed test.py
+staticx ./test ./test2
+
+# But now the issue is with older kernel versions, the script will not work with older versions
