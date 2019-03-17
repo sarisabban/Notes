@@ -47,8 +47,7 @@ conda install -c salilab dssp
 sudo pip install cython
 mv test.py test.pyx
 cython test.pyx --embed
-gcc -Os -I /usr/include/python3.5m -o test test.c -lpython3.5m -lpthread -lm -lutil -ldl
-
+gcc -Os -I /usr/include/python3.6m -o test test.c -l python3.6m -l pthread -l m -l util -l dl
 
 GLIBC problems:
 ---------------
