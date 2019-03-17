@@ -43,8 +43,11 @@ make
 # or
 conda install -c salilab dssp
 # Keep DSSP on the same directory as Biopython and it should work
-
-
+======ANOTHER OPTION======
+sudo pip install cython
+mv test.py test.pyx
+cython test.pyx --embed
+gcc -Os -I /usr/include/python3.5m -o test test.c -lpython3.5m -lpthread -lm -lutil -ldl
 
 
 GLIBC problems:
