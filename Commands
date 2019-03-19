@@ -74,7 +74,7 @@ cd {ROSETTA}/main/source
 module use /app/utils/modules && module load python-2.7.9 gcc-4.9.2
 ./scons.py -j24 mode=release bin
 or just single executables
-./scons.py -j4 mode=release bin/AbinitioRelax.linuxgccrelease
+./scons.py -j4 mode=release bin/AbinitioRelax.default.linuxgccrelease
 ./scons.py -j4 mode=release bin/score.linuxgccrelease
 --------------------------------------------------
 **#PYROSETTA**
