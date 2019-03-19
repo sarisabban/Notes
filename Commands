@@ -71,8 +71,11 @@ tar -xvzf {ROSETTA}.tgz
 cd {ROSETTA}/main/source
 ./scons.py mode=release bin
 # Cannot compile on AZIZ straighforward because python -V -> python 2.6.6 therefore to compile first load python 2.7.9 then compile normally
-module use /app/utils/modules && module load python-2.7.9 gcc-5.3.0
+module use /app/utils/modules && module load python-2.7.9 gcc-4.9.2
 ./scons.py -j24 mode=release bin
+or just single executables
+./scons.py -j4 mode=release bin/AbinitioRelax.linuxgccrelease
+./scons.py -j4 mode=release bin/score.linuxgccrelease
 --------------------------------------------------
 **#PYROSETTA**
 # Download
