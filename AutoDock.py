@@ -7,7 +7,7 @@ Instructions:
 This script uses Python 3.6+ and requires openbabel and PyMOL 2.2.
 
 1. Update system and install required programs:
-	sudo update && sudo full-upgrade && sudo apt install openbabel pymol
+	sudo apt update && sudo apt full-upgrade && sudo apt install openbabel pymol
 2. Prepare and convert the protein receptor from PDB to PDBQT:
 	python3 AutoDock.py -r FILENAME.pdb
 3. Choose the search space:
