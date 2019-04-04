@@ -117,22 +117,26 @@ def download(filename):
 	'''
 	with open(filename, 'r')as infile:
 		for line in infile:
-			namegz = line.split()[-1]
-			name = line.split()[-1].split('gz')[0][:-1]
-			get = line.split()[1]
-			wget = 'wget {} -O {}'.format(get, namegz)
-			gunzip = 'gunzip {}'.format(namegz)
-			cat = 'cat {} >> temp'.format(name)
-			os.system(wget)
-			os.system(gunzip)
-			with open(name) as f:
-				first = f.readline()
-			if first.split()[0] == 'MODEL':
-				os.system(cat)
-			else:
-				os.system('echo "MODEL        1" >> temp')
-				os.system(cat)
-				os.system('echo "ENDMDL" >> temp')
+			try:
+				namegz = line.split()[-1]
+				name = line.split()[-1].split('gz')[0][:-1]
+				get = line.split()[1]
+				wget = 'wget {} -O {}'.format(get, namegz)
+				gunzip = 'gunzip {}'.format(namegz)
+				cat = 'cat {} >> temp'.format(name)
+				os.system(wget)
+				os.system(gunzip)
+				with open(name) as f:
+					first = f.readline()
+				if first.split()[0] == 'MODEL':
+					os.system(cat)
+				else:
+					os.system('echo "MODEL        1" >> temp')
+					os.system(cat)
+					os.system('echo "ENDMDL" >> temp')
+			except:
+				with open('error', 'a') as e:
+					e.write(line)
 	count = 0
 	with open('temp', 'r') as infile:
 		with open('temp2', 'a') as outfile:
