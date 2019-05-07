@@ -62,6 +62,11 @@ mkdir env
 python3 -m venv env
 ./env/bin/pip3 install LIBRARY
 --------------------------------------------------
+**#All in one executable**
+pip3 install pyinstaller staticx patchelf-wrapper
+pyinstaller --onefile --windowed test.py
+staticx ./test ./test2
+--------------------------------------------------
 **#Rosetta**
 # Download
 [https://www.rosettacommons.org/software/academic]
