@@ -103,3 +103,18 @@ matplotlib.pyplot.axis('off')							# Remove plot axis
 matplotlib.pyplot.show()							# Show the plot with the image
 #matplotlib.pyplot.savefig('generated.png')					# Save plot as a .png image file
 '''
+
+''' # For RamaNet
+real = X[np.random.randint(0, X.shape[0], size=batchs)]					# Real data from dataset, taking random sections from the dataset, shape is (batch size - number of examples, amino acid size, channels)
+noise = np.random.uniform(0.0, 1.0, size=[batchs, 100])					# Noise data between 0 and 1 (because dataset is normalised at 0-1), shape is (batch size, noise size)
+fake = G.predict(noise)													# Take noise and generate a tensor that looks like real data, shape is same as real data (batch size, amino acids size, channels)
+# Now I have real data and fake data
+x = np.concatenate((real, fake))										# Combine both real and fake data into 1 tensor, thus a dataset that contains both real and fake data
+y = np.ones([2*batchs, 1])												# Label all real data with 1 (true)
+y[batchs:, :] = 0														# Label all fake data with 0 (false)
+# Now I have a labeled real and fake data
+d_loss = DM.train_on_batch(x, y)										# Train Discriminator to learn what is real and what is fake data
+# After training the D now it is time to update the G
+y = np.ones([batchs, 1])												# Make a new label of all true, indipendent of previous y label
+a_loss = AM.train_on_batch(noise, y)									# Train both D and G: use the generated noise with True label and 
+'''
