@@ -116,5 +116,5 @@ y[batchs:, :] = 0														# Label all fake data with 0 (false)
 d_loss = DM.train_on_batch(x, y)										# Train Discriminator to learn what is real and what is fake data
 # After training the D now it is time to update the G
 y = np.ones([batchs, 1])												# Make a new label of all true, indipendent of previous y label
-a_loss = AM.train_on_batch(noise, y)									# Train both D and G: use the generated noise with True label and 
+a_loss = AM.train_on_batch(noise, y)									# Train both D and G: use the generated noise with True label and train the generator
 '''
