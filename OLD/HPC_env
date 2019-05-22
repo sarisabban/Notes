@@ -57,6 +57,10 @@ pip3 install pyinstaller staticx patchelf-wrapper
 pyinstaller --onefile --windowed test.py
 staticx ./test ./test2
 
+BEST TO USE THIS FOR PYROSETTA:
+pyinstaller fold.py
+staticx fold fold2
+
 # But now the issue is with older kernel versions, the script will not work with older versions
 
 kernel 2.6.32-358.23.2.el6.x86_64
