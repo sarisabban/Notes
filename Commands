@@ -4,6 +4,9 @@
 sudo apt update && sudo apt full-upgrade && sudo apt install transmission weechat vim pymol openconnect audacity obs-studio gnuplot tmux htop git dssp ffmpeg gnome-tweak-tool python3-pip python3-venv -y && n="$(awk '/PS1=/ { $0 = "PS1=\x27\\[\\033[0;33m\\][\\W]\\$ \\[\\033[0m\\]\x27" } 1' .bashrc)"; echo "$n" > .bashrc && printf ':set shiftwidth=4 noexpandtab\n:set softtabstop=4 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap\n:set number\n:set ts=4 sw=4\n:set cc=81' >> ~/.vimrc && pip3 install lxml numpy scipy sklearn keras tensorflow matplotlib pandas biopython opencv-python pillow beautifulsoup4
 ## Programs to install (PACMAN)
 sudo pacman -Syu && sudo pacman -S weechat vim pymol openconnect audacity obs-studio gnuplot tmux htop git ffmpeg python-pip qt && n="$(awk '/PS1=/ { $0 = "PS1=\x27\\[\\033[0;33m\\][\\W]\\$ \\[\\033[0m\\]\x27" } 1' .bashrc)"; echo "$n" > .bashrc && printf ':set shiftwidth=4 noexpandtab\n:set softtabstop=4 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap\n:set number\n:set ts=4 sw=4\n:set cc=81' >> ~/.vimrc && sudo pip install lxml numpy scipy sklearn keras tensorflow matplotlib pandas biopython opencv-python pillow beautifulsoup4
+
+printf '' > ~/.vimrc && tmux kill-server
+
 ## Weechat setup
 /set buflist.look.enabled off
 /server add freenode irc.freenode.net
@@ -36,7 +39,7 @@ sudo dd bs=4M if=FILENAME.iso of=/dev/sdb status=progress
 --------------------------------------------------
 **#TMUX**
 # Environment setups
-tmux new -s aziz -n aziz \; split-window -h -p25 \; split-window -v -p50
+tmux new -s Aziz -n Aziz \; split-window -h -p25 \; split-window -v -p50
 tmux new -s Twitch -n Twitch \; split-window -d -t 0 -v -p35 \; split-window -h -p35 htop \; split-window -v -p70
 tmux new \; split-window -h -p40 htop \; split-window -v -p82
 --------------------------------------------------
