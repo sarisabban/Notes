@@ -81,6 +81,7 @@ def fit_with(	lr1,
 								node2,
 								momentum,
 								batchs)
+	latent = int(100*latent)
 	for epoch in range(epochs):
 		real = dataset[np.random.randint(0, dataset.shape[0], size=batchs)]
 		noise = np.random.normal(0.0, 1.0, size=[batchs, latent])
@@ -97,7 +98,7 @@ def fit_with(	lr1,
 		A_accu = round(float(a_loss[1]), 3)
 		Verb =	'Epoch:{:6d} [Dis L:{:.3f} A:{:.3f}] [Gen L:{:.3f}, A:{:.3f}]'\
 				.format(epoch+1, D_loss, D_accu, A_loss, A_accu)
-		#print(Verb)
+		print(Verb)
 	return(A_accu)
 
 fit_with_partial = functools.partial(fit_with)
