@@ -66,7 +66,7 @@ for epoch in range(1000*int(epochs)):
 	D_accu = float(d_loss[1])
 	A_loss = float(a_loss[0])
 	A_accu = float(a_loss[1])
-	print (	'Epoch:{:6d} [Dis Loss:{:.5f}] [Gen Loss:{:.5f}]'\
+	print (	'Epoch:{:6d} [Dis Loss:{:.7f}] [Gen Loss:{:.7f}]'\
 			.format(epoch+1, D_loss, D_accu, A_loss, A_accu))
 
 #G.save_weights('GAN.h5')
