@@ -96,7 +96,7 @@ def fit_with(	lr1,
 		A_loss = round(float(a_loss[0]), 3)
 		A_accu = round(float(a_loss[1]), 3)
 		Verb =	'Epoch:{:6d} [Dis L:{:.3f} A:{:.3f}] [Gen L:{:.3f}, A:{:.3f}]'\
-				.format(epoch, D_loss, D_accu, A_loss, A_accu)
+				.format(epoch+1, D_loss, D_accu, A_loss, A_accu)
 		#print(Verb)
 	return(A_accu)
 
