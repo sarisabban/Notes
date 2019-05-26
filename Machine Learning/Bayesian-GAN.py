@@ -92,11 +92,11 @@ def fit_with(	lr1,
 		d_loss = DM.train_on_batch(x, y)
 		y = np.ones([batchs, 1])
 		a_loss = AM.train_on_batch(noise, y)
-		D_loss = round(float(d_loss[0]), 3)
-		D_accu = round(float(d_loss[1]), 3)
-		A_loss = round(float(a_loss[0]), 3)
-		A_accu = round(float(a_loss[1]), 3)
-		Verb =	'Epoch:{:6d} [Dis Loss:{:.5f}] [Adv Loss:{:.5f}]'\
+		D_loss = float(d_loss[0])
+		D_accu = float(d_loss[1])
+		A_loss = float(a_loss[0])
+		A_accu = float(a_loss[1])
+		Verb =	'Epoch:{:6d} [Dis Loss:{:.5f}] [Gen Loss:{:.5f}]'\
 				.format(epoch+1, D_loss, D_accu, A_loss, A_accu)
 		print(Verb)
 	return(A_accu)
