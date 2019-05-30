@@ -34,7 +34,7 @@ sudo eopkg upgrade && sudo eopkg install transmission weechat vim pymol openconn
 ----------
 ## Live USB
 sudo fdisk -l
-sudo dd bs=4M if=FILENAME.iso of=/dev/sdb status=progress
+sudo dd bs=4M if=FILENAME.iso of=/dev/sdb status=progress oflag=sync
 --------------------------------------------------
 **#TMUX**
 # Environment setups
