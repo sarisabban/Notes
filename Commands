@@ -40,6 +40,8 @@ tmux new -s Aziz -n Aziz \; split-window -h -p25 \; split-window -v -p50
 tmux new -s Twitch -n Twitch \; split-window -d -t 0 -v -p35 \; split-window -h -p40 htop \; split-window -v -p70
 cd Desktop && tmux new -s Bioinformatics -n Bioinformatics \; split-window -d -t 0 -v -p35 weechat \; split-window -h -p40 htop \; split-window -v -p75
 tmux new \; split-window -h -p40 htop \; split-window -v -p82
+PASTE TERMINAL COMMAND OUTPUT TO BIN:
+command | nc termbin.com 9999
 --------------------------------------------------
 **#PyMOL**
 # Generate movies
