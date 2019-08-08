@@ -1548,7 +1548,8 @@ PyROS/bin/python3 -m pip install PyRosetta/setup/
 #Run your script as follows:
 PyROS/bin/python3 SCRIPT.py
 ======================================
-Convert all spaces to tabs in a script
+Convert all spaces to tabs in a script in vim
 :set ts=4
 :set noet
 :%retab!
+:%s/    /\t/g
