@@ -62,10 +62,10 @@ import os
 import sys
 import math
 import numpy
-#import pymol
+import pymol
 import argparse
 import itertools
-#from pymol.cgo import *
+from pymol.cgo import *
 
 def Box(pX, pY, pZ, x, y, z):
 	'''
