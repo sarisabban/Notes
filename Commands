@@ -101,3 +101,17 @@ or just single executables
 tar -vjxf {PYROSETTA}.tar.bz2
 mv {PYROSETTA} PyRosetta && rm -r {PYROSETTA} && mv PyRosetta ~/ && sudo python3 PyRosetta/setup/setup.py install
 for server use this command only: apt install python3-setuptools && pip3 install PyRosetta/setup
+# AZIZ
+## To setup
+module use /app/utils/modules
+module load anaconda3
+conda create --prefix /fefs1/generic/ssabban/ML -y
+source activate /fefs1/generic/ssabban/ML
+conda install numpy pandas scipy scikit-learn keras biopython -y
+printf "channels:\n  - https://levinthal:paradox@conda.graylab.jhu.edu\n  - defaults">>~/.condarc
+conda install pyrosetta -y
+rm ~/.condarc
+source deactivate ML
+## To delete
+rm -r ~/.conda
+rm -r /fefs1/generic/ssabban/ML
