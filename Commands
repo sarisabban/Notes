@@ -102,14 +102,14 @@ tar -vjxf {PYROSETTA}.tar.bz2
 mv {PYROSETTA} PyRosetta && rm -r {PYROSETTA} && mv PyRosetta ~/ && sudo python3 PyRosetta/setup/setup.py install
 for server use this command only: apt install python3-setuptools && pip3 install PyRosetta/setup
 # AZIZ
-## To setup
+## To setup - cd to FEFS1 DIRECTORY
 module use /app/utils/modules
 module load anaconda3
-printf "channels:\n  - https://levinthal:paradox@conda.graylab.jhu.edu\n  - defaults">>~/.condarc
+printf "channels:\n  - https://levinthal:paradox@conda.graylab.jhu.edu\n  - defaults">>.condarc
 conda create -n ML -y
 source activate ML
 conda install numpy pandas scipy scikit-learn keras biopython pyrosetta -y
-rm ~/.condarc
+rm /.condarc
 source deactivate ML
 ## To delete
-rm -r ~/.conda
+rm -r .conda
