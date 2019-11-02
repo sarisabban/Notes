@@ -113,3 +113,8 @@ rm /.condarc
 source deactivate ML
 ## To delete
 rm -r .conda
+
+
+
+# Download PyRosetta
+conda install --offline {ROSETTA}.tar.bz2
