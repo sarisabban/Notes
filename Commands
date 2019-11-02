@@ -117,4 +117,5 @@ rm -r .conda
 
 
 # Download PyRosetta
+conda clean --packages
 conda install --offline {ROSETTA}.tar.bz2
