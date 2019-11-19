@@ -111,8 +111,8 @@ conda create -n ML -y
 source activate ML
 conda install numpy pandas scipy scikit-learn keras biopython pyrosetta -y
 rm /.condarc
-source deactivate ML
 ## Download Pyrosetta and upload 
 conda install {ROSETTA}.tar.bz2
+source deactivate ML
 ## To delete
 rm -r .conda
