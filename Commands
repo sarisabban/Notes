@@ -113,6 +113,8 @@ conda install numpy pandas scipy scikit-learn keras biopython pyrosetta -y
 rm /.condarc
 ## Download Pyrosetta and upload 
 conda install {ROSETTA}.tar.bz2
+----> DOES NOT IMPORT
+
 source deactivate ML
 ## To delete
 rm -r .conda
