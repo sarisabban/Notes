@@ -104,11 +104,15 @@ for server use this command only: apt install python3-setuptools && pip3 install
 # AZIZ
 ## To setup - cd to FEFS1 DIRECTORY
 module use /app/utils/modules
-module load anaconda3 python-3.5.2
-printf "channels:\n  - https://levinthal:paradox@conda.graylab.jhu.edu\n  - defaults">>.condarc
+module load anaconda3 python-3.6.1
 conda create -n ML -y
 source activate ML
-conda install numpy pandas scipy scikit-learn keras biopython pyrosetta -y
+conda install numpy pandas scipy scikit-learn keras biopython -y
+source deactivate ML
+
+# PyRosetta
+printf "channels:\n  - https://levinthal:paradox@conda.graylab.jhu.edu\n  - defaults">>.condarc
+conda install pyrosetta -y
 rm /.condarc
 ## Download Pyrosetta and upload 
 conda install {ROSETTA}.tar.bz2
