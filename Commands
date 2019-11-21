@@ -113,8 +113,7 @@ conda install numpy pandas scipy scikit-learn keras biopython pyrosetta -y
 rm /.condarc
 ## Download Pyrosetta and upload 
 conda install {ROSETTA}.tar.bz2
-----> DOES NOT IMPORT
-
+----> PyRosetta does not work on AZIZ "GlibC error"
 source deactivate ML
 ## To delete
 rm -r .conda
