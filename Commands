@@ -104,10 +104,10 @@ for server use this command only: apt install python3-setuptools && pip3 install
 # AZIZ
 ## To setup - cd to FEFS1 DIRECTORY
 module use /app/utils/modules
-module load anaconda3 python-3.6.1
-conda create -n ML python=3.6.1 -y
+module load anaconda3 python-3.5.2
+conda create -n ML python=3.5.2 -y
 source activate ML
-conda install numpy pandas scipy scikit-learn keras biopython -y
+conda install numpy pandas scipy scikit-learn keras tensorflow biopython -y
 source deactivate ML
 
 # PyRosetta
