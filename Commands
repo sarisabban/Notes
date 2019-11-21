@@ -119,4 +119,4 @@ conda install {ROSETTA}.tar.bz2
 ----> PyRosetta does not work on AZIZ "GlibC error"
 source deactivate ML
 ## To delete
-rm -r .conda
+rm -r ~/.conda /fefs1/generic/sabban/.conda
