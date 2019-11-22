@@ -114,15 +114,8 @@ rm -r ~/.conda /fefs1/generic/sabban/.conda
 --------------------------------------------------
 **#AZIZ Python**
 ## To setup - cd to FEFS1 DIRECTORY
-#!/bin/bash
-#PBS -N inst
-#PBS -q thin
-#PBS -l walltime=01:00:00
-#PBS -l select=1:ncpus=1
-#PBS -j oe
-cd $PBS_O_WORKDIR
 module use /app/utils/modules
-module load anaconda3 python-3.6.1
+module load anaconda3 python-3.5.2
 conda create -n ML python=3.6.1 -y
 source activate ML
 conda install numpy pandas scipy scikit-learn keras tensorflow biopython -y
