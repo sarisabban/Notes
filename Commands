@@ -100,17 +100,8 @@ or just single executables
 # Compile
 tar -vjxf {PYROSETTA}.tar.bz2
 mv {PYROSETTA} PyRosetta && rm -r {PYROSETTA} && mv PyRosetta ~/ && sudo python3 PyRosetta/setup/setup.py install
+----
 for server use this command only: apt install python3-setuptools && pip3 install PyRosetta/setup
-# AZIZ
-## To setup - cd to FEFS1 DIRECTORY
-module use /app/utils/modules
-module load anaconda3 python-3.5.2
-conda create -n ML python=3.5.2 -y
-source activate ML
-conda install numpy pandas scipy scikit-learn keras tensorflow biopython -y
-source deactivate ML
-
-# PyRosetta
 printf "channels:\n  - https://levinthal:paradox@conda.graylab.jhu.edu\n  - defaults">>.condarc
 conda install pyrosetta -y
 rm /.condarc
@@ -120,3 +111,19 @@ conda install {ROSETTA}.tar.bz2
 source deactivate ML
 ## To delete
 rm -r ~/.conda /fefs1/generic/sabban/.conda
+--------------------------------------------------
+**#AZIZ Python**
+## To setup - cd to FEFS1 DIRECTORY
+#!/bin/bash
+#PBS -N inst
+#PBS -q thin
+#PBS -l walltime=01:00:00
+#PBS -l select=1:ncpus=1
+#PBS -j oe
+cd $PBS_O_WORKDIR
+module use /app/utils/modules
+module load anaconda3 python-3.6.1
+conda create -n ML python=3.6.1 -y
+source activate ML
+conda install numpy pandas scipy scikit-learn keras tensorflow biopython -y
+source deactivate ML
