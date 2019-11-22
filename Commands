@@ -39,7 +39,12 @@ sudo dd bs=4M if=FILENAME.iso of=/dev/sdb status=progress oflag=sync
 tmux new -s Aziz -n Aziz \; split-window -h -p26 \; split-window -v -p50
 tmux new -s Twitch -n Twitch \; split-window -d -t 0 -v -p35 weechat \; split-window -h -p40 htop \; split-window -v -p75 vlc -I ncurses --no-video https://www.youtube.com/watch?v=hHW1oY26kxQ 2> /dev/null \; split-window -v -p70
 tmux new -s Bioinformatics -n Bioinformatics \; split-window -d -t 0 -v -p35 weechat \; split-window -h -p40 htop \; split-window -v -p75
-tmux new \; split-window -h -p40 htop \; split-window -v -p82
+tmux new \; split-window -h -p40 htop \; split-window -v -p85
+# Write to each buffer:
+Ctrl-B
+:
+setw synchronize-panes on
+setw synchronize-panes off
 PASTE TERMINAL COMMAND OUTPUT TO BIN:
 command | nc termbin.com 9999
 FOR VIM:
