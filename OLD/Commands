@@ -317,6 +317,7 @@ N=1; ls -tr -1 | while read file; do mv "$file" "$N"; N=$((N+1)); done
 
 #Rename all files starting at number 417 (not starting at 1)
 n=417 ; for f in *.png ; do printf -v t 'video%04d.png' $((n++))  ; mv -vi -- "$f" "$t"; done
+n=417 ; for f in *.jpg ; do printf -v t '%d.jpg' $((n++))  ; mv -vi -- "$f" "$t"; done
 
 #To Shutdown
 sudo poweroff
