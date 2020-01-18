@@ -6,6 +6,7 @@ Instructions:
 
 This script uses Python 3.6+ and requires openbabel and PyMOL 2.2.
 
+0. Use the command python3 AutoDock.py -h for the help menu.
 1. Update system and install required programs:
 	sudo apt update && sudo apt full-upgrade && sudo apt install openbabel pymol
 2. Prepare and convert the protein receptor from PDB to PDBQT:
@@ -22,12 +23,19 @@ This script uses Python 3.6+ and requires openbabel and PyMOL 2.2.
 	python3 AutoDock.py -s FILENAME.pdbqt 300000
 7. Generate a PBS job submission file for a high performance computer:
 	python3 AutoDock.py -j Center_X Center_Y Center_Z Size_X Size_Y Size_Z Seed Exhaustiveness Output CPUs Array Email
-8. Download Autodock vina from the following link
+8. Download Autodock vina from the following link:
 	http://vina.scripps.edu/download.html
-9. Combine computed files and sort them to see which ligand binds strongest
+9. Combine computed files and sort them to see which ligand binds strongest:
 	python3 AutoDock.py -c DIRECTORY
-
-Use the command python3 AutoDock.py -h for the help menu.
+10. Generate PBS job script:
+	python3 AutoDock.py -p pX pY pZ x y z seed exhaust out CPU array email
+		pX pY pZ x y z -> these values are the box dementions
+		seed           -> choose a random number for a starting seed
+		exhaust        -> how exhaustive you want the search
+		out            -> true or false (true will keep the output for each search - I recommend false)
+		CPU            -> number of CPUs you have available per node
+		array          -> number of array to repeat the code
+		email          -> your email to be notified when the job completes
 
 Here is a video explaning how to perform virtual screaning using AutoDock Vina
 and how to use this script:
