@@ -285,6 +285,10 @@ parser.add_argument('-dG',
 					'--dG_to_Kd',
 					nargs='+',
 					help='Convert delta G to Kd')
+parser.add_argument('-p',
+					'--pbs',
+					nargs='+',
+					help='Generates an HPC PBS job script')
 args = parser.parse_args()
 
 def main():
@@ -316,5 +320,7 @@ def main():
 		Kd_to_dG(sys.argv[2])
 	elif args.dG_to_Kd:
 		dG_to_Kd(sys.argv[2])
+	elif args.pbs:
+		PBS(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7], sys.argv[8], sys.argv[9], sys.argv[10], sys.argv[11], sys.argv[12], sys.argv[13])
 
 if __name__ == '__main__': main()
