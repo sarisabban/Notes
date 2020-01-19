@@ -129,7 +129,8 @@ def download(filename):
 				namegz = line.split()[-1]
 				name = line.split()[-1].split('gz')[0][:-1]
 				get = line.split()[1]
-				wget = 'wget {} -O {}'.format(get, namegz)
+				#wget = 'wget {} -O {}'.format(get, namegz)
+				wget = line.strip()
 				gunzip = 'gunzip {}'.format(namegz)
 				cat = 'cat {} >> temp'.format(name)
 				os.system(wget)
@@ -154,7 +155,8 @@ def download(filename):
 					outfile.write('MODEL {:15}\n'.format(count))
 				else:
 					outfile.write(line)
-	os.system('ls *.pdbqt | grep -v receptor.pdbqt | xargs rm')
+	#os.system('ls *.pdbqt | grep -v receptor.pdbqt | xargs rm')
+	os.system("rm -R `ls -1 -d */`")
 	os.remove('temp')
 	os.rename('temp2', 'ZINC15.pdbqt')
 
