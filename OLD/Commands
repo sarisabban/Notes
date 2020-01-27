@@ -308,6 +308,9 @@ tmux new -s aziz -n aziz \; split-window -h -p25 \; split-window -v -p50
 --------------------------------------------------
 **#Terminal Commands - Bash**
 
+#Remove all file types recursivly:
+find . -type f -name "*.xml" -delete
+
 #Bulk Rename Sequentially Command
 cd to directory where files are found
 N=1; ls -tr -1 | while read file; do mv "$file" "FILENAME $N"; N=$((N+1)); done
