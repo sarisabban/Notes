@@ -187,7 +187,7 @@ def split(filename, direct, prefix, limit):
 		for dircount in itertools.count():
 			for line in infile:
 				#if line.strip() == 'MODEL{:16}'.format(count+1):
-				if line.strip() == 'MODEL{:9}'.format(count+1):
+				if line.strip().split()[0] == 'MODEL' and line.strip().split()[1] == '{}'.format(count+1):
 					directory = os.path.join(direct, '{}'.format(dircount+1))
 					os.makedirs(directory, exist_ok=True)
 					name = '{}_{:09}.pdbqt'.format(prefix, count+1)
