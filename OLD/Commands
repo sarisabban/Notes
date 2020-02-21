@@ -325,6 +325,9 @@ N=1; ls -tr -1 | while read file; do mv "$file" "$N"; N=$((N+1)); done
 n=417 ; for f in *.png ; do printf -v t 'video%04d.png' $((n++))  ; mv -vi -- "$f" "$t"; done
 n=417 ; for f in *.jpg ; do printf -v t '%d.jpg' $((n++))  ; mv -vi -- "$f" "$t"; done
 
+#Move Random number of files to a directory
+shuf -n 50 -e * | xargs -i mv {} ./DIRECTORY_NAME
+
 #To Shutdown
 sudo poweroff
 
