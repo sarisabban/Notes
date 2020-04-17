@@ -1,0 +1,21 @@
+1. Zenodo>Profile>GitHub:
+	Turn ON the switch for the repository
+
+2. Github>Repository>Code>Releases:
+	Tag Version v1.0
+	Release Title
+	Description
+	Publish
+
+3. Zenodo>Upload>The repository release:
+	Edit:
+		Check Everything
+		Upload Type: Software
+		License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+		Grants: Remove Grants
+		Save
+		Publish
+
+4. Take DOI and add to README file (as button)
+
+# Auto DOI generation for each subsequent version
