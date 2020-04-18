@@ -49,7 +49,7 @@ PASTE TERMINAL COMMAND OUTPUT TO BIN:
 command | nc termbin.com 9999
 FOR VIM:
 yank normally then
-:w !nc termbin.com 9999
+'[,']:w !nc termbin.com 9999
 --------------------------------------------------
 **#PyMOL**
 # Generate movies
