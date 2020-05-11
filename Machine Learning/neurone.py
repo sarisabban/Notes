@@ -24,7 +24,7 @@ print('\ny', y.shape, '\n', y)
 L = -(Y*np.log(y) + (1-Y)*np.log(1-y))				# Loss
 print('\nL', L.shape, '\n', L)
 J = (np.sum(L))/m									# Cost
-print('\nJ =', w)
+print('\nJ =', J)
 
 ## --- BACK PROPAGATION --- ##
 dZ = Y-y											# Derivative of hypothesis
