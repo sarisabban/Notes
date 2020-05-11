@@ -61,7 +61,7 @@ print('\ndZ3', dZ3.shape, '\n', dZ3)
 dw3 = np.dot(y2.T, dZ3)/m							# Derivative of w of layer_3 (output layer)
 print('\ndw3', dw3.shape, '\n', dw3)
 db3 = (np.sum(dZ3, axis=0, keepdims=True))/m		# Derivative of b of layer_3 (output layer) keep dimentions otherwise can become scaler rather than (1,1) matrix, and sum the 0th axis (squeez top to bottom)
-print('\nbd3 =', db3)
+print('\nbd3 =', db3.shape, '\n', db3)
 
 ## Layer 2
 dy2 = (-Y/y2)+((1-Y)/(1-y2))						# Derivative of layer_2 activation function
@@ -71,7 +71,7 @@ print('\ndZ2', dZ2.shape, '\n', dZ2)
 dw2 = np.dot(y1.T, dZ2)/m							# Derivative of w of layer_2
 print('\ndw2', dw2.shape, '\n', dw2)
 db2 = (np.sum(dZ2, axis=0, keepdims=True))/m		# Derivative of b of layer_2
-print('\nbd2 =', db2)
+print('\nbd2 =', db2.shape, '\n', db2)
 
 ## Layer 1
 dy1 = (-Y/y1)+((1-Y)/(1-y1))						# Derivative of layer_1 activation function 
@@ -80,8 +80,8 @@ dZ1 = np.dot(dZ2, w2.T) * (dy1*Z1)					# Derivative of Z of layer_1 (next layer 
 print('\ndZ1', dZ1.shape, '\n', dZ1)
 dw1 = np.dot(X.T, dZ1)/m							# Derivative of w of layer_1
 print('\ndw1', dw1.shape, '\n', dw1)
-db1 = (np.sum(dZ1))/m								# Derivative of b of layer_1
-print('\nbd1 =', db1)
+db1 = (np.sum(dZ1, axis=0, keepdims=True))/m								# Derivative of b of layer_1
+print('\nbd1 =', db1.shape, '\n', db1)
 
 print('-----')
 
