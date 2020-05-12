@@ -17,7 +17,7 @@ print('\nX', X.shape, '\n', X)
 
 ### --- FORWARD PROPAGATION --- ###
 # LAYER 1
-w1 = np.zeros((nx, layer_1_nodes))					# Initialise weights with 0s (better use initialise with random numbers)
+w1 = np.random.randn(nx, layer_1_nodes)				# Initialise weights with 0s (better use initialise with random numbers)
 print('\nw1', w1.shape, '\n', w1)
 b1 = np.zeros((1, layer_1_nodes))					# Inisialise biases with 0s (better use initialise with random numbers)
 print('\nb1', b1.shape, '\n', b1)
@@ -27,7 +27,7 @@ y1 = 1/(1+np.exp(-Z1))								# Layer_1 activation output
 print('\ny1', y1.shape, '\n', y1)
 
 # LAYER 2
-w2 = np.zeros((layer_1_nodes, layer_2_nodes))		# Initialise weights with 0s (better use initialise with random numbers)
+w2 = np.random.randn(layer_1_nodes, layer_2_nodes)	# Initialise weights with 0s (better use initialise with random numbers)
 print('\nw2', w2.shape, '\n', w2)
 b2 = np.zeros((1, layer_2_nodes))					# Inisialise biases with 0s (better use initialise with random numbers)
 print('\nb2', b2.shape, '\n', b2)
@@ -37,7 +37,7 @@ y2 = 1/(1+np.exp(-Z2))								# Layer_2 activation output
 print('\ny2', y2.shape, '\n', y2)
 
 # LAYER 3
-w3 = np.zeros((layer_2_nodes, layer_3_nodes))		# Initialise weights with 0s (better use initialise with random numbers)
+w3 = np.random.randn(layer_2_nodes, layer_3_nodes)	# Initialise weights with 0s (better use initialise with random numbers)
 print('\nw3', w3.shape, '\n', w3)
 b3 = np.zeros((1, layer_3_nodes))					# Inisialise biases with 0s (better use initialise with random numbers)
 print('\nb3', b3.shape, '\n', b3)
@@ -69,7 +69,7 @@ b3 = b3 - a*db3										# Update b for layer_3
 print('\nb3', b3.shape, '\n', b3)
 
 ## Layer 2
-dy2 = (-Z2/y2)+((1-Z2)/(1-y2))						# Derivative of layer_2 activation function
+dy2 = (-Y/Z2)+((1-Y)/(1-Z2))						# Derivative of layer_2 activation function
 print('\ndy2', dy2.shape, '\n', dy2)
 dZ2 = np.dot(dZ3, w3.T) * dy2						# Derivative of Z of layer_2 (next layer weights . next layer dz) * (derivative of activeation function of this layer . z of this layer)
 print('\ndZ2', dZ2.shape, '\n', dZ2)
@@ -84,7 +84,7 @@ b2 = b2 - a*db2										# Update b for layer_2
 print('\nb2', b2.shape, '\n', b2)
 
 ## Layer 1
-dy1 = (-Z1/y1)+((1-Z1)/(1-y1))						# Derivative of layer_1 activation function 
+dy1 = (-Y/Z1)+((1-Y)/(1-Z1))						# Derivative of layer_1 activation function 
 print('\ndy1', dy1.shape, '\n', dy1)
 dZ1 = np.dot(dZ2, w2.T) * dy1						# Derivative of Z of layer_1 (next layer weights . next layer dz) * (derivative of activeation function of this layer . z of this layer)
 print('\ndZ1', dZ1.shape, '\n', dZ1)
