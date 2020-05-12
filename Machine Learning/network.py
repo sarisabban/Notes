@@ -69,9 +69,9 @@ b3 = b3 - a*db3										# Update b for layer_3
 print('\nb3', b3.shape, '\n', b3)
 
 ## Layer 2
-dy2 = (-Y/y2)+((1-Y)/(1-y2))						# Derivative of layer_2 activation function
+dy2 = (-Z2/y2)+((1-Z2)/(1-y2))						# Derivative of layer_2 activation function
 print('\ndy2', dy2.shape, '\n', dy2)
-dZ2 = np.dot(dZ3, w3.T) * (dy2*Z2)					# Derivative of Z of layer_2 (next layer weights . next layer dz) * (derivative of activeation function of this layer . z of this layer)
+dZ2 = np.dot(dZ3, w3.T) * dy2						# Derivative of Z of layer_2 (next layer weights . next layer dz) * (derivative of activeation function of this layer . z of this layer)
 print('\ndZ2', dZ2.shape, '\n', dZ2)
 dw2 = np.dot(y1.T, dZ2)/m							# Derivative of w of layer_2
 print('\ndw2', dw2.shape, '\n', dw2)
@@ -84,9 +84,9 @@ b2 = b2 - a*db2										# Update b for layer_2
 print('\nb2', b2.shape, '\n', b2)
 
 ## Layer 1
-dy1 = (-Y/y1)+((1-Y)/(1-y1))						# Derivative of layer_1 activation function 
+dy1 = (-Z1/y1)+((1-Z1)/(1-y1))						# Derivative of layer_1 activation function 
 print('\ndy1', dy1.shape, '\n', dy1)
-dZ1 = np.dot(dZ2, w2.T) * (dy1*Z1)					# Derivative of Z of layer_1 (next layer weights . next layer dz) * (derivative of activeation function of this layer . z of this layer)
+dZ1 = np.dot(dZ2, w2.T) * dy1						# Derivative of Z of layer_1 (next layer weights . next layer dz) * (derivative of activeation function of this layer . z of this layer)
 print('\ndZ1', dZ1.shape, '\n', dZ1)
 dw1 = np.dot(X.T, dZ1)/m							# Derivative of w of layer_1
 print('\ndw1', dw1.shape, '\n', dw1)
