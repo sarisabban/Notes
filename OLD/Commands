@@ -308,6 +308,9 @@ tmux new -s aziz -n aziz \; split-window -h -p25 \; split-window -v -p50
 --------------------------------------------------
 **#Terminal Commands - Bash**
 
+# ls | wc -l on all directories all at once:
+for d in */ ; do echo "$d" && ls $d | wc -l; done
+
 #Remove all file types recursivly:
 find . -type f -name "*.xml" -delete
 
