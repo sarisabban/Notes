@@ -8,6 +8,7 @@ sudo apt install transmission weechat vim pymol openconnect audacity obs-studio 
 /set irc.server.freenode.addresses "chat.freenode.net/7000"
 /set irc.server.freenode.ssl on
 /set irc.server_default.autoconnect on
+/set weechat.plugin.autoload *,!logger
 /set irc.server.freenode.sasl_username NICKNAME
 /set irc.server.freenode.sasl_password PASSWORD
 /server add twitch irc.chat.twitch.tv
