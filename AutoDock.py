@@ -13,7 +13,7 @@ This script uses Python 3.6+ and requires openbabel and PyMOL 2.2.
 	python3 AutoDock.py -r FILENAME.pdb
 3. Choose the search space:
 	pymol AutoDock.py -b FILENAME.pdb
-	in PyMOL command terminal type Box(0,0,0,1,1,1) then adjust numbers
+	in PyMOL command terminal type Box("sele",1,1,1) then adjust numbers
 	to get the search box. You have to delete the Box and Position objects
 	before adjusting the numbers.
 4. Get Ligands from ZINC15 database.
@@ -75,11 +75,27 @@ import argparse
 import itertools
 from pymol.cgo import *
 
-def Box(pX, pY, pZ, x, y, z):
+def center_of_box(selection):
+	'''
+	output the avarage Ca coordinate of the given selection
+	'''
+	selection = selection + " and n. CA"
+	model = querying.get_model(selection)
+	coords = model.get_coord_list()
+	coords_matrix = numpy.array(coords)
+	coords_ave = coords_matrix.mean(axis=0)
+	coords_ave = coords_ave.tolist()
+	print("Ca coordinates of selection are:", coords)
+	print("Ca center of selection is:", coords_ave)
+	cmd.extend("center_of_box", center_of_box)
+	return coords_ave
+
+def Box(selection, x, y, z):
 	'''
 	Sets up the search box within the protein, which is
 	used in the docking protocol
 	'''
+	pX, pY, pZ = center_of_box(selection)
 	pymol.cmd.pseudoatom('Position', pos=[pX, pY, pZ])
 	([X, Y, Z],[a, b, c]) = pymol.cmd.get_extent('Position')
 	pymol.cmd.show('spheres', 'Position')
