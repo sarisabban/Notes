@@ -65,6 +65,12 @@ exec $SHELL
 echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
 echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
 restart terminal
+## Use python 3.7
+pyenv install -v 3.7.2
+eval "$(pyenv init -)"     ->     .bashrc
+exec $Shell
+re-start terminal
+pyenv shell 3.7.2
 ----------
 Antergos XFCE Environment:
 sudo pacman -Syu && sudo pacman -S weechat vim pymol openconnect audacity obs-studio gnuplot tmux git python-pip yaourt python-lxml python-numpy python-biopython python-scipy python-matplotlib python-pandas python-beautifulsoup4 python-scikit-learn python-tensorflow && pip install keras && yaourt -S dssp && printf ':set shiftwidth=8 noexpandtab\n:set softtabstop=8 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap\n:set number' >> ~/.vimrc && n="$(awk '/PS1=/ { $0 = "PS1=\x27\\[\\033[0;33m\\][\\W]\\$ \\[\\033[0m\\]\x27" } 1' .bashrc)"; echo "$n" > .bashrc
