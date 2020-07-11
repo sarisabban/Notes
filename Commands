@@ -59,6 +59,10 @@ FOR VIM:
 yank normally then
 '[,']:w !nc termbin.com 9999
 --------------------------------------------------
+**#Strong Compression**
+xz -0 --keep FILENAME
+xz -d COMPRESSEDFILE
+--------------------------------------------------
 **#PyMOL**
 # Generate movies
 # Run this script from the terminal using this command:	pymol -c Render.py
