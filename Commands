@@ -15,7 +15,29 @@ sudo apt install transmission weechat vim pymol openconnect audacity obs-studio 
 /set irc.server.twitch.autojoin "#sarisabban"
 /set irc.server.twitch.username NICKNAME
 /set irc.server.twitch.password oauth:***** [http://www.twitchapps.com/tmi/]
-## Desktop environment setup
+## Desktop environment setup Linux Mint
+* Install hardware drivers
+* FirFox>setup
+* Xed>View>[X]Statusbar [X]Word wrap [X]Toolbar
+* Terminal>[X]Scrolling [X]Menu [/]Theme colours green on back
+* System Settings>Background
+* System Settings>Themes>Window boarders>Mint-Y-Dark
+* System Settings>Themes>Controls>Mint-y-Dark-Grey
+* System Settings>Themes>Mouse>Adawita
+* System Settings>Account Details> Add picture
+* System Settings>Desktop>[X]Computer [X]Home
+* System Settings>Panel>Right Mouse Click>Move>Up
+* System Settings>Panel>Height>20
+* System Settings>Panel Edit Mode>Left Side>Unpin everything
+* System Settings>Panel Edit Mode>Right Side>Remove everything except Time, WiFi, Battery
+* System Settings>Screen Saver>[X]Lock computer when sleep [X]Lock computer after screen saver
+* System Settings>Bluetooth>Disable
+* System Settings>Keyboard>Shortcuts>(Home ctrl-alt-H [sh -c 'setsid xdg-open "$HOME" &']) (Text ctrl-alt-G [xed]) (Firefox ctrl-alt-W [firefox])
+* System Settings>Keyboard>Layouts>Arabic (Macintosh)
+* System Settings>Mouse>Touchpad>[X]Tap to click [/]Horizontal scrolling
+* System Settings>Power Management>on A/C and Battery  [X]Inactive turn off screen [X]Inactive suspend [X]When lid is closed
+* System Settings>Sound>Sounds>[X]All
+## Desktop environment setup Linux Ubuntu
 * Settings>Bluetooth>             OFF
 * Settings>Background>            Change background
 * Settings>Appearance>            Dark + Autohide Dock
