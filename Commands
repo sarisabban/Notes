@@ -60,7 +60,7 @@ yank normally then
 '[,']:w !nc termbin.com 9999
 --------------------------------------------------
 **#Strong Compression**
-xz -0 --keep FILENAME
+xz -0 --keep FILENAME #-0 fast/large -9 slow/small --keep do not delete original file
 xz -d COMPRESSEDFILE
 --------------------------------------------------
 **#PyMOL**
