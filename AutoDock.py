@@ -41,7 +41,7 @@ Here is a video explaning how to perform virtual screaning using AutoDock Vina
 and how to use this script:
 
 For running on a local computer use this command:
-for file in ./Ligands/*; do tmp=${file%.pdbqt}; name="${tmp##*/}"; ./vina --receptor receptor.pdbqt --ligand "$file" --out $name_out.pdbqt --log $name.log --exhaustiveness 10 --center_x 0 --center_y 0 --center_z 10 --size_x 15 --size_y 15 --size_z 15; awk '/^[-+]+$/{getline;print FILENAME,$0}' $name.log >> temp; done; sort temp -nk 3 > Results; rm temp; mkdir logs; mv *.log *.out logs
+for file in ./Ligands/*/*; do tmp=${file%.pdbqt}; name="${tmp##*/}"; ./vina --receptor receptor.pdbqt --ligand "$file" --out $name_out.pdbqt --log $name.log --exhaustiveness 10 --center_x 0 --center_y 0 --center_z 10 --size_x 15 --size_y 15 --size_z 15; awk '/^[-+]+$/{getline;print FILENAME,$0}' $name.log >> temp; done; sort temp -nk 3 > Results; rm temp; mkdir logs; mv *.log *.out logs
 --------------------------------------------------------------------------------
 MIT License
 
