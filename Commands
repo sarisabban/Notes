@@ -20,7 +20,8 @@ sudo apt update && sudo apt full-upgrade && sudo apt install transmission weecha
 ## Desktop environment setup Linux Mint
 * System Reports>Install hardware drivers
 * FirFox>setup
-* Xed>View>[X]Statusbar [X]Word wrap [X]Toolbar
+* Xed>View>[X]Statusbar [X]Toolbar
+* Xed>Edit>Preferences>[/]Display line numbers [X]Use spaces instead of tabs [X]Word wrap [/]Theme cobalt
 * Terminal>[X]Scrolling [X]Menu [/]Theme colours green on back
 * System Settings>Background
 * System Settings>Themes>Window boarders>Mint-Y-Dark
