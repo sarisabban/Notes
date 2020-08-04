@@ -18,7 +18,7 @@ sudo apt update && sudo apt full-upgrade && sudo apt install transmission weecha
 /set irc.server.twitch.username NICKNAME
 /set irc.server.twitch.password oauth:***** [http://www.twitchapps.com/tmi/]
 ## Desktop environment setup Linux Mint
-* Install hardware drivers
+* System Reports>Install hardware drivers
 * FirFox>setup
 * Xed>View>[X]Statusbar [X]Word wrap [X]Toolbar
 * Terminal>[X]Scrolling [X]Menu [/]Theme colours green on back
