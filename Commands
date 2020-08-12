@@ -68,11 +68,11 @@ sudo dd bs=4M if=FILENAME.iso of=/dev/sdb status=progress oflag=sync
 sudo dd bs=4M if=FILENAME.iso of=/dev/sdb status=progress oflag=sync iflag=fullblock
 --------------------------------------------------
 **#TMUX**
-# Environment setups
+# Environment setups (Linux Mint)
 tmux new -s Aziz -n Aziz \; split-window -h -p26 \; split-window -v -p50
-tmux new -s Twitch -n Twitch \; split-window -d -t 0 -v -p35 weechat \; split-window -h -p40 htop \; split-window -v -p75 vlc -I ncurses --no-video https://www.youtube.com/watch?v=hHW1oY26kxQ 2> /dev/null \; split-window -v -p70
-tmux new -s Bioinformatics -n Bioinformatics \; split-window -d -t 0 -v -p34 weechat \; split-window -h -p40 htop \; split-window -v -p75
-tmux new \; split-window -h -p40 htop \; split-window -v -p85
+tmux new -s Twitch -n Twitch \; split-window -d -t 0 -v -p35 weechat \; split-window -h -p46 htop \; split-window -v -p75 vlc -I ncurses --no-video https://www.youtube.com/watch?v=hHW1oY26kxQ 2> /dev/null \; split-window -v -p70
+tmux new -s Bioinformatics -n Bioinformatics \; split-window -d -t 0 -v -p34 weechat \; split-window -h -p46 htop \; split-window -v -p75
+tmux new \; split-window -h -p46 htop \; split-window -v -p85
 # Write to each buffer:
 Ctrl-B
 :
