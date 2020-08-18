@@ -138,7 +138,7 @@ or just single executables
 --------------------------------------------------
 **#PYROSETTA**
 # Download
-[https://graylab.jhu.edu/download/PyRosetta4/archive/release/PyRosetta4.Release.python37.ubuntu/latest.html]
+[https://graylab.jhu.edu/download/PyRosetta4/archive/release/PyRosetta4.Release.python38.ubuntu/latest.html]
 # Compile
 tar -vjxf {PYROSETTA}.tar.bz2
 mv {PYROSETTA} PyRosetta && rm -r {PYROSETTA} && mv PyRosetta ~/ && sudo python3 PyRosetta/setup/setup.py install
