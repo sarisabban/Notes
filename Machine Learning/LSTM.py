@@ -197,3 +197,29 @@ def Stats(CSV_filename):
 If Accuracy suddenly drops after several epochs (13 - 100), try removing the Dropouts and replacing them with Batch Normalisation which prevents large weights to be used in the Dense layers. You see Dropout is random regularisation technique thus can cause issues of loosing accuracy at different epochs. Batch Normalisation on the otherhand is another form of regularisation but not random, it just makes sure large weights are not used in any Dense node.
 
 '''
+
+
+
+# Simple Straightforward LSTM
+import keras
+from keras.optimizers import Adam
+from keras.models import Sequential
+from keras.layers import Dense, LSTM, Dropout
+
+MNIST = keras.datasets.mnist
+(x_train, y_train), (x_test, y_test) = MNIST.load_data()
+x_train = x_train/255.0
+x_test = x_test/255.0
+print(x_train.shape)
+print(y_train.shape)
+
+model = Sequential()
+model.add(LSTM(128, input_shape=(x_train.shape[1:]), activation='relu', return_sequences=True))
+model.add(Dropout(0.2))
+model.add(LSTM(128, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(32, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(10, activation='softmax'))
+model.compile(optimizer=Adam(lr=1e-3), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+model.fit(x_train, y_train, epochs=3, validation_data=(x_test, y_test))
