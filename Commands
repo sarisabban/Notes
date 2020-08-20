@@ -141,7 +141,7 @@ or just single executables
 [https://graylab.jhu.edu/download/PyRosetta4/archive/release/PyRosetta4.Release.python38.ubuntu/latest.html]
 # Compile
 tar -vjxf {PYROSETTA}.tar.bz2
-mv {PYROSETTA} PyRosetta && rm -r {PYROSETTA} && mv PyRosetta ~/ && sudo python3 PyRosetta/setup/setup.py install
+mv {PYROSETTA} PyRosetta && rm {PYROSETTA}.tar.bz2 && mv PyRosetta ~/ && sudo python3 PyRosetta/setup/setup.py install
 ----
 for server use this command only: apt install python3-setuptools && pip3 install PyRosetta/setup
 printf "channels:\n  - https://levinthal:paradox@conda.graylab.jhu.edu\n  - defaults">>.condarc
