@@ -87,6 +87,9 @@ yank normally then
 **#Strong Compression**
 xz -0 --keep FILENAME #-0 fast/large -9 slow/small --keep do not delete original file
 xz -d COMPRESSEDFILE
+**#Split Files**
+split -b 3G FILENAME.xz "FILENAME.xz.part"
+cat FILENAME.xz.* > FILENAME.xz
 --------------------------------------------------
 **#PyMOL**
 # Generate movies
