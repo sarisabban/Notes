@@ -109,7 +109,7 @@ def Bi2():
 	X = X.reshape(1000, length, 1)
 	Y = Y.reshape(1000, length, 1)
 	model = Sequential()
-	model.add(Bidirectional(LSTM(16, input_shape=(10, 1), return_sequences=True)))
+	model.add(Bidirectional(LSTM(16, return_sequences=True), input_shape=(10, 1)))
 	model.add(Bidirectional(LSTM(16, return_sequences=True)))
 	model.add(TimeDistributed(Dense(1, activation='sigmoid')))
 	model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
