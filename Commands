@@ -78,11 +78,15 @@ Ctrl-B
 :
 setw synchronize-panes on
 setw synchronize-panes off
-PASTE TERMINAL COMMAND OUTPUT TO BIN:
+--------------------------------------------------
+**#VIM**
+# Paste terminal command output to bin:
 command | nc termbin.com 9999
-FOR VIM:
+# For VIM:
 yank normally then
 '[,']:w !nc termbin.com 9999
+# Convert all string lines into python list:
+:%normal! C'CRTL-vr"',
 --------------------------------------------------
 **#Strong Compression**
 xz -0 --keep FILENAME #-0 fast/large -9 slow/small --keep do not delete original file
