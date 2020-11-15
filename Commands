@@ -22,7 +22,7 @@ sudo apt update && sudo apt full-upgrade && sudo apt install transmission weecha
 * FirFox>setup
 * Xed>View>[X]Statusbar [X]Toolbar
 * Xed>Edit>Preferences>[/]Display line numbers [X]Use spaces instead of tabs [X]Word wrap [/]Theme cobalt
-* Terminal>[X]Scrolling [X]Menu [/]Theme colours green on back
+* Terminal>[X]Scrolling [/]Scroll on key stroke [X]Menu [/]Theme colours green on back
 * System Settings>Background
 * System Settings>Themes>Window boarders>Mint-Y-Dark
 * System Settings>Themes>Controls>Mint-y-Dark-Grey
