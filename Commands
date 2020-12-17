@@ -119,6 +119,12 @@ source myenv/bin/activate
 pip3 install LIBRARY
 deactivate
 --------------------------------------------------
+**#Conda virtual environment**
+conda create -n MLenv python=3.6.1 -y
+source activate MLenv
+conda install numpy pandas scipy scikit-learn keras tensorflow biopython -y
+source deactivate MLenv
+--------------------------------------------------
 **#All in one executable**
 pip3 install pyinstaller staticx patchelf-wrapper
 pyinstaller --onefile --windowed test.py
