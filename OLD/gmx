@@ -203,7 +203,7 @@ reset
 set terminal pdfcairo
 set encoding iso_8859_1
 set term post eps enh color
-set output './Results.pdf'
+set output '../Results.pdf'
 set title 'MD simulation results'
 set grid
 set xlabel 'Time (ps)'
