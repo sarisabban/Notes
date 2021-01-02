@@ -187,7 +187,7 @@ time gmx mdrun -deffnm md
 
 # Analysis
 printf %s\\n 0 | gmx trjconv -f md.trr -s md.tpr -o MD.pdb -pbc mol -ur compact
-mv Simulation.pdb ..
+mv MD.pdb ..
 printf %s\\n 0 | gmx trjconv -s md.tpr -f md.xtc -o md.xtc -pbc mol -ur compact
 printf %s\\n 14 | gmx energy -s md.tpr -f md.edr -o temperature.xvg
 sed -i 's/@/#/g' temperature.xvg
