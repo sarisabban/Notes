@@ -92,8 +92,8 @@ yank normally then
 xz -0 --keep FILENAME #-0 fast/large -9 slow/small --keep do not delete original file
 xz -d COMPRESSEDFILE
 **#Strong Compression - directory**
-tar -jcvf FILENAME.tar
-bzip2 -zk FILENAME.tar
+tar -jcvf FILENAME.tar.bz2
+xz -0 --keep FILENAME.tar.bz2
 **#Split Files**
 split -b 3G FILENAME.xz "FILENAME.xz.part"
 cat FILENAME.xz.* > FILENAME.xz
