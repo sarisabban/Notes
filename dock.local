@@ -1,0 +1,32 @@
+<<COMMENT
+* Edit this script to have all the correct values in the {} positions
+* You should have all of the following in the same location:
+     1. A directory called "Ligands" with ligands in .pdbqt format within it.
+     2. The receptor.pdbqt file.
+     3. The vina executable
+* Run this script using the command: bash dock.local
+* MAKE SURE you backup the "Ligands" directory because this script will delete
+each ligand after it finishes searching it.
+COMMENT
+
+process() { local n=${1##*/}
+	./vina \
+		--receptor receptor.pdbqt \
+		--ligand "$1" \
+		--out '/dev/null' \
+		--log "log_$n" \
+		--exhaustiveness 1 \
+		--cpu 1 \
+		--seed 1991540417 \
+		--center_x {} \
+		--center_y {} \
+		--center_z {} \
+		--size_x {} \
+		--size_y {} \
+		--size_z {} \
+		| awk -v name="$n" '$1 == "1" {print name "\t" $0;exit}' >> Docks \
+	&& rm log_$n \
+	&& rm "$1"
+}
+export -f process
+find ./Ligands/ -type f -print0 | xargs -0 -P 24 -I{} bash -c 'process "$1"' _ {}
