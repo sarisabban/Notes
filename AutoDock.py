@@ -13,9 +13,13 @@ This script uses Python 3.6+ and requires openbabel and PyMOL 2.2.
 	python3 AutoDock.py -r FILENAME.pdb
 3. Choose the search space:
 	pymol AutoDock.py -b FILENAME.pdb
-	in PyMOL command terminal type Box("sele",1,1,1) then adjust numbers
-	to get the search box. You have to delete the Box and Position objects
-	before adjusting the numbers.
+	select an amino acid where you want the center of the search box to be
+	then in PyMOL command terminal type Box("sele",1,1,1) where 1, 1, 1 are the x y z distances
+	from the center of the box. Adjust the x y z distances until the box is of satisfactory
+	size, you have to delete the Box and Position objects before adjusting the numbers.
+	when finished the last line that is printed in the pymol terminal (Ca center of selection is)
+	will be the Center_X Center_Y Center_Z values and the Size_X Size_Y Size_Z values are the 
+	values that you have adjusted.
 4. Get Ligands from ZINC15 database.
 5. Download the ligands and combine them into a file:
 	python3 AutoDock.py -d FILENAME.wget
