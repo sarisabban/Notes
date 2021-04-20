@@ -15,10 +15,11 @@ Follow this precise order of steps.
 	select an amino acid (has to be an amino acid only) where you want the center of the search box to be
 	then in PyMOL command terminal type Box("sele",1,1,1) where 1, 1, 1 are the x y z distances
 	from the center of the box. Adjust the x y z distances until the box is of satisfactory
-	size, you have to delete the Box and Position objects before adjusting the numbers.
-	when finished the last line that is printed in the pymol terminal (Ca center of selection is)
-	will be the Center_X Center_Y Center_Z values and the Size_X Size_Y Size_Z values are the 
-	values that you have adjusted.
+	size, you have to delete the Box and Position objects everytime before adjusting the numbers.
+	When finished the last line that is printed in the pymol terminal (Ca center of selection is)
+	will be the Center_X Center_Y Center_Z values. The Size_X Size_Y Size_Z values are the 
+	values that you have adjusted. Use Box_fine(pX, pY, pZ, x, y, z) to fine adjust the center of the box,
+	where pX, pY, pZ are the values from Ca center of selection (the center of the box).
 3. Prepare and convert the protein receptor from PDB to PDBQT:
 	python3 AutoDock.py -r FILENAME.pdb
 4. Get Ligands from ZINC15 database.
@@ -101,6 +102,50 @@ def Box(selection, x, y, z):
 	used in the docking protocol
 	'''
 	pX, pY, pZ = center_of_box(selection)
+	pymol.cmd.pseudoatom('Position', pos=[pX, pY, pZ])
+	([X, Y, Z],[a, b, c]) = pymol.cmd.get_extent('Position')
+	pymol.cmd.show('spheres', 'Position')
+	minX = X+float(x)
+	minY = Y+float(y)
+	minZ = Z+float(z)
+	maxX = X-float(x)
+	maxY = Y-float(y)
+	maxZ = Z-float(z)
+	boundingBox = [BEGIN, LINES,
+		VERTEX, minX, minY, minZ,
+		VERTEX, minX, minY, maxZ,
+		VERTEX, minX, maxY, minZ,
+		VERTEX, minX, maxY, maxZ,
+		VERTEX, maxX, minY, minZ,
+		VERTEX, maxX, minY, maxZ,
+		VERTEX, maxX, maxY, minZ,
+		VERTEX, maxX, maxY, maxZ,
+		VERTEX, minX, minY, minZ,
+		VERTEX, maxX, minY, minZ,
+		VERTEX, minX, maxY, minZ,
+		VERTEX, maxX, maxY, minZ,
+		VERTEX, minX, maxY, maxZ,
+		VERTEX, maxX, maxY, maxZ,
+		VERTEX, minX, minY, maxZ,
+		VERTEX, maxX, minY, maxZ,
+		VERTEX, minX, minY, minZ,
+		VERTEX, minX, maxY, minZ,
+		VERTEX, maxX, minY, minZ,
+		VERTEX, maxX, maxY, minZ,
+		VERTEX, minX, minY, maxZ,
+		VERTEX, minX, maxY, maxZ,
+		VERTEX, maxX, minY, maxZ,
+		VERTEX, maxX, maxY, maxZ,
+		END]
+	boxName = 'Box'
+	pymol.cmd.load_cgo(boundingBox, boxName)
+	return(boxName)
+
+def Box_fine(pX, pY, pZ, x, y, z):
+	'''
+	Fine selection of the search box within the protein, which is
+	used in the docking protocol
+	'''
 	pymol.cmd.pseudoatom('Position', pos=[pX, pY, pZ])
 	([X, Y, Z],[a, b, c]) = pymol.cmd.get_extent('Position')
 	pymol.cmd.show('spheres', 'Position')
