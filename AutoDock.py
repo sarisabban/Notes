@@ -5,21 +5,22 @@ Instructions:
 -------------
 
 This script uses Python 3.6+ and requires openbabel and PyMOL 2.2.
+Follow this precise order of steps.
 
 0. Use the command python3 AutoDock.py -h for the help menu.
 1. Update system and install required programs:
 	sudo apt update && sudo apt full-upgrade && sudo apt install openbabel pymol
-2. Prepare and convert the protein receptor from PDB to PDBQT:
-	python3 AutoDock.py -r FILENAME.pdb
-3. Choose the search space:
+2. Choose the search space:
 	pymol AutoDock.py -b FILENAME.pdb
-	select an amino acid where you want the center of the search box to be
+	select an amino acid (has to be an amino acid only) where you want the center of the search box to be
 	then in PyMOL command terminal type Box("sele",1,1,1) where 1, 1, 1 are the x y z distances
 	from the center of the box. Adjust the x y z distances until the box is of satisfactory
 	size, you have to delete the Box and Position objects before adjusting the numbers.
 	when finished the last line that is printed in the pymol terminal (Ca center of selection is)
 	will be the Center_X Center_Y Center_Z values and the Size_X Size_Y Size_Z values are the 
 	values that you have adjusted.
+3. Prepare and convert the protein receptor from PDB to PDBQT:
+	python3 AutoDock.py -r FILENAME.pdb
 4. Get Ligands from ZINC15 database.
 5. Download the ligands and combine them into a file:
 	python3 AutoDock.py -d FILENAME.wget
