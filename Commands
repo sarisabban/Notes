@@ -74,6 +74,10 @@ sudo apt update && sudo apt full-upgrade && sudo apt install transmission weecha
 * Tweek Tools>                    [Remove Trash from Desktop][Yaru-dark][No Sleep When Lid Closes]
 * FireFox>                        My Own Setup
 ----------
+## Raspberry Pi
+sudo apt install rpi-imager
+sudo raspi-config
+----------
 ## Live USB
 sudo fdisk -l
 sudo dd bs=4M if=FILENAME.iso of=/dev/sdb status=progress oflag=sync
