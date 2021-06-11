@@ -7,16 +7,28 @@ sudo apt update && sudo apt full-upgrade && sudo apt install transmission weecha
 ## Weechat setup
 /set buflist.look.enabled off
 /server add freenode irc.freenode.net
-/set irc.server.freenode.addresses "chat.freenode.net/7000"
-/set irc.server.freenode.ssl on
-/set irc.server_default.autoconnect on
+/server add freenode irc.libera.chat
+/server add freenode irc.oftc.net
 /set weechat.plugin.autoload *,!logger
+/set irc.server_default.autoconnect on
+/set irc.server.freenode.addresses "irc.freenode.net/7000"
+/set irc.server.freenode.ssl on
+/set irc.server.libera.addresses "irc.libera.chat/7000"
+/set irc.server.libera.ssl on
+/set irc.server.oftc.addresses "irc.oftc.net/6697"
+/set irc.server.oftc.ssl on
 /set irc.server.freenode.sasl_username NICKNAME
+/set irc.server.libera.sasl_username NICKNAME
+/set irc.server.oftc.sasl_username NICKNAME
 /set irc.server.freenode.sasl_password PASSWORD
+/set irc.server.libera.sasl_password PASSWORD
+/set irc.server.oftc.sasl_password PASSWORD
+
 /server add twitch irc.chat.twitch.tv
 /set irc.server.twitch.autojoin "#sarisabban"
 /set irc.server.twitch.username NICKNAME
 /set irc.server.twitch.password oauth:***** [http://www.twitchapps.com/tmi/]
+
 ## Desktop environment setup Linux Mint
 * System Reports>Install hardware drivers
 * FirFox>setup
