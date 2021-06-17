@@ -243,14 +243,13 @@ def receptor(filename):
 	os.remove('protein.pdb')
 
 def ligand(filename):
+	name = filename[:-4]
 	cmd.load(filename)
 	cmd.remove('resn HOH')
 	cmd.h_add()
-	cmd.save('{}.pdb'.format(filename[:-4]))
-	os.system('obabel {}.pdb -O temp.pdbqt -xh'.format(filename[:-4]))
-	os.system('grep ATOM temp.pdbqt > {}.pdbqt'.format(filename[:-4]))
-	os.remove('temp.pdbqt')
-	os.remove('{}.pdb'.format(filename[:-4]))
+	cmd.save('{}.pdb'.format(name))
+	os.system('obabel {}.pdb -O {}.pdbqt -xh'.format(name, name))
+	os.remove('{}.pdb'.format(name))
 
 def split(filename, direct, prefix, limit):
 	'''
