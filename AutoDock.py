@@ -242,6 +242,16 @@ def receptor(filename):
 	os.remove('temp.pdbqt')
 	os.remove('protein.pdb')
 
+def ligand(filename):
+	cmd.load(filename)
+	cmd.remove('resn HOH')
+	cmd.h_add()
+	cmd.save('{}.pdb'.format(filename[:-4]))
+	os.system('obabel {}.pdb -O temp.pdbqt -xh'.format(filename[:-4]))
+	os.system('grep ATOM temp.pdbqt > {}.pdbqt'.format(filename[:-4]))
+	os.remove('temp.pdbqt')
+	os.remove('{}.pdb'.format(filename[:-4]))
+
 def split(filename, direct, prefix, limit):
 	'''
 	Separates a .pdbqt file with multiple molecules into separate files with
