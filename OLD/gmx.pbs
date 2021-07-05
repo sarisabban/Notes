@@ -200,13 +200,7 @@ printf %s\\n 15 | gmx pdb2gmx -f $P.pdb -o $P.gro -water spce -ignh
 gmx editconf -f $P.gro -o $P\_box.gro -c -d 1.0 -bt dodecahedron
 gmx solvate -cp $P\_box.gro -cs spc216.gro -o $P\_solv.gro -p topol.top
 gmx grompp -f ions.mdp -c $P\_solv.gro -p topol.top -o ions.tpr -maxwarn 1
-charge=$(grep qtot topol.top | tail -n 1 | awk 'NF>1{print $NF}')
-if [[ $charge -le "0" ]]; then
-    charge=$(( $charge * -1 ))
-    printf %s\\n 13 | gmx genion -s ions.tpr -o $P\_solv\_ions.gro -p topol.top -pname NA -nname CL -nn 0 -np $charge
-else
-    printf %s\\n 13 | gmx genion -s ions.tpr -o $P\_solv\_ions.gro -p topol.top -pname NA -nname CL -nn $charge -np 0
-fi
+printf %s\\n 13 | gmx genion -s ions.tpr -o $P\_solv\_ions.gro -p topol.top -pname NA -nname CL -neutral
 gmx grompp -f minim.mdp -c $P\_solv_ions.gro -p topol.top -o em.tpr
 gmx mdrun -deffnm em
 gmx grompp -f nvt.mdp -c em.gro -r em.gro -p topol.top -o nvt.tpr
