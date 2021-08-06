@@ -248,7 +248,7 @@ def ligand(filename):
 	cmd.remove('resn HOH')
 	cmd.h_add()
 	cmd.save('{}.pdb'.format(name))
-	os.system('obabel {}.pdb -O {}.pdbqt -xh'.format(name, name))
+	os.system('obabel {}.pdb -O {}.pdbqt -xh --partialcharge gasteiger'.format(name, name))
 	os.remove('{}.pdb'.format(name))
 
 def split(filename, direct, prefix, limit):
