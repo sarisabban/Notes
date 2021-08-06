@@ -237,7 +237,7 @@ def receptor(filename):
 	cmd.h_add(selection='acceptors or donors')
 	cmd.save('protein.pdb')
 	#os.system('babel protein.pdb temp.pdbqt -xh')	#OLD
-	os.system('obabel protein.pdb -O temp.pdbqt -xh')
+	os.system('obabel protein.pdb -O temp.pdbqt -xh --partialcharge gasteiger')
 	os.system('grep ATOM temp.pdbqt > receptor.pdbqt')
 	os.remove('temp.pdbqt')
 	os.remove('protein.pdb')
