@@ -43,8 +43,8 @@ tensorboard --logdir=./
 '''
 #Import data
 data = pandas.read_csv('../OLD/MNIST.csv')
-X = (data.ix[:,1:].values) / 255		# Divide each vector value by 255, MinMax regularisation but for each item separatly, therefore 0-255 values become 0-1 values
-Y = data.ix[:,0].values
+X = (data.iloc[:,1:].values) / 255		# Divide each vector value by 255, MinMax regularisation but for each item separatly, therefore 0-255 values become 0-1 values
+Y = data.iloc[:,0].values
 X , Y = sklearn.utils.shuffle(X , Y , random_state = 0)
 n_class = 10
 n_featu = X.shape[1]
