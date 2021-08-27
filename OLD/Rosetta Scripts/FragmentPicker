@@ -1,0 +1,54 @@
+#!/bin/bash
+
+<<COMMENT
+Generate Fragments
+
+Input Files:
+1. structure.fasta
+2. structure.pdb
+3. structure.psipred.ss2	from psipred|http://bioinf.cs.ucl.ac.uk/psipred
+4. simple.wghts			from 
+5. structure.checkpoint		from 
+COMMENT
+
+echo '
+-in::file::vall			{ROSETTA}/tools/fragment_tools/vall.jul19.2011.gz
+-frags::scoring::config		{PATH}/simple.wghts
+
+-in::file::checkpoint		./structure.checkpoint
+-in::file::fasta		./structure.fasta
+-in::file::s			./structure.pdb
+-frags::ss_pred			./structure.psipred.ss2 predA
+
+-frags::bounded_protocol	
+-frags::frag_sizes		3 9
+-frags::n_candidates		200
+-frags::n_frags			200
+-out::file::frag_prefix		./frag
+'>flags
+
+{ROSETTA}/main/source/bin/fragment_picker.default.linuxgccrelease @flags
+
+
+
+<<COMMENT
+Quality of Fragments
+
+Input Files:
+1. structure.pdb
+2. frag.200.3mers
+3. frag.200.9mers
+COMMENT
+
+{ROSETTA}/main/source/bin/r_frag_quality.default.linuxgccrelease -in:file:native structure.pdb -f ./frag.200.3mers
+{ROSETTA}/main/source/bin/r_frag_quality.default.linuxgccrelease -in:file:native structure.pdb -f ./frag.200.9mers
+
+
+
+
+# How to get structure.checkpoint
+# How to get simple.wghts
+# Where is r_frag_quality.default.linuxgccrelease
+
+
+

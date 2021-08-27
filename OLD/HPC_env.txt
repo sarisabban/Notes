@@ -1,0 +1,69 @@
+ON LOCAL COMPUTER:
+------------------
+pip3 download cython numpy biopython
+# Do not rename files
+git clone https://github.com/pypa/virtualenv.git
+git clone https://github.com/ninja-build/ninja
+https://cmake.org/files/v3.5/cmake-3.5.0-Linux-x86_64.tar.gz
+# Download Rosetta
+# Download DSSP https://github.com/cmbi/xssp/releases
+# Upload to HPC
+
+ON HPC COMPUTER:
+----------------
+module use /app/utils/modules
+module load Python3/3.6.1
+module load gcc-5.3.0
+python3 ./virtualenv-master/virtualenv.py env_1
+env_1/bin/pip3 install Cython---.whl
+env_1/bin/pip3 install numpy---.whl
+env_1/bin/pip3 install biopython---.whl
+cd ninja
+./configure.py --bootstrap
+ln -s ninja Ninja
+export PATH=/fefs1/generic/ssabban/ninja:${PATH}
+tar -zxvf cmake-3.5.0-Linux-x86_64.tar.gz
+export PATH=/fefs1/generic/ssabban/cmake-3.5.0-Linux-x86_64/bin:${PATH}
+export CC=/app/utils/gcc-5.3.0/bin/gcc
+export CXX=/app/utils/gcc-5.3.0/bin/gcc
+tar -xvzf {ROSETTA}
+cd {ROSETTA}/main/source/src/python/PyRosetta
+###(DOES NOT WORK) python3 build.py -j24 --python-lib /app/utils/python3/Python-3.6.1/lib/libpython3.6m.a --python-include-dir /app/utils/python3/Python-3.6.1/include/python3.6m --create-package PyRosetta
+env_1/bin/python3.6 PyRosetta/setup.py install
+env_1/bin/python3.6 FILENAME.py
+
+ALL IN ONE OPTION PYTHON BINARY:
+--------------------------------
+pyinstaller -Fw FILENAME.py
+./FILENAME
+git clone https://github.com/cmbi/xssp.git
+./autogen.sh
+./configure
+make
+# or
+conda install -c salilab dssp
+# Keep DSSP on the same directory as Biopython and it should work
+======ANOTHER OPTION======
+sudo pip install cython
+mv test.py test.pyx
+cython test.pyx --embed
+gcc -Os -I /usr/include/python3.6m -o test test.c -l python3.6m -l pthread -l m -l util -l dl
+
+GLIBC problems:
+---------------
+# Compiling using pyinstaller allows the binary to be use anywhere given that the kernel and GLIBC are up-to-date or higher, future compatible, but not backward compatible, so we cannot execute the binary on older systems with older GLIBC.
+# Solution is to use staticx to make the the binary work with older GLIBC versions
+pip3 install pyinstaller staticx patchelf-wrapper
+pyinstaller --onefile --windowed test.py
+staticx ./test ./test2
+
+BEST TO USE THIS FOR PYROSETTA:
+pyinstaller fold.py
+staticx fold fold2
+
+# But now the issue is with older kernel versions, the script will not work with older versions
+
+kernel 2.6.32-358.23.2.el6.x86_64
+
+# Install ubuntu linux with kernel 2.6 - list of linux kernels: https://kernel.ubuntu.com/~kernel-ppa/mainline/
+https://kernel.ubuntu.com/~kernel-ppa/mainline/v2.6.32-lucid/

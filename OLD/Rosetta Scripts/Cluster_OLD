@@ -1,0 +1,27 @@
+#!/bin/bash
+
+rm /home/ssabban/*.fsc
+{ROSETTA}/main/source/bin/combine_silent.default.linuxgccrelease -in:file:silent fold_silent_*.out -out:file:silent fold_silent.out
+rm fold_silent_*
+rm Ab_Initio.o*
+grep SCORE fold_silent.out | awk '{print $27 "\t" $2}' > SCOREvsRMSD.dat
+tail -n +2 "SCOREvsRMSD.dat" > "SCOREvsRMSD.dat.tmp" && mv "SCOREvsRMSD.dat.tmp" "SCOREvsRMSD.dat"
+grep SCORE fold_silent.out | sort -nk +2 | head -5000 | awk '{print $27 "\t" $2}' > SCOREvsRMSD_low5000.dat
+mkdir cluster
+grep SCORE fold_silent.out | sort -nk +2 | head -200 | awk '{print $30}' > list
+cat list | awk '{print}' ORS=" " > liststring
+xargs {ROSETTA}/main/source/bin/extract_pdbs.linuxgccrelease -in::file::silent fold_silent.out -out:pdb -in:file:tags < liststring
+rm list
+rm liststring
+mv S_* cluster
+cd cluster
+echo '
+-database {ROSETTA}/main/database
+-in:file:fullatom
+-cluster:radius 3
+-nooutput
+-out:file:silent cluster_silent.out
+'>cluster_flags
+{ROSETTA}/main/source/bin/cluster.default.linuxgccrelease @cluster_flags -in:file:s *.pdb
+rm *.pdb
+{ROSETTA}/main/source/bin/extract_pdbs.linuxgccrelease -in::file::silent cluster_silent.out -out:pdb -in:file:tags

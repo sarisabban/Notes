@@ -1,0 +1,17 @@
+#!/bin/bash
+
+<<COMMENT
+Input:
+1. structure.pdb
+COMMENT
+
+echo '
+-in:file:s {PATH}/protein.pdb
+-database {ROSETTA}/main/database
+-relax:thorough
+-nstruct 10
+-out:suffix _relaxed
+'>flags
+
+{ROSETTA}/main/source/bin/relax.default.linuxgccrelease @flags
+

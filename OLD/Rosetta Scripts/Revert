@@ -1,0 +1,18 @@
+#!/bin/bash
+
+<<COMMENT
+Input Files:
+1. native.pdb		The Native Structure
+2. design.fasta		The Designed Structure
+COMMENT
+
+echo '
+-database {ROSETTA}/main/database
+-revert_app:wt native.pdb
+-revert_app:design design.pdb
+-ex1
+-ex2
+-use_input_sc
+'>flags
+
+{ROSETTA}/main/source/bin/revert_design_to_native.default.linuxgccrelease @flags
