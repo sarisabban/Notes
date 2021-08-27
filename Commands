@@ -1,13 +1,10 @@
-**#Linux Setup**
-----------
+**#LINUX SETUP**
+================
 ## Programs to install (APT) Mint
-sudo apt update && sudo apt full-upgrade
-
-&& sudo apt install weechat vim pymol openconnect audacity obs-studio gnuplot tmux htop git dssp ffmpeg python3-pip python3-venv -y
-
-&& sleep 1 && n="$(awk '/PS1=/ { $0 = "PS1=\x27\\[\\033[0;33m\\][\\W]\\$ \\[\\033[0m\\]\x27" } 1' .bashrc)"; echo "$n" > .bashrc
-&& sleep 1 && printf ':set shiftwidth=4 noexpandtab\n:set softtabstop=4 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap\n:set number\n:set ts=4 sw=4\n:set cc=81' >> ~/.vimrc
-&& sleep 1 && printf "set -g status-bg black\nset -g status-fg red\nset -g pane-border-style fg=magenta\nset -g pane-active-border-style fg=magenta\nset -g status-justify 'centre'\nset -g status-left-length '100'\nset -g status 'on'\nset -g status-right-length '100'\nsetw -g window-status-separator ''\nset -g status-right '%%H:%%M'\nsetw -g window-status-current-format '#(whoami)'\nset -g status off" > ~/.tmux.conf
+sudo apt update
+&& sleep 1 && sudo apt full-upgrade
+&& sleep 1 && sudo apt install weechat vim gromacs texlive-full pymol openconnect audacity obs-studio gnuplot tmux htop git dssp ffmpeg python3-pip python3-venv -y
+&& sleep 1 && n="$(awk '/PS1=/ { $0 = "PS1=\x27\\[\\033[0;33m\\][\\W]\\$ \\[\\033[0m\\]\x27" } 1' .bashrc)"; echo "$n" > .bashrc && sleep 1 && printf ':set shiftwidth=4 noexpandtab\n:set softtabstop=4 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap\n:set number\n:set ts=4 sw=4\n:set cc=81' >> ~/.vimrc && sleep 1 && printf "set -g status-bg black\nset -g status-fg red\nset -g pane-border-style fg=magenta\nset -g pane-active-border-style fg=magenta\nset -g status-justify 'centre'\nset -g status-left-length '100'\nset -g status 'on'\nset -g status-right-length '100'\nsetw -g window-status-separator ''\nset -g status-right '%%H:%%M'\nsetw -g window-status-current-format '#(whoami)'\nset -g status off" > ~/.tmux.conf
 && sleep 1 && python3 -m venv myenv
 && sleep 1 && source myenv/bin/activate
 && sleep 1 && pip install lxml numpy scipy sklearn keras tensorflow matplotlib pandas biopython beautifulsoup4 tqdm
@@ -24,44 +21,48 @@ sudo apt update && sudo apt full-upgrade
 /set irc.server.libera.sasl_password PASSWORD
 
 ## Desktop environment setup Linux Mint
-* System Reports>Install hardware drivers
-* FirFox>setup
-* Xed>View>[X]Statusbar [X]Toolbar
-* Xed>Edit>Preferences>[/]Display line numbers [X]Use spaces instead of tabs [X]Word wrap [/]Theme cobalt
-* Terminal>[X]Scrolling [/]Scroll on key stroke [X]Menu [/]Theme colours green on back
-* System Settings>Background
-* System Settings>Themes>Window boarders>Mint-Y-Dark
-* System Settings>Themes>Controls>Mint-y-Dark-Grey
-* System Settings>Themes>Mouse>Adawita
-* System Settings>Account Details> Add picture
-* System Settings>Desktop>[X]Computer [X]Home
-* System Settings>Panel>Right Mouse Click>Move>Up
-* System Settings>Panel>Height>20
-* System Settings>Panel Edit Mode>Left Side>Unpin everything
-* System Settings>Panel Edit Mode>Right Side>Remove everything except Time, WiFi, Battery
-* System Settings>Screen Saver>[X]Lock computer when sleep [X]Lock computer after screen saver
-* System Settings>Bluetooth>Disable
-* System Settings>Keyboard>Shortcuts>(Home ctrl-alt-H [sh -c 'setsid xdg-open "$HOME" &']) (Text ctrl-alt-G [xed]) (Firefox ctrl-alt-W [firefox])
-* System Settings>Keyboard>Layouts>Arabic (Macintosh)
-* System Settings>Mouse>Touchpad>[X]Tap to click [/]Horizontal scrolling
-* System Settings>Power Management>on A/C and Battery  [X]Inactive turn off screen [X]Inactive suspend [X]When lid is closed
-* System Settings>Sound>Sounds>[X]All
-----------
+* System Reports>                               Install hardware drivers
+* FirFox>                                       setup
+* Xed>View>                                     [X]Statusbar [X]Toolbar
+* Xed>Edit>Preferences>                         [/]Display line numbers [X]Use spaces instead of tabs [X]Word wrap [/]Theme cobalt
+* Terminal>                                     [X]Scrolling [/]Scroll on key stroke [X]Menu [/]Theme colours green on back
+* System Settings>                              Background
+* System Settings>Themes>Window boarders>       Mint-Y-Dark
+* System Settings>Themes>Controls>              Mint-y-Dark-Grey
+* System Settings>Themes>Mouse>                 Adawita
+* System Settings>Account Details>              Add picture
+* System Settings>Desktop>                      [X]Computer [X]Home
+* System Settings>Panel>Right Mouse Click>Move> Up
+* System Settings>Panel>Height>                 20
+* System Settings>Panel Edit Mode>              Left Side>Unpin everything
+* System Settings>Panel Edit Mode>Right Side>   Remove everything except Time, WiFi, Battery
+* System Settings>Screen Saver>                 [X]Lock computer when sleep [X]Lock computer after screen saver
+* System Settings>Bluetooth>                    Disable
+* System Settings>Keyboard>Shortcuts>           (Home ctrl-alt-H [sh -c 'setsid xdg-open "$HOME" &']) (Text ctrl-alt-G [xed]) (Firefox ctrl-alt-W [firefox])
+* System Settings>Keyboard>Layouts>             Arabic (Macintosh)
+* System Settings>Mouse>Touchpad>               [X]Tap to click [/]Horizontal scrolling
+* System Settings>Power Management>             on A/C and Battery  [X]Inactive turn off screen [X]Inactive suspend [X]When lid is closed
+* System Settings>Sound>Sounds>                 [X]All
+
+
+
+**#OTHER COMMANDS**
+===============
 ## Live USB
 sudo fdisk -l
 sudo dd bs=4M if=FILENAME.iso of=/dev/sdb status=progress oflag=sync iflag=fullblock
---------------------------------------------------
+------------------------------
 **#TMUX**
 tmux new -s Bioinformatics -n Bioinformatics \; split-window -d -t 0 -v -p34 weechat \; split-window -h -p46 htop \; split-window -v -p75
---------------------------------------------------
+------------------------------
 **#VIM**
 '[,']:w !nc termbin.com 9999
---------------------------------------------------
+------------------------------
 **#FFMPEG**
 for i in *.mkv; do ffmpeg -i "$i" -vcodec libx264 -r 25 -crf 23 -ab 384k -acodec ac3 "${i%.mkv}.mp4"; done
---------------------------------------------------
+------------------------------
 **#Conda virtual environment**
-conda create -n MLenv python=3.6.1 -y
-source activate MLenv
-conda install numpy pandas scipy scikit-learn keras tensorflow biopython -y
-source deactivate MLenv
+conda create -n Cenv
+source activate Cenv
+conda install 
+source deactivate Cenv
