@@ -63,6 +63,6 @@ for i in *.mkv; do ffmpeg -i "$i" -vcodec libx264 -r 25 -crf 23 -ab 384k -acodec
 ------------------------------
 **#Conda virtual environment**
 conda create -n Cenv
-source activate Cenv
+source activate Cenv # or conda activate VINA
 conda install 
 source deactivate Cenv
