@@ -487,6 +487,9 @@ file index -> HTML document text
 -n 2 to print only the last 2 lines
 -2 +2 to print everything except the first 2 lines
 
+**SPLIT**
+split -l 10 FILENAME      # Segment a file into separate files each with 10 lines
+
 **PIPES**
 | to pass command to another command (use output of one command as input for another command)
 
