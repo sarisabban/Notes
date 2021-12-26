@@ -1,5 +1,5 @@
 # Download YouTube videos
-# pip3 install pytube
+# pip install pytube
 
 from pytube import YouTube
 
@@ -15,20 +15,22 @@ def format_bytes(size):
 
 link = input('Enter URL > ')
 yt = YouTube(link)
-videos = yt.streams.all()
-video = list(enumerate(videos))
+videos = yt.streams.filter(progressive=True, file_extension='mp4')
+videos = videos.order_by('resolution')
 
 print('OPTION\tFORMAT\tRESOLUTION\tFPS\tSIZE')
-for option in video:
-	OPTION      = option[0]
-	FORMAT      = option[1].subtype
-	RESOLUTION  = option[1].resolution
-	FPS         = option[1].fps
-	SIZE        = format_bytes(int(option[1].filesize))
-	line = '{}\t{}\t{}\t\t{}\t{}'.format(OPTION, FORMAT, RESOLUTION, FPS, SIZE)
-	print(line)
+for option in videos:
+	try:
+		OPTION      = option.itag
+		FORMAT      = option.subtype
+		RESOLUTION  = option.resolution
+		FPS         = option.fps
+		SIZE        = format_bytes(int(option.filesize))
+		line = '{}\t{}\t{}\t\t{}\t{}'.format(OPTION, FORMAT, RESOLUTION, FPS, SIZE)
+		print(line)
+	except: pass
 
 dn_option = int(input('Enter option to download > '))
-dn_video = videos[dn_option]
-dn_video.download()
-print('downloaded successfully')
+print('[+] downloading...')
+videos.get_by_itag(dn_option).download()
+print('[+] Downloaded successfully')
