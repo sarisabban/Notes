@@ -12,7 +12,7 @@ sudo apt update
 
 ## Weechat setup
 /set buflist.look.enabled off
-/server add freenode irc.libera.chat
+/server add libera irc.libera.chat
 /set weechat.plugin.autoload *,!logger
 /set irc.server_default.autoconnect on
 /set irc.server.libera.addresses "irc.libera.chat/7000"
