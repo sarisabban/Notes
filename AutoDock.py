@@ -361,15 +361,15 @@ def PBS(pX, pY, pZ, x, y, z, seed, exhaust, out, CPU, array, email):
 		dock.write('export -f process\n')
 		dock.write('''find ../Ligands/${PBS_ARRAY_INDEX}/ -type f -print0 | xargs -0 -P 24 -I{} bash -c 'process "$1"' _ {}''')
 
-def Kd_to_dG(Kd):
-	Kd = float(Kd)
-	dG = 0.0019872036*298*numpy.log(Kd)
-	print('{} Kcal/mol'.format(round(dG, 2)))
-
-def dG_to_Kd(dG):
-	dG = float(dG)
-	Kd = math.e**(dG/(0.0019872036*298))
-	print('{:0.2e} dG'.format(Kd))
+def affinity(name, Kd=None, dG=None, R=0.00198720425864083, T=298):
+	if Kd != None and dG == None:
+		Kd = float(Kd)
+		dG = R*T*math.log(Kd)
+		print('{} dG = {} Kcal/mol'.format(name, round(dG, 2)))
+	if dG != None and Kd == None:
+		dG = float(dG)
+		Kd = math.e**(dG/(R*T))
+		print('{} Kd = {:0.2e} M'.format(name, Kd))
 
 parser = argparse.ArgumentParser(description='Prep ligands for AutoDock Vina')
 parser.add_argument('-r',
@@ -437,9 +437,9 @@ def main():
 	elif args.combine:
 		os.system('cat {}/Docks_* | sort -nk 3 > Result'.format(sys.argv[2]))
 	elif args.Kd_to_dG:
-		Kd_to_dG(sys.argv[2])
+		affinity('molecule', Kd=sys.argv[2])
 	elif args.dG_to_Kd:
-		dG_to_Kd(sys.argv[2])
+		affinity('molecule', dG=sys.argv[2])
 	elif args.pbs:
 		PBS(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7], sys.argv[8], sys.argv[9], sys.argv[10], sys.argv[11], sys.argv[12], sys.argv[13])
 
