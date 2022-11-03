@@ -56,7 +56,7 @@ for episode in range(epochs):
 			action_probs = actor(state_tensor)                                   # Get action probabilities from actor network 
 			q_value = critic(state_tensor)                                       # Get q-value from critic network
 			Q_history.append(q_value[0, 0])                                      # Save q-value 
-			action = np.random.choice(actions, p=np.squeeze(action_probs))		 # Choose action randomly
+			action = np.random.choice(actions, p=np.squeeze(action_probs))		 # Choose action according to its probability
 			A_history.append(tf.math.log(action_probs[0, action]))               # Save chosen action
 			S2, R, St, _ = env.step(action)                                      # Apply action
 			R_history.append(R)                                                  # Save reward
