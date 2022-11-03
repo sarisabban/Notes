@@ -127,6 +127,9 @@ for episode in range(epochs):
 				del A_history[:1]
 				del St_history[:1]
 
+            if St:                                                               # End trajectory if St becomes True
+            	break
+
 	# Episode wide updates
 	Gt_history.append(Gt)                                                        # Append to Gt history
 	if len(Gt_history) > 100: del Gt_history[:1]                                 # Limit memory size
@@ -136,7 +139,3 @@ for episode in range(epochs):
 	if Reward > 40:                                                              # Condition to consider the task solved: if average Gt = 40
 		print('Solved at episode {}!'.format(episode))
 		break
-
-
-
-
