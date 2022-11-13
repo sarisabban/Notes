@@ -11,7 +11,7 @@ Layers:			*Input layer:	1 layer , nodes = number of features (sometimes +1 for a
 
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
-mnist = input_data.read_data_sets('/home/acresearch/Desktop' , one_hot = True)
+mnist = input_data.read_data_sets('./Desktop' , one_hot = True)
 
 feature_size =	784						#Number of features of each instance in the dataset
 n_classes =	10						#Number of classes (labels) in the dataset
