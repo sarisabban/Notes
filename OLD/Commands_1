@@ -56,7 +56,7 @@ then click Add then click crtl+alt+t
 Creat Live Install USB:
 su
 lsblk
-dd if=/home/acresearch/Desktop/ubuntu-gnome-16.04.2-desktop-amd64.iso of=/dev/sdb
+dd if=./Desktop/ubuntu-gnome-16.04.2-desktop-amd64.iso of=/dev/sdb
 ----------
 ## PyEnv:
 sudo apt-get update; sudo apt-get install --no-install-recommends make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
@@ -199,8 +199,8 @@ put -r directory_name
 For some reason mput -r needs the same directory name in the destination. But mget does not need a destination folder.
 
 NO SFTP - If you do not want to use sftp you can simply copy files using:
-To HPC:		scp /home/acresearch/Desktop/* ssabban@10.113.16.5:/fefs1/generic/ssabban/Allergy_Vaccine_pex/refine_remodel/1Q1FA/design_1Q1FA
-From HPC:	scp ssabban@10.113.16.5:/fefs1/generic/ssabban/Allergy_Vaccine_pex/refine_remodel/1Q1FA/refinement_* /home/acresearch/Desktop
+To HPC:		scp ./Desktop/* USERNAME@IP:~
+From HPC:	scp USERNAME@IP:~ ./Desktop
 --------------------------------------------------
 **#Networking**
 
@@ -724,7 +724,7 @@ cd {ROSETTA}/main/source
 
 #Ubuntu 17.04
 in home directory .bashrc add at the end of the line:
-export LD_LIBRARY_PATH=/home/acresearch/rosetta_src_2017.08.59291_bundle/main/source/build/external/release/linux/4.10/64/x86/gcc/6.3/default/:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=~/rosetta_src_2017.08.59291_bundle/main/source/build/external/release/linux/4.10/64/x86/gcc/6.3/default/:$LD_LIBRARY_PATH
 
 #Cannot Compile on AZIZ straighforward because python -V -> Python 2.6.6
 #To compile first load python 2.7.9 by these two commands
