@@ -6,9 +6,9 @@ from keras.preprocessing.image import ImageDataGenerator
 
 #Import data - pip3 install pillow
 #Keras simply can take images from directories and organises them according to class, this makes importing the data quick and very simple. The target size is the size of each picture's pixles that we will import, i.e: we can have different picture sizes but we will import only specific pixels so that the dataset has uniform examples.
-train_image = ImageDataGenerator().flow_from_directory('/home/acresearch/Desktop/CatDog/train' , target_size = (224 , 224) , classes = ['cat' , 'dog'] , batch_size = 10)
-valid_image = ImageDataGenerator().flow_from_directory('/home/acresearch/Desktop/CatDog/valid' , target_size = (224 , 224) , classes = ['cat' , 'dog'] , batch_size = 4)
-tests_image = ImageDataGenerator().flow_from_directory('/home/acresearch/Desktop/CatDog/tests' , target_size = (224 , 224) , classes = ['cat' , 'dog'] , batch_size = 10)
+train_image = ImageDataGenerator().flow_from_directory('./Desktop/CatDog/train' , target_size = (224 , 224) , classes = ['cat' , 'dog'] , batch_size = 10)
+valid_image = ImageDataGenerator().flow_from_directory('./Desktop/CatDog/valid' , target_size = (224 , 224) , classes = ['cat' , 'dog'] , batch_size = 4)
+tests_image = ImageDataGenerator().flow_from_directory('./Desktop/CatDog/tests' , target_size = (224 , 224) , classes = ['cat' , 'dog'] , batch_size = 10)
 
 #gen = ImageDataGenerator(rotation_range = 10 , width_shift_range = 0.1 , height_shift_range = 0.1 , shear_range = 0.15 , zoom_range = 0.1 , channel_shift_range = 0.15 , horizontal_flip = True)	#Augment the images (flip them, zoom them etc...)
 #pix = numpy.expand_dims(scipy.ndimage.imread('28.jpg') , 0)																																			#Change image dimentions to be used in next line
