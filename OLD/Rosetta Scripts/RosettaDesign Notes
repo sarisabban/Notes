@@ -9,7 +9,7 @@ structure.pdb
 -relax:constrain_relax_to_start_coords	# Add coordinate constraints to backbone heavy atoms, based on the input structure.
 -scorefile relax.fasc
 
-/home/acresearch/Rosetta/main/source/bin/relax.default.linuxgccrelease @relax.options -s structure.pdb
+./Rosetta/main/source/bin/relax.default.linuxgccrelease @relax.options -s structure.pdb
 
 NOTE: Generate 50 relaxed models and choose the lowest scoring one
 
@@ -51,7 +51,7 @@ DESIGN.xml
 	<OUTPUT scorefxn="REF2015" />
 </ROSETTASCRIPTS>
 
-/home/acresearch/Rosetta/main/source/bin/rosetta_scripts.default.linuxgccrelease @design.options -parser:protocol design.xml -out:suffix _design -scorefile design.fasc
+./Rosetta/main/source/bin/rosetta_scripts.default.linuxgccrelease @design.options -parser:protocol design.xml -out:suffix _design -scorefile design.fasc
 
 NOTE: Generate 100 designed models and choose the lowest scoring one
 
@@ -104,4 +104,4 @@ BACKRUB.xml
 	<OUTPUT scorefxn="REF2015" />
 </ROSETTASCRIPTS>
 
-/home/acresearch/Rosetta/main/source/bin/rosetta_scripts.default.linuxgccrelease @design.options -parser:protocol design_backrub.xml -out:suffix _design_backrub -scorefile design_backrub.fasc
+./Rosetta/main/source/bin/rosetta_scripts.default.linuxgccrelease @design.options -parser:protocol design_backrub.xml -out:suffix _design_backrub -scorefile design_backrub.fasc
