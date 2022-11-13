@@ -14,7 +14,7 @@ def format_author(author):
 def format_authors(authors):
 	return(';'.join(format_author(author) for author in authors))
 
-email_address = 'ac.research@icloud.com'
+email_address = 'EMAIL@EMAIL.com'
 cursor = '*'
 rows = rows_per_page = 1000
 while rows == rows_per_page:
@@ -54,7 +54,7 @@ def member_publications(member_id , mailto=None , rows_per_page=1000):
 		params['cursor'] = message['next-cursor']
 
 if __name__ == '__main__':
-	for doi , authors in member_publications(2674 , mailto = 'ac.research@icloud.com'):
+	for doi , authors in member_publications(2674 , mailto = 'EMAIL@EMAIL.com'):
 		row = ';'.join(itertools.chain([doi] , (format_author(a) for a in authors)))
 		tempfile = open('temp' , 'a')
 		tempfile.write(row + '\n')
