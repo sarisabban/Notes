@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 def qarray(q):
@@ -33,3 +34,37 @@ def qdot(q1, q2):
 	v = a*y + e*x + np.cross(x, y)
 	result = np.array([s, v[0], v[1], v[2]])
 	return(result)
+
+def rotate(v, n, theta):
+	''' Rotate a vector around axis n '''
+	n_ = n / np.linalg.norm(n)
+	C = math.cos(math.radians(theta))
+	S = math.sin(math.radians(theta))
+	nxv = np.cross(n_, v)
+	result = np.array(v)*C + nxv*S
+	return(result)
+
+def qrotate(v, n, theta):
+	''' Rotate a vector around axis n using quaternions'''
+	e = math.e
+	theta = math.radians(theta)
+	q = np.array([0, v[0], v[1], v[2]])
+	n = n / np.linalg.norm(n)
+	# https://github.com/MichaelGrupp/evo/blob/master/evo/core/transformations.py
+	# e**(theta*n) * q
+	x = [math.cos(theta/2), n[0]*math.sin(theta/2), n[1]*math.sin(theta/2), n[2]*math.sin(theta/2)]
+	xc = [x[0], -x[1], -x[2], -x[3]]
+	result = qatmul(qatmul(x, q), xc)
+	return(result[1:])
+
+
+
+v = [0, 0, 1]
+n = [0, 1, 0]
+theta = 90
+
+q_ = rotate(v, n, theta)
+print(q_)
+
+q_ = qrotate(v, n, theta)
+print(q_)
