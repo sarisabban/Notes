@@ -62,11 +62,13 @@ def qrotate(v, n, theta):
 	theta = math.radians(theta)
 	q = np.array([0, v[0], v[1], v[2]])
 	n = n / np.linalg.norm(n)
-	# https://github.com/MichaelGrupp/evo/blob/master/evo/core/transformations.py
-	# e**(theta*n) * q
-	x = [math.cos(theta/2), n[0]*math.sin(theta/2), n[1]*math.sin(theta/2), n[2]*math.sin(theta/2)]
-	xc = [x[0], -x[1], -x[2], -x[3]]
-	result = qatmul(qatmul(x, q), xc)
+	w  = math.cos(theta/2)
+	nx = n[0]*math.sin(theta/2)
+	ny = n[1]*math.sin(theta/2)
+	nz = n[2]*math.sin(theta/2)
+	P  = [w,  nx,  ny,  nz]
+	Ps = [w, -nx, -ny, -nz]
+	result = qatmul(qatmul(P, q), Ps)
 	return(result[1:])
 
 
@@ -77,11 +79,5 @@ v = [0, 0, 1]
 n = [0, 1, 0]
 theta = 90
 
-#v_ = rotate(v, n, theta)
-#print(v_)
-
-#q_ = qrotate(v, n, theta)
-#print(q_)
-
-#v_ = rodrigues(v, n, theta)
-#print(v_)
+q_ = qrotate(v, n, theta)
+print(q_)
