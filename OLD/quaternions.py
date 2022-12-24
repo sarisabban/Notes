@@ -71,13 +71,29 @@ def qrotate(v, n, theta):
 	result = qatmul(qatmul(P, q), Ps)
 	return(result[1:])
 
+def reflect(v, n):
+	''' Reflect a vector around axis n '''
+	v = np.array(v)
+	n = n / np.linalg.norm(n)
+	result = v - 2*(np.dot(v, n))*n
+	return(result)
+
+def qreflect(v, n):
+	''' Reflect a vector around axis n using quaternions '''
+	v = np.array(v)
+	n = n / np.linalg.norm(n)
+	v = [0, v[0], v[1], v[2]]
+	n = [0, n[0], n[1], n[2]]
+	result = qatmul(qatmul(n, v), n)
+	return(result[1:])
 
 
-
-
-v = [0, 0, 1]
-n = [0, 1, 0]
+v = [1, 1, 1]
+n = [0, 0, 1]
 theta = 90
 
 q_ = qrotate(v, n, theta)
+print(q_)
+
+q_ = qreflect(v, n)
 print(q_)
