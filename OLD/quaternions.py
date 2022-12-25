@@ -88,12 +88,63 @@ def qreflect(v, n):
 	return(result[1:])
 
 
-v = [1, 1, 1]
-n = [0, 0, 1]
+v1 = [2, 1, 1]
+v2 = [2, 2, 1]
+n = [0, 1, 0]
 theta = 90
 
-q_ = qrotate(v, n, theta)
-print(q_)
+q1_ = qreflect(v1, n)
+print(q1_)
+print()
 
-q_ = qreflect(v, n)
-print(q_)
+q1_ = qrotate(v1, n, theta)
+q2_ = qrotate(v2, n, theta)
+print(q1_)
+print(q2_)
+print()
+
+
+
+
+
+
+
+
+def QRM(Q):
+	''' Quaternion rotation matrix '''
+	# https://automaticaddison.com/how-to-convert-a-quaternion-to-a-rotation-matrix/
+	q0 = Q[0]
+	q1 = Q[1]
+	q2 = Q[2]
+	q3 = Q[3]
+	r00 = 2 * (q0 * q0 + q1 * q1) - 1
+	r01 = 2 * (q1 * q2 - q0 * q3)
+	r02 = 2 * (q1 * q3 + q0 * q2)
+	r10 = 2 * (q1 * q2 + q0 * q3)
+	r11 = 2 * (q0 * q0 + q2 * q2) - 1
+	r12 = 2 * (q2 * q3 - q0 * q1)
+	r20 = 2 * (q1 * q3 - q0 * q2)
+	r21 = 2 * (q2 * q3 + q0 * q1)
+	r22 = 2 * (q0 * q0 + q3 * q3) - 1
+	rot_matrix = np.array([
+	[r00, r01, r02],
+	[r10, r11, r12],
+	[r20, r21, r22]])
+	return(rot_matrix)
+
+
+m = np.array([
+[2, 1, 1],
+[2, 2, 1]])
+theta = 90
+n = [0, 1, 0]
+
+theta = math.radians(-theta)
+w  = math.cos(theta/2)
+nx = n[0]*math.sin(theta/2)
+ny = n[1]*math.sin(theta/2)
+nz = n[2]*math.sin(theta/2)
+q  = [w,  nx,  ny,  nz]
+RM = QRM(q)
+m_ = np.matmul(m, RM)
+print(m_)
