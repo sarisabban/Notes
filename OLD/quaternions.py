@@ -88,6 +88,7 @@ def qreflect(v, n):
 	return(result[1:])
 
 
+
 v1 = [2, 1, 1]
 v2 = [2, 2, 1]
 n = [0, 1, 0]
@@ -131,6 +132,7 @@ def QRM(Q):
 	[r10, r11, r12],
 	[r20, r21, r22]])
 	return(rot_matrix)
+
 
 
 m = np.array([
