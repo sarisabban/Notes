@@ -58,7 +58,6 @@ def rodrigues(v, n, theta):
 
 def qrotate(v, n, theta):
 	''' Rotate a vector around axis n using quaternions '''
-	e = math.e
 	theta = math.radians(theta)
 	q = np.array([0, v[0], v[1], v[2]])
 	n = n / np.linalg.norm(n)
