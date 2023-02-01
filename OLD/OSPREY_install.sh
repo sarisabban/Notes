@@ -1,3 +1,4 @@
+<<COMMENT
 # Install OSPREY:
 # ===============
 mkdir software
@@ -48,3 +49,14 @@ echo 'export OSPREY_HOME=$HOME/software/osprey-3.3' >> $HOME/.bash_profile
 echo 'export PATH=$PATH:$OSPREY_HOME/bin' >> $HOME/.bash_profile
 source $HOME/.bash_profile
 osprey --help
+COMMENT
+
+# Install OSPREY Python:
+# ======================
+git clone https://github.com/donaldlab/OSPREY3.git
+cd OSPREY3/
+sed -i s/'"--user", "--editable",'/'"--editable",'/ ./buildSrc/src/main/kotlin/osprey/python.kt
+python3 -m venv myenv
+source myenv/bin/activate
+./gradlew assemble
+./gradlew pythonDevelop
