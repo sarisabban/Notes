@@ -53,10 +53,10 @@ COMMENT
 
 # Install OSPREY Python:
 # ======================
+python3 -m venv myenv
+source myenv/bin/activate
 git clone https://github.com/donaldlab/OSPREY3.git
 cd OSPREY3/
 sed -i s/'"--user", "--editable",'/'"--editable",'/ ./buildSrc/src/main/kotlin/osprey/python.kt
-python3 -m venv myenv
-source myenv/bin/activate
 ./gradlew assemble
 ./gradlew pythonDevelop
