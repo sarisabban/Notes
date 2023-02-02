@@ -22,10 +22,56 @@ sed -i s/'"--user", "--editable",'/'"--editable",'/ ./buildSrc/src/main/kotlin/o
 cd
 '''
 
+'''
+# apt install gromacs
+
+P=2RL0
+
+echo '
+integrator           = steep               ; Algorithm (steep = steepest descent minimization)
+emtol                = 1000.0              ; Stop minimization when the maximum force < 1000.0 kJ/mol/nm
+emstep               = 0.01                ; Energy step size
+nsteps               = 50000               ; Maximum number of (minimization) steps to perform
+; Parameters describing how to find the neighbors of each atom and how to calculate the interactions
+nstlist              = 1                   ; Frequency to update the neighbor list and long range forces
+cutoff-scheme        = Verlet
+ns_type              = grid                ; Method to determine neighbor list (simple, grid)
+coulombtype          = PME                 ; Treatment of long range electrostatic interactions
+rcoulomb             = 1.0                 ; Short-range electrostatic cut-off
+rvdw                 = 1.0                 ; Short-range Van der Waals cut-off
+pbc                  = xyz                 ; Periodic Boundary Conditions (yes/no)
+'>>ions.mdp
+
+echo '
+integrator           = steep               ; Algorithm (steep = steepest descent minimization)
+emtol                = 1000.0              ; Stop minimization when the maximum force < 1000.0 kJ/mol/nm
+emstep               = 0.01                ; Energy step size
+nsteps               = 50000               ; Maximum number of (minimization) steps to perform
+; Parameters describing how to find the neighbors of each atom and how to calculate the interactions
+nstlist              = 1                   ; Frequency to update the neighbor list and long range forces
+cutoff-scheme        = Verlet
+ns_type              = grid                ; Method to determine neighbor list (simple, grid)
+coulombtype          = PME                 ; Treatment of long range electrostatic interactions
+rcoulomb             = 1.0                 ; Short-range electrostatic cut-off
+rvdw                 = 1.0                 ; Short-range Van der Waals cut-off
+pbc                  = xyz                 ; Periodic Boundary Conditions (yes/no)
+'>>minim.mdp
+
+printf %s\\n 3 | gmx pdb2gmx -f $P.pdb -o $P.gro -water spce -ignh
+gmx editconf -f $P.gro -o $P\_box.gro -c -d 1.0 -bt dodecahedron
+gmx solvate -cp $P\_box.gro -cs spc216.gro -o $P\_solv.gro -p topol.top
+gmx grompp -f ions.mdp -c $P\_solv.gro -p topol.top -o ions.tpr -maxwarn 1
+printf %s\\n 13 | gmx genion -s ions.tpr -o $P\_solv\_ions.gro -p topol.top -pname NA -nname CL -neutral
+gmx grompp -f minim.mdp -c $P\_solv_ions.gro -p topol.top -o em.tpr
+gmx mdrun -deffnm em
+printf %s\\n 1 | gmx trjconv -s em.tpr -f em.gro -pbc mol -o $P\_\H\_min.pdb
+rm *.gro *.edr *.log *.tpr *.trr *.mdp *.itp *.top \#topol*
+'''
+
 import osprey
 osprey.start()
 
-filename = '2RL0.pdb'
+filename = '2RL0_H_min.pdb'
 epsilon  = 0.99
 CPUs     = 4
 
