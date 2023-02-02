@@ -72,7 +72,7 @@ import osprey
 osprey.start()
 
 filename = '2RL0_H_min.pdb'
-epsilon  = 0.99
+epsilon  = 0.999
 CPUs     = 4
 
 ffparams = osprey.ForcefieldParams()
