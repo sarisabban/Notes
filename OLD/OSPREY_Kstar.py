@@ -1,19 +1,31 @@
 '''
 # Install OSPREY Python:
 # ======================
+apt install python3-venv
 python3 -m venv myenv
 source myenv/bin/activate
+mkdir software
+cd software
+wget -q https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-x64_bin.tar.gz
+tar -xf openjdk-17.0.2_linux-x64_bin.tar.gz
+rm openjdk-17.0.2_linux-x64_bin.tar.gz
+touch .bash_profile
+echo 'export JAVA_HOME=$HOME/software/jdk-17.0.2' >> $HOME/.bash_profile
+echo 'export PATH=$PATH:$JAVA_HOME/bin' >> $HOME/.bash_profile
+source $HOME/.bash_profile
+java -version
 git clone https://github.com/donaldlab/OSPREY3.git
 cd OSPREY3/
 sed -i s/'"--user", "--editable",'/'"--editable",'/ ./buildSrc/src/main/kotlin/osprey/python.kt
 ./gradlew assemble
 ./gradlew pythonDevelop
+cd
 '''
 
 import osprey
 osprey.start()
 
-filename = '2RL0.min.reduce.pdb'
+filename = '2RL0.pdb'
 epsilon  = 0.99
 CPUs     = 4
 
