@@ -25,8 +25,6 @@ cd
 '''
 # apt install gromacs
 
-P=2RL0
-
 echo '
 integrator           = steep               ; Algorithm (steep = steepest descent minimization)
 emtol                = 1000.0              ; Stop minimization when the maximum force < 1000.0 kJ/mol/nm
@@ -57,21 +55,21 @@ rvdw                 = 1.0                 ; Short-range Van der Waals cut-off
 pbc                  = xyz                 ; Periodic Boundary Conditions (yes/no)
 '>>minim.mdp
 
-printf %s\\n 3 | gmx pdb2gmx -f $P.pdb -o $P.gro -water spce -ignh
-gmx editconf -f $P.gro -o $P\_box.gro -c -d 1.0 -bt dodecahedron
-gmx solvate -cp $P\_box.gro -cs spc216.gro -o $P\_solv.gro -p topol.top
-gmx grompp -f ions.mdp -c $P\_solv.gro -p topol.top -o ions.tpr -maxwarn 1
-printf %s\\n 13 | gmx genion -s ions.tpr -o $P\_solv\_ions.gro -p topol.top -pname NA -nname CL -neutral
-gmx grompp -f minim.mdp -c $P\_solv_ions.gro -p topol.top -o em.tpr
+printf %s\\n 3 | gmx pdb2gmx -f compelx.pdb -o compelx.gro -water spce -ignh
+gmx editconf -f compelx.gro -o compelx\_box.gro -c -d 1.0 -bt dodecahedron
+gmx solvate -cp compelx\_box.gro -cs spc216.gro -o compelx\_solv.gro -p topol.top
+gmx grompp -f ions.mdp -c compelx\_solv.gro -p topol.top -o ions.tpr -maxwarn 1
+printf %s\\n 13 | gmx genion -s ions.tpr -o compelx\_solv\_ions.gro -p topol.top -pname NA -nname CL -neutral
+gmx grompp -f minim.mdp -c compelx\_solv_ions.gro -p topol.top -o em.tpr
 gmx mdrun -deffnm em
-printf %s\\n 1 | gmx trjconv -s em.tpr -f em.gro -pbc mol -o $P\_\H\_min.pdb
+printf %s\\n 1 | gmx trjconv -s em.tpr -f em.gro -pbc mol -o compelx\_\H\_min.pdb
 rm *.gro *.edr *.log *.tpr *.trr *.mdp *.itp *.top \#topol*
 '''
 
 import osprey
 osprey.start()
 
-filename = '2RL0_H_min.pdb'
+filename = 'compelx_H_min.pdb'
 epsilon  = 0.99
 CPUs     = 4
 
