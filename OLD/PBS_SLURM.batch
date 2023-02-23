@@ -1,0 +1,18 @@
+#!/bin/bash
+#PBS -N test
+#PBS -q thin
+#PBS -l walltime=00:05:00
+#PBS -l select=1:ncpus=4
+#PBS -j oe
+#PBS -J 1-4
+cd $PBS_O_WORKDIR
+
+#!/bin/bash
+#SBATCH --job-name=test
+#SBATCH --partition=batch
+#SBATCH --time=00:03:00
+#SBATCH --mem=0
+#SBATCH --nodes=1
+#SBATCH --ntasks=4
+#SBATCH --array=1-4
+cd $SLURM_SUBMIT_DIR
