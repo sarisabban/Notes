@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 env         = 'CartPole-v1'
 lr          = 2.5e-4
 seed        = 1
-timesteps   = 5000
+timesteps   = 50000
 n_envs      = 4
 n_steps     = 128
 epochs      = 4
