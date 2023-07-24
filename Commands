@@ -58,6 +58,9 @@ tmux new -s Bioinformatics -n Bioinformatics \; split-window -d -t 0 -v -p34 wee
 **#VIM**
 '[,']:w !nc termbin.com 9999
 ------------------------------
+**#My Public IP Address**
+curl ifconfig.me
+------------------------------
 **#Convert PDF to IMAGE**
 pdfimages FILENAME.pdf x
 convert x-000.ppm FILENAME.jpg
