@@ -118,14 +118,14 @@ def center_of_box(selection):
 	'''
 	output the avarage Ca coordinate of the given selection
 	'''
-	selection = selection + " and n. CA"
+	selection = selection + ' and n. CA'
 	model = querying.get_model(selection)
 	coords = model.get_coord_list()
 	coords_matrix = numpy.array(coords)
 	coords_ave = coords_matrix.mean(axis=0)
 	coords_ave = coords_ave.tolist()
-	print("Ca coordinates of selection are:", coords)
-	print("Ca center of selection is:", coords_ave)
+	print('Ca coordinates of selection are:', coords)
+	print('Ca center of selection is:', coords_ave)
 	cmd.extend("center_of_box", center_of_box)
 	return coords_ave
 
