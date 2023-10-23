@@ -44,8 +44,6 @@ sudo apt update
 * System Settings>Power Management>             on A/C and Battery  [X]Inactive turn off screen [X]Inactive suspend [X]When lid is closed
 * System Settings>Sound>Sounds>                 [X]All
 
-
-
 **#OTHER COMMANDS**
 ===============
 ## Live USB
@@ -54,6 +52,9 @@ sudo dd bs=4M if=FILENAME.iso of=/dev/sdb status=progress oflag=sync iflag=fullb
 ------------------------------
 **#TMUX**
 tmux new -s Bioinformatics -n Bioinformatics \; split-window -d -t 0 -v -p34 weechat \; split-window -h -p46 htop \; split-window -v -p75
+------------------------------
+**#SSH**
+ssh-keygen -t rsa -b 4096 -C USERNAME
 ------------------------------
 **#VIM**
 '[,']:w !nc termbin.com 9999
@@ -69,7 +70,7 @@ convert x-000.ppm FILENAME.jpg
 for i in *.mkv; do ffmpeg -i "$i" -vcodec libx264 -r 25 -crf 23 -ab 384k -acodec ac3 "${i%.mkv}.mp4"; done
 ------------------------------
 **#Conda virtual environment**
-conda create -n Cenv
+conda create -n ENV
 source activate Cenv # or conda activate Cenv
 conda install 
 source deactivate Cenv
