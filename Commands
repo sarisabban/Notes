@@ -55,6 +55,7 @@ sudo dd bs=4M if=FILENAME.iso of=/dev/sdb status=progress oflag=sync iflag=fullb
 ------------------------------
 **#TMUX**
 tmux new -s Bioinformatics -n Bioinformatics \; split-window -d -t 0 -v -p34 weechat \; split-window -h -p46 htop \; split-window -v -p75
+tmux new -s main -n main \; split-window -d -t 0 -v -p34 weechat \; split-window -h -p46 htop \; split-window -v -p68 echo "vlc"\; split-window -v -p75
 tmux new -s work -n work \; split-window -d -t 0 -v -p34 weechat \; split-window -h -p50 htop \; split-window -v -p65
 ------------------------------
 **#SSH**
