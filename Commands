@@ -31,11 +31,12 @@ deactivate
 * Settings>Background           Choose background
 * Settings>Appearance           Dark Theme - [X]Show personal folder
 * Settings>Notifications        [X]Lock screen notifications
-* Settings>Power                [X]Dim Screen [X]Screen blank
+* Settings>Privacy>Screen       [X]Automatic lock screen [X]Lock screen on suspend
+* Settings>Power                [X]Dim Screen [X]Screen blank [X]Automatic suspend
 * Settings>Mouse & Touchpad     [X]Tap on click
 * Settings>Keyboard             Arabic (Macintosh) - (Home ctrl-alt-H [sh -c 'setsid xdg-open "$HOME" &']) (Text ctrl-alt-G [gedit]) (Firefox ctrl-alt-W [firefox])
 * Settings>Region & Langauge    Language & Format UK
-* Settings>Users                Add picture 
+* Settings>Users                Add picture
 
 **#OTHER COMMANDS**
 ===============
