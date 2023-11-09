@@ -7,18 +7,8 @@ sudo apt install weechat vim pymol openconnect tmux htop git ffmpeg python3-venv
 n="$(awk '/PS1=/ { $0 = "PS1=\x27\\[\\033[0;33m\\][\\W]\\$ \\[\\033[0m\\]\x27" } 1' .bashrc)"; echo "$n" > ~/.bashrc
 printf ':set shiftwidth=4 noexpandtab\n:set softtabstop=4 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap\n:set number\n:set ts=4 sw=4\n:set cc=81' >> ~/.vimrc
 printf "set -g status-bg black\nset -g status-fg red\nset -g pane-border-style fg=magenta\nset -g pane-active-border-style fg=magenta\nset -g status-justify 'centre'\nset -g status-left-length '100'\nset -g status 'on'\nset -g status-right-length '100'\nsetw -g window-status-separator ''\nset -g status-right '%%H:%%M'\nsetw -g window-status-current-format '#(whoami)'\nset -g status off" > ~/.tmux.conf
-
-touch ~/.config/htop/htoprc && sed -i '/show_cpu_temperature/c\show_cpu_temperature=1' ~/.config/htop/htoprc && sed -i '/enable_mouse/c\enable_mouse=0' ~/.config/htop/htoprc && sed -i '/left_meters/c\left_meters=AllCPUs Memory Swap Battery' ~/.config/htop/htoprc && sed -i '/left_meter_modes/c\left_meter_modes=1 1 1 1' ~/.config/htop/htoprc && sed -i '/right_meters/c\right_meters=NetworkIO NetworkIO Tasks Uptime' ~/.config/htop/htoprc && sed -i '/right_meter_modes/c\right_meter_modes=3 2 2 2' ~/.config/htop/htoprc
-
-
-touch ~/.config/htop/htoprc &
-echo 'show_cpu_temperature=1' >> ~/.config/htop/htoprc &
-echo 'enable_mouse=0' >> ~/.config/htop/htoprc &
-echo 'left_meters=AllCPUs Memory Swap Battery' >> ~/.config/htop/htoprc &
-echo 'left_meter_modes=1 1 1 1' >> ~/.config/htop/htoprc &
-echo 'right_meters=NetworkIO NetworkIO Tasks Uptime' >> ~/.config/htop/htoprc &
-echo 'right_meter_modes=3 2 2 2' >> ~/.config/htop/htoprc
-
+#open then save htop to get ~/.config/htop/htoprc
+sed -i '/show_cpu_temperature/c\show_cpu_temperature=1' ~/.config/htop/htoprc && sed -i '/enable_mouse/c\enable_mouse=0' ~/.config/htop/htoprc && sed -i '/left_meters/c\left_meters=AllCPUs Memory Swap Battery' ~/.config/htop/htoprc && sed -i '/left_meter_modes/c\left_meter_modes=1 1 1 1' ~/.config/htop/htoprc && sed -i '/right_meters/c\right_meters=NetworkIO NetworkIO Tasks Uptime' ~/.config/htop/htoprc && sed -i '/right_meter_modes/c\right_meter_modes=3 2 2 2' ~/.config/htop/htoprc
 python3 -m venv myenv
 source myenv/bin/activate
 pip install numpy scipy scikit-learn matplotlib pandas tqdm
