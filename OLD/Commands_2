@@ -1,6 +1,53 @@
 **#Linux Setup**
 ----------
 ## Programs to install (APT) Mint
+sudo apt update
+sudo apt full-upgrade
+sudo apt install weechat vim gromacs texlive-full pymol openconnect audacity obs-studio gnuplot tmux htop git dssp ffmpeg python3-pip python3-venv -y
+n="$(awk '/PS1=/ { $0 = "PS1=\x27\\[\\033[0;33m\\][\\W]\\$ \\[\\033[0m\\]\x27" } 1' .bashrc)"; echo "$n" > ~/.bashrc
+printf ':set shiftwidth=4 noexpandtab\n:set softtabstop=4 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap\n:set number\n:set ts=4 sw=4\n:set cc=81' >> ~/.vimrc
+printf "set -g status-bg black\nset -g status-fg red\nset -g pane-border-style fg=magenta\nset -g pane-active-border-style fg=magenta\nset -g status-justify 'centre'\nset -g status-left-length '100'\nset -g status 'on'\nset -g status-right-length '100'\nsetw -g window-status-separator ''\nset -g status-right '%%H:%%M'\nsetw -g window-status-current-format '#(whoami)'\nset -g status off" > ~/.tmux.conf
+sed -i '/show_cpu_temperature/c\show_cpu_temperature=1' ~/.config/htop/htoprc && sed -i '/enable_mouse/c\enable_mouse=0' ~/.config/htop/htoprc && sed -i '/left_meters/c\left_meters=AllCPUs Memory Swap Battery' ~/.config/htop/htoprc && sed -i '/left_meter_modes/c\left_meter_modes=1 1 1 1' ~/.config/htop/htoprc && sed -i '/right_meters/c\right_meters=NetworkIO NetworkIO Tasks Uptime' ~/.config/htop/htoprc && sed -i '/right_meter_modes/c\right_meter_modes=3 2 2 2' ~/.config/htop/htoprc
+python3 -m venv myenv
+source myenv/bin/activate
+pip install lxml numpy scipy sklearn keras tensorflow matplotlib pandas biopython beautifulsoup4 tqdm
+deactivate
+
+## Weechat setup
+/set buflist.look.enabled off
+/server add libera irc.libera.chat
+/set weechat.plugin.autoload *,!logger
+/set irc.server_default.autoconnect on
+/set irc.server.libera.addresses "irc.libera.chat/7000"
+/set irc.server.libera.ssl on
+/set irc.server.libera.sasl_username NICKNAME
+/set irc.server.libera.sasl_password PASSWORD
+
+## Desktop environment setup Linux Mint
+* System Reports>                               Install hardware drivers
+* FirFox>                                       setup
+* Xed>View>                                     [X]Statusbar [X]Toolbar
+* Xed>Edit>Preferences>                         [/]Display line numbers [X]Use spaces instead of tabs [X]Word wrap [/]Theme cobalt
+* Terminal>                                     [X]Scrolling [/]Scroll on key stroke [X]Menu [/]Theme colours green on back
+* System Settings>                              Background
+* System Settings>Themes>Window boarders>       Mint-Y-Dark
+* System Settings>Themes>Controls>              Mint-y-Dark-Grey
+* System Settings>Themes>Mouse>                 Adawita
+* System Settings>Account Details>              Add picture
+* System Settings>Desktop>                      [X]Computer [X]Home
+* System Settings>Panel>Right Mouse Click>Move> Up
+* System Settings>Panel>Height>                 20
+* System Settings>Panel Edit Mode>              Left Side>Unpin everything
+* System Settings>Panel Edit Mode>Right Side>   Remove everything except Time, WiFi, Battery
+* System Settings>Screen Saver>                 [X]Lock computer when sleep [X]Lock computer after screen saver
+* System Settings>Bluetooth>                    Disable
+* System Settings>Keyboard>Shortcuts>           (Home ctrl-alt-H [sh -c 'setsid xdg-open "$HOME" &']) (Text ctrl-alt-G [xed]) (Firefox ctrl-alt-W [firefox])
+* System Settings>Keyboard>Layouts>             Arabic (Macintosh)
+* System Settings>Mouse>Touchpad>               [X]Tap to click [/]Horizontal scrolling
+* System Settings>Power Management>             on A/C and Battery  [X]Inactive turn off screen [X]Inactive suspend [X]When lid is closed
+* System Settings>Sound>Sounds>                 [X]All
+
+## Programs to install (APT) Mint - OLD
 sudo apt update && sudo apt full-upgrade && sudo apt install weechat vim pymol openconnect audacity obs-studio gnuplot tmux htop git dssp ffmpeg python3-pip python3-venv -y && sleep 1 && n="$(awk '/PS1=/ { $0 = "PS1=\x27\\[\\033[0;33m\\][\\W]\\$ \\[\\033[0m\\]\x27" } 1' .bashrc)"; echo "$n" > .bashrc && sleep 1 && printf ':set shiftwidth=4 noexpandtab\n:set softtabstop=4 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap\n:set number\n:set ts=4 sw=4\n:set cc=81' >> ~/.vimrc && sleep 1 && printf "set -g status-bg black\nset -g status-fg red\nset -g pane-border-style fg=magenta\nset -g pane-active-border-style fg=magenta\nset -g status-justify 'centre'\nset -g status-left-length '100'\nset -g status 'on'\nset -g status-right-length '100'\nsetw -g window-status-separator ''\nset -g status-right '%%H:%%M'\nsetw -g window-status-current-format '#(whoami)'\nset -g status off" > ~/.tmux.conf && sleep 1 && python3 -m venv myenv && sleep 1 && source myenv/bin/activate && sleep 1 && pip install lxml numpy scipy sklearn keras tensorflow matplotlib pandas biopython beautifulsoup4 tqdm && sleep 1 && deactivate
 ## Programs to install (APT) Ubuntu
 sudo apt update && sudo apt full-upgrade && sudo apt install transmission weechat vim pymol openconnect audacity obs-studio gnuplot tmux htop git dssp ffmpeg gnome-tweak-tool python3-pip python3-venv python3-opencv texlive-full -y && sleep 1 && n="$(awk '/PS1=/ { $0 = "PS1=\x27\\[\\033[0;33m\\][\\W]\\$ \\[\\033[0m\\]\x27" } 1' .bashrc)"; echo "$n" > .bashrc && sleep 1 && printf ':set shiftwidth=4 noexpandtab\n:set softtabstop=4 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap\n:set number\n:set ts=4 sw=4\n:set cc=81' >> ~/.vimrc && sleep 1 && printf "set -g status-bg black\nset -g status-fg red\nset -g pane-border-style fg=magenta\nset -g pane-active-border-style fg=magenta\nset -g status-justify 'centre'\nset -g status-left-length '100'\nset -g status 'on'\nset -g status-right-length '100'\nsetw -g window-status-separator ''\nset -g status-right '%%H:%%M'\nsetw -g window-status-current-format '#(whoami)'\nset -g status off" > ~/.tmux.conf && sleep 1 && python3 -m venv myenv && sleep 1 && source myenv/bin/activate && sleep 1 && pip install lxml numpy scipy sklearn keras tensorflow matplotlib pandas biopython pillow beautifulsoup4 tqdm pyinstaller staticx patchelf-wrapper bayesian-optimization && sleep 1 && deactivate
