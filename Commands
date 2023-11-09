@@ -26,7 +26,7 @@ deactivate
 ## Desktop environment setup Linux Ubuntu
 * FirFox>                                       Settings/Home page - More Tools/Customise Toolbar
 * Terminal>                                     [/]Theme colours green on back [X]Show Scrollbar
-* Xed>Preferences>                              [X]Display statusbar [X]Word wrap [/]Theme cobalt
+* Xed>Preferences>                              [X]Display statusbar [X]Word wrap [/]Theme cobalt [X]Highlight current line [X]Matching brackets
 
 **#OTHER COMMANDS**
 ===============
