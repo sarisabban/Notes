@@ -24,18 +24,18 @@ deactivate
 /set irc.server.libera.sasl_password PASSWORD
 
 ## Desktop environment setup Linux Ubuntu
-* FirFox>                                       Settings/Home page - More Tools/Customise Toolbar
-* Terminal>                                     [/]Theme colours green on back [X]Show Scrollbar
-* Xed>Preferences>                              [X]Display statusbar [X]Word wrap [/]Theme cobalt [X]Highlight current line [X]Matching brackets
-* Settings>Bluetooth                              Turn off
-* Settings>Background                             Choose background
-* Settings>Appearance                             Dark Theme - [X]Show personal folder
-* Settings>Notifications                          [X]Lock screen notifications
-* Settings>Power                                  [X]Dim Screen [X]Screen blank
-* Settings>Mouse & Touchpad                       [X]Tap on click
-* Settings>Keyboard                               Arabic (Macintosh) - (Home ctrl-alt-H [sh -c 'setsid xdg-open "$HOME" &']) (Text ctrl-alt-G [gedit]) (Firefox ctrl-alt-W [firefox])
-* Settings>Region & Langauge                      Language & Format UK
-* Settings>Users                                  Add picture 
+* FirFox>                       Settings/Home page - More Tools/Customise Toolbar
+* Terminal>                     [/]Theme colours green on back [X]Show Scrollbar
+* Xed>Preferences>              [X]Display statusbar [X]Word wrap [/]Theme cobalt [X]Highlight current line [X]Matching brackets
+* Settings>Bluetooth            Turn off
+* Settings>Background           Choose background
+* Settings>Appearance           Dark Theme - [X]Show personal folder
+* Settings>Notifications        [X]Lock screen notifications
+* Settings>Power                [X]Dim Screen [X]Screen blank
+* Settings>Mouse & Touchpad     [X]Tap on click
+* Settings>Keyboard             Arabic (Macintosh) - (Home ctrl-alt-H [sh -c 'setsid xdg-open "$HOME" &']) (Text ctrl-alt-G [gedit]) (Firefox ctrl-alt-W [firefox])
+* Settings>Region & Langauge    Language & Format UK
+* Settings>Users                Add picture 
 
 **#OTHER COMMANDS**
 ===============
