@@ -306,7 +306,7 @@ rfkill block bluetooth
 
 # Change User Profile Picture:
 #-----------------------------
-sed -i '/Icon=/c\Icon=/usr/share/pixmaps/faces/guitar2.jpg' /var/lib/AccountsService/users/$USER
+
 
 # Setup Remaining Distro Environment:
 #------------------------------------
