@@ -67,7 +67,9 @@ convert x-000.ppm FILENAME.jpg
 **#FFMPEG**
 for i in *.mkv; do ffmpeg -i "$i" -vcodec libx264 -r 25 -crf 23 -ab 384k -acodec ac3 "${i%.mkv}.mp4"; done
 ------------------------------
-**#Conda virtual environment**
+**#Conda**
+wget -q https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+sh Miniconda3-latest-Linux-x86_64.sh
 conda create -n ENV
 source activate Cenv # or conda activate Cenv
 conda install 
