@@ -1,46 +1,4 @@
-**#LINUX SETUP**
-================
-## Programs to install (APT) Ubuntu
-sudo apt update
-sudo apt full-upgrade
-sudo apt install weechat vim pymol openconnect tmux htop git ffmpeg python3-venv -y
-n="$(awk '/PS1=/ { $0 = "PS1=\x27\\[\\033[0;33m\\][\\W]\\$ \\[\\033[0m\\]\x27" } 1' .bashrc)"; echo "$n" > ~/.bashrc
-printf ':set shiftwidth=4 noexpandtab\n:set softtabstop=4 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap\n:set number\n:set ts=4 sw=4\n:set cc=81' >> ~/.vimrc
-printf "set -g status-bg black\nset -g status-fg red\nset -g pane-border-style fg=magenta\nset -g pane-active-border-style fg=magenta\nset -g status-justify 'centre'\nset -g status-left-length '100'\nset -g status 'on'\nset -g status-right-length '100'\nsetw -g window-status-separator ''\nset -g status-right '%%H:%%M'\nsetw -g window-status-current-format '#(whoami)'\nset -g status off" > ~/.tmux.conf
-#open then F2 then F10 to save htop to get ~/.config/htop/htoprc
-sed -i '/show_cpu_temperature/c\show_cpu_temperature=1' ~/.config/htop/htoprc && sed -i '/enable_mouse/c\enable_mouse=0' ~/.config/htop/htoprc && sed -i '/left_meters/c\left_meters=AllCPUs Memory Swap Battery' ~/.config/htop/htoprc && sed -i '/left_meter_modes/c\left_meter_modes=1 1 1 1' ~/.config/htop/htoprc && sed -i '/right_meters/c\right_meters=NetworkIO NetworkIO Tasks Uptime' ~/.config/htop/htoprc && sed -i '/right_meter_modes/c\right_meter_modes=3 2 2 2' ~/.config/htop/htoprc
-python3 -m venv myenv
-source myenv/bin/activate
-pip install numpy scipy scikit-learn matplotlib pandas tqdm
-deactivate
-
-## Weechat setup
-/set buflist.look.enabled off
-/server add libera irc.libera.chat
-/set weechat.plugin.autoload *,!logger
-/set irc.server_default.autoconnect on
-/set irc.server.libera.addresses "irc.libera.chat/7000"
-/set irc.server.libera.ssl on
-/set irc.server.libera.sasl_username NICKNAME
-/set irc.server.libera.sasl_password PASSWORD
-
-## Desktop environment setup Linux Ubuntu
-* FirFox>                       Settings/Home page - More Tools/Customise Toolbar
-* Terminal>                     [X]Show Scrollbar [/]Theme colours green on back [/]Palette>Builtin schemes>Linux Console
-* Xed>Preferences>              [X]Display statusbar [X]Word wrap [/]Theme cobalt [X]Highlight current line [X]Matching brackets
-* Files                         List display
-* Settings>Bluetooth            Turn off
-* Settings>Background           Choose background
-* Settings>Appearance           Dark Theme - [X]Show personal folder
-* Settings>Notifications        [X]Lock screen notifications
-* Settings>Privacy>Screen       [X]Automatic lock screen [X]Lock screen on suspend [/] Blank Screen Display [never]
-* Settings>Power                [X]Automatic screen brightness [X]Dim Screen [X]Screen blank [X]Automatic suspend
-* Settings>Mouse & Touchpad     [X]Tap on click
-* Settings>Keyboard             Arabic (Macintosh) - (Home ctrl-alt-H [sh -c 'setsid xdg-open "$HOME" &']) (Text ctrl-alt-G [gedit]) (Firefox ctrl-alt-W [firefox])
-* Settings>Region & Langauge    Language & Format UK
-* Settings>Users                Add picture
-
-**#OTHER COMMANDS**
+**#COMMANDS**
 ===============
 ## Live USB
 sudo fdisk -l
