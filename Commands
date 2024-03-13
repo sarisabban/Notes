@@ -11,6 +11,7 @@ tmux new -s work -n work \; split-window -d -t 0 -v -p34 weechat \; split-window
 **#SSH**
 ssh-keygen -t rsa -b 4096 -C USERNAME
 copy/paste public key to ~/.ssh/authorized_keys
+chmod 600 KEY.prv
 ------------------------------
 **#VIM**
 '[,']:w !nc termbin.com 9999
