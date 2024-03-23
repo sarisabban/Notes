@@ -1,6 +1,9 @@
 **#COMMANDS**
 ===============
-## Live USB
+**#Ubuntu Environment Setup**
+wget -O - https://raw.githubusercontent.com/sarisabban/Notes/master/OLD/UbuntuEnv.bash | bash
+------------------------------
+**#Live USB**
 sudo fdisk -l
 sudo dd bs=4M if=FILENAME.iso of=/dev/sdb status=progress oflag=sync iflag=fullblock
 ------------------------------
