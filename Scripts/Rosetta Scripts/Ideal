@@ -1,0 +1,16 @@
+#!/bin/bash
+
+<<COMMENT
+Input Files:
+1. structure.pdb
+2. input.xml
+3. myweight.wts
+4. input.resfile
+5. input1.bbskel
+6. input2.bbskel
+COMMENT
+
+echo '
+'>flags
+
+{ROSETTA}/main/source/bin/rosetta_scripts.linuxgccrelease -s structure.pdb -parser:protocol input.xml -ex1 -ex2aro -nstruct 100

@@ -1,0 +1,39 @@
+#!/bin/bash
+
+<<COMMENT
+Input Files:
+1. structure.pdb
+2. structure.fasta
+3. 3mer
+4. 9mer
+5. psipred_ss2 
+COMMENT
+
+echo '
+-database {ROSETTA}/main/database
+-in:file:fasta {PATH}/structure.fasta
+-in:file:native {PATH}/structure.pdb
+-in:file:frag3 {PATH}/aat000_03_05.200_v1_3
+-in:file:frag9 {PATH}/aat000_09_05.200_v1_3
+-psipred_ss2 {PATH}/t000_.psipred_ss2
+-nstruct 25
+-abinitio:relax
+-use_filters true
+-abinitio::increase_cycles 10
+-abinitio::rg_reweight 0.5
+-abinitio::rsd_wt_helix 0.5
+-abinitio::rsd_wt_loop 0.5
+-relax::fast
+-out:file:silent {PATH}/fold_silent_${PBS_ARRAY_INDEX}.out
+'>fold_flags
+
+echo '
+#!/bin/bash
+#PBS -N Abinitio
+#PBS -q fat
+#PBS -l select=1:ncpus=1
+#PBS -j oe
+#PBS -J 1-1000
+
+{ROSETTA}/main/source/bin/AbinitioRelax.default.linuxgccrelease @{PATH}/fold_flags
+'>ab_initio.pbs

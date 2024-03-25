@@ -1,0 +1,107 @@
+## The Protein
+structure.pdb
+
+## Relax
+-linmem_ig 100				# Use 100mb memory to store rotamer pair interactions
+-use_input_sc				# Include rotamers from the input structure
+-nstruct 1				# Generate 1 model
+-relax:fast				# Do a small cycle number fast relax
+-relax:constrain_relax_to_start_coords	# Add coordinate constraints to backbone heavy atoms, based on the input structure.
+-scorefile relax.fasc
+
+./Rosetta/main/source/bin/relax.default.linuxgccrelease @relax.options -s structure.pdb
+
+NOTE: Generate 50 relaxed models and choose the lowest scoring one
+
+## Design
+-linmem_ig 100						# limit memory to store rotamer pair interactions
+-use_input_sc						# Include rotamers from the input structure
+-ex1
+-nstruct 10						# Generate 10 models
+-s structure_0005.pdb					# Use structure 4HKX as input
+
+DESIGN.xml
+<ROSETTASCRIPTS>
+	<SCOREFXNS>
+	</SCOREFXNS>
+	<TASKOPERATIONS>
+		Include rotamer options from the command line
+		<InitializeFromCommandline name="ifcl" />
+		Design and repack residues based on resfile
+		<ReadResfile name="rrf" filename="structure.resfile"/>
+	</TASKOPERATIONS>
+	<MOVERS>
+		Design the antibody interface
+		<PackRotamersMover name="design" scorefxn="REF2015" task_operations="ifcl,rrf" />
+
+		Analyze the resulting interface
+		<InterfaceAnalyzerMover name="analyze" scorefxn="REF2015" packstat="0" pack_input="0" pack_separated="1" fixedchains="H,L" />
+	</MOVERS>
+	<FILTERS>
+	</FILTERS>
+	<APPLY_TO_POSE>
+	</APPLY_TO_POSE>
+	<PROTOCOLS>
+		Run the design protocol
+		<Add mover="design" />
+
+		Calculate interface metrics for the final sequence
+		<Add mover="analyze" />
+	</PROTOCOLS>
+	<OUTPUT scorefxn="REF2015" />
+</ROSETTASCRIPTS>
+
+./Rosetta/main/source/bin/rosetta_scripts.default.linuxgccrelease @design.options -parser:protocol design.xml -out:suffix _design -scorefile design.fasc
+
+NOTE: Generate 100 designed models and choose the lowest scoring one
+
+=========================================================================================================================================================
+
+NOTE: Generally in protein design it is useful to use iterations of design and backbone motion. Backrub motions are small rotations of the backbone designed to mimic protein flexibility in solution. Small perturbations of the antibody backbone can provide more backbone diversity among our models to improve sequence diversity. Backrub motion in design is recommended for production runs.
+
+NOTE: Design the antibody interface (ifcl,rrf) why does rrf not work? seems to be a problem
+
+BACKRUB.xml
+<ROSETTASCRIPTS>
+	<SCOREFXNS>
+	</SCOREFXNS>
+	<TASKOPERATIONS>
+		Include rotamer options from the command line
+		<InitializeFromCommandline name="ifcl" />
+#######		Design and repack residues based on resfile
+#######		<ReadResfile name="rrf" filename="structure.resfile"/>
+	</TASKOPERATIONS>
+	<MOVERS>
+		Design the antibody interface
+                <PackRotamersMover name="design" scorefxn="REF2015" task_operations="ifcl,rrf" />
+
+                Analyze the resulting interface
+                <InterfaceAnalyzerMover name="analyze" scorefxn="REF2015" packstat="0" pack_input="0" pack_separated="1" fixedchains="H,L" />
+
+		Backrub motions of the antibody
+		<Backrub name="backrub_motion" pivot_residues="1-224" />
+		<GenericMonteCarlo name="backrub" mover_name="backrub_motion" scorefxn_name="REF2015" trials="500" temperature="1.0" recover_low="1" />
+	</MOVERS>
+	<FILTERS>
+	</FILTERS>
+	<APPLY_TO_POSE>
+	</APPLY_TO_POSE>
+	<PROTOCOLS>
+		Run three rounds of design followed by backbone motion
+		<Add mover="design" />
+		<Add mover="backrub" />
+		
+		<Add mover="design" />
+		<Add mover="backrub" />
+		
+		<Add mover="design" />
+		<Add mover="backrub" />
+
+		Calculate interface metrics for the final sequence
+		<Add mover="analyze" />
+
+	</PROTOCOLS>
+	<OUTPUT scorefxn="REF2015" />
+</ROSETTASCRIPTS>
+
+./Rosetta/main/source/bin/rosetta_scripts.default.linuxgccrelease @design.options -parser:protocol design_backrub.xml -out:suffix _design_backrub -scorefile design_backrub.fasc
