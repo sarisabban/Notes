@@ -12,9 +12,9 @@ FLWR = {
 'Mo'  :0.00005, 'Zn'  :0.00033, 'Ca'  :0.20000, 'Mg'  :0.04500,
 'SO4' :0.18000}
 
-Ca = {'NO3' :14.50, 'NH4' :1.000, 'Ca'  :19.00}
+Ca = {'NO3':14.50, 'NH4':1.000, 'Ca':19.00}
 
-Mg = { 'Mg'  :20.00, 'SO4' :80.00}
+Mg = {'Mg':20.00, 'SO4':80.00}
 
 NPK_4_18_38 = { # Greenway Biotech Tomato Fertilizer: https://www.greenwaybiotech.com/products/tomato-fertilizer
 'NO3' :3.500, 'NH4' :0.500, 'P2O3':18.00, 'K2O' :38.00, 'B'   :0.100,
