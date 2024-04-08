@@ -1,7 +1,7 @@
 **#COMMANDS**
 ===============
 **#Ubuntu Environment Setup**
-wget -O - https://raw.githubusercontent.com/sarisabban/Notes/master/OLD/UbuntuEnv.bash | bash
+wget -O - https://raw.githubusercontent.com/sarisabban/Notes/master/Scripts/UbuntuEnv.bash | bash
 ------------------------------
 **#Live USB**
 sudo fdisk -l
