@@ -1,6 +1,6 @@
 # Download YouTube videos
 # pip install pytube
-# Alternative "pip install -U yt-dlp" --terminal--> yt-dlp URL 
+# Alternative "pip install -U yt-dlp" --terminal--> yt-dlp URL  or yt-dlp -x --audio-format mp3 URL
 
 from pytube import YouTube
 
