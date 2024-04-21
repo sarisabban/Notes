@@ -1,0 +1,95 @@
+# JavaScript (JS) Study Notes:
+------------------------------
+* Programming language mainly used for the web "front and back ends"
+* Coding in browser: crtl+shift+c > console
+	// is a comment
+	console.log('hello world'); // a way to print
+	2 + 2                       // math operations
+	alert.('test')              // display a box with the words text and the button 'OK'
+* Browsers have a JS engine that can run JS scripts, firefox=SpiderMonkey chrome=V8
+* NodeJS is the backend terminal structure of JS (it is the V8 engine)
+	sudo apt install nodejs
+	Better option: nodejs.org > Download > Prebuilt Binaries > I want the [v21.7.3(current)] version of Node.js for [Linux] running x64 > Download Button
+	tar -xf FILENAME
+	Get version by executing ./NodeJS/bin/node -v
+	./NodeJS/bin/node main.js
+	Exit by double ^C^C
+	Make accessible anywhere:
+		vim .bashrc > go to the bottom > export PATH=/home/.../NodeJS/bin:$PATH
+		or
+		echo 'export PATH=/home/.../NodeJS/bin:$PATH' >> ~/.bashrc
+		then run to activate the change: source .bashrc
+	npm is the way to install dependencies (like pip in python)
+* NPM and NVM:
+	npm is a package manager used for managing JavaScript packages and dependencies, while nvm is a version manager used for installing and managing different versions of Node. js on a single machine
+	Use node to execute npm or nvm as follow: ./NodeJS/bin/node ./NodeJS/bin/npm install ....
+	all dependencies are stored in location where you ran the command
+* Open a local loop back server to work on HTML and JS:
+	python3 -m http.server --bind 127.0.0.1 5000
+	will read index.html found locally
+* In HTML at the end of <body> we add <script src="./main.js"></script>
+	or <script>console.log('hello world');</script>
+	Best to add the script at the end of the <body> because if it takes time to load and execute the script at least the page would render faster, this would be a better user experience than watching an empty screen
+* Separation of concern: HTML=content (index.html) JS=behaviour (main.js)
+* Install dependencies:
+	./NodeJS/bin/node ./NodeJS/bin/npm install NAME
+
+
+
+# Variable:
+-----------
+let name;
+console.log(name); // --> undefined because it is an empty variable
+
+let name = 'hello world'; // old style was --> var name = ...
+console.log(name); // --> prints hello world
+
+let first = 'hello', last = 'world'; // assign multiple variables in the same line
+console.log(first, last); // print multiple variables
+
+first = 'hello hello'; // after declaring the variable we can change it without the reserver word "let"
+
+const first = 'hello'; // this is a constant and not a variable, we cannot re-assign its content
+
+
+
+# Primative Type Values:                       # Reference Type Values:
+------------------------                       ------------------------
+types of values we can assign to a variable    objects
+strings                                        arrays
+numbers (int and float)                        functions
+boolians (true/false) without capital letters
+undefined
+null
+
+console.log(typeof first); // prints the type of the variable
+
+
+
+# Objects:
+----------
+	let person = {name:'name', age:'age'}; // dictionary
+		change by: person.name = 'name2';
+		print: console.log(person.name)
+		or
+		change by: person['name'] = 'name2';
+		print: console.log(person['name'])
+		both ways work
+
+	let things = [] // array or list
+		index: things[0]
+		slice: things[:]
+		append an extra index or change this index: things[2] = 'item3';
+		length: things.length
+
+
+
+# Functions:
+------------
+define the function as such:
+Thing (input x) {
+//body
+return y
+}     // here we did not add a ;
+
+call the function: Thing(input);
