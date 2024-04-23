@@ -2,7 +2,7 @@
 
 <<COMMENT
 1. Run this script using the following command:
-wget -O - https://raw.githubusercontent.com/sarisabban/Notes/master/OLD/UbuntuEnv.bash | bash
+wget -O - https://raw.githubusercontent.com/sarisabban/Notes/master/Scripts/UbuntuEnv.bash | bash
 2. Setup FireFox
 3. Settings > Users > Add profile picture
 COMMENT
@@ -306,7 +306,8 @@ rfkill block bluetooth
 
 # Change User Profile Picture:
 #-----------------------------
-sudo sed -i "s#Icon=$HOME/.face#Icon=/usr/share/pixmaps/faces/guitar2.jpg#" /var/lib/AccountsService/users/$USER
+#sudo sed -i "s#Icon=$HOME/.face#Icon=/usr/share/pixmaps/faces/guitar2.jpg#" /var/lib/AccountsService/users/$USER
+sudo dbus-send --print-reply --system --dest=org.freedesktop.Accounts /org/freedesktop/Accounts/User"${UID}" org.freedesktop.Accounts.User.SetIconFile string:/usr/share/pixmaps/faces/guitar2.jpg
 
 # Setup Remaining Distro Environment:
 #------------------------------------
