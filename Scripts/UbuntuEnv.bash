@@ -339,8 +339,8 @@ translate=true
 [org/gnome/desktop/background]
 color-shading-type='solid'
 picture-options='zoom'
-picture-uri='file:///usr/share/backgrounds/jj_dark_by_Hiking93.jpg'
-picture-uri-dark='file:///usr/share/backgrounds/jj_dark_by_Hiking93.jpg'
+picture-uri='file:///usr/share/backgrounds/ubuntu-wallpaper-d.png'
+picture-uri-dark='file:///usr/share/backgrounds/ubuntu-wallpaper-d.png'
 primary-color='#000000'
 secondary-color='#000000'
 
@@ -373,7 +373,7 @@ color-shading-type='solid'
 lock-delay=uint32 0
 lock-enabled=false
 picture-options='zoom'
-picture-uri='file:///usr/share/backgrounds/jj_dark_by_Hiking93.jpg'
+picture-uri='file:///usr/share/backgrounds/ubuntu-wallpaper-d.png'
 primary-color='#000000'
 secondary-color='#000000'
 ubuntu-lock-on-suspend=false
