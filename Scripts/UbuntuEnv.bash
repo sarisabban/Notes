@@ -439,7 +439,7 @@ name='Home'
 
 [org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2]
 binding='<Primary><Alt>g'
-command='gedit'
+command='gnome-text-editor'
 name='Text'
 
 [org/gnome/settings-daemon/plugins/power]
