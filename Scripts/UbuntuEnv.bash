@@ -475,7 +475,7 @@ use-theme-colors=false
 region='en_GB.UTF-8'">dconf-settings.ini
 printf '%s\n' '/command==/' d i 'command="sh -c '\''setsid xdg-open '"$HOME"' &'\''"' . w q | ed -s dconf-settings.ini
 #dconf dump / > dconf-settings.ini
-cat dconf-settings.ini | dconf load /
+cat dconf-settings.ini | dconf load / # Dump info using dconf dump / > dconf-settings.ini
 rm dconf-settings.ini
 
 # Reboot:
