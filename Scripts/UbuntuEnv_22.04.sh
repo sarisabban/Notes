@@ -2,7 +2,7 @@
 
 <<COMMENT
 1. Run this script using the following command:
-wget -O - https://raw.githubusercontent.com/sarisabban/Notes/master/Scripts/UbuntuEnv.bash | bash
+wget -O - https://raw.githubusercontent.com/sarisabban/Notes/master/Scripts/UbuntuEnv_22.04.sh | bash
 2. Setup FireFox
 3. Settings > Users > Add profile picture
 COMMENT
