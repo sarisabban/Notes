@@ -8,8 +8,8 @@ sudo fdisk -l
 sudo dd bs=4M if=FILENAME.iso of=/dev/sdb status=progress oflag=sync iflag=fullblock
 ------------------------------
 **#TMUX**
-tmux new -s main -n main \; split-window -d -t 0 -v -p34 weechat \; split-window -h -p44 htop \; split-window -v -p68 vlc -I ncurses --no-video https://www.youtube.com/watch?v=jfKfPfyJRdk \; split-window -v -p75
-tmux new -s work -n work \; split-window -d -t 0 -v -p34 weechat \; split-window -h -p44 htop \; split-window -v -p65
+tmux new -s work -n work \; split-window -d -t 0 -v -l "30%" weechat \; split-window -h -l "47%" htop \; split-window -v -l "68%" vlc -I ncurses --no-video https://www.youtube.com/watch?v=jfKfPfyJRdk \; split-window -v -p75
+tmux new -s work -n work \; split-window -d -t 0 -v -l "30%" weechat \; split-window -h -l "47%" htop \; split-window -v -l "65%"
 ------------------------------
 **#SSH**
 ssh-keygen -t rsa -b 4096 -C USERNAME
