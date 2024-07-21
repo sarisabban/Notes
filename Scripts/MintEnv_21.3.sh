@@ -140,7 +140,7 @@ name='FireFox'
 
 [org/cinnamon/desktop/keybindings/custom-keybindings/custom1]
 binding=['<Primary><Alt>h']
-command="sh -c 'setsid xdg-open \"$HOME\" &'"
+command==
 name='Home'
 
 [org/cinnamon/desktop/keybindings/custom-keybindings/custom2]
@@ -430,7 +430,7 @@ autostart=false
 connect-id='SLURM-B88ED3DD8046057BC50C'
 no-overwrite=true
 ">dconf-settings.ini
-printf '%s\n' '/command==/' d i 'command="sh -c '\''setsid xdg-open '"$HOME"' &'\''"' . w q | ed -s dconf-settings.ini
+printf '%s\n' '/command==/' d i 'command="sh -c '\''setsid xdg-open \"$HOME\" &'\''"' . w q | ed -s dconf-settings.ini
 cat dconf-settings.ini | dconf load / # Dump info using: dconf dump / > dconf-settings.ini
 rm dconf-settings.ini
 
