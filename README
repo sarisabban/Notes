@@ -1,7 +1,8 @@
+```
 **#COMMANDS**
 ===============
 **#Ubuntu Environment Setup**
-wget -O - https://raw.githubusercontent.com/sarisabban/Notes/master/Scripts/MintEnv_21.3.sh | bash
+wget -O - https://raw.githubusercontent.com/sarisabban/Notes/master/Scripts/MintEnv_22.sh | bash
 ------------------------------
 **#Live USB**
 sudo fdisk -l
@@ -36,3 +37,4 @@ conda create -n ENV
 source activate Cenv # or conda activate Cenv
 conda install 
 source deactivate Cenv
+```
