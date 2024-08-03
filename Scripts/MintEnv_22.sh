@@ -2,7 +2,7 @@
 
 <<COMMENT
 1. Run this script using the following command:
-wget -O - https://raw.githubusercontent.com/sarisabban/Notes/master/Scripts/MintEnv_21.3.sh | bash
+wget -O - https://raw.githubusercontent.com/sarisabban/Notes/master/Scripts/MintEnv_22.sh | bash
 2. Setup FireFox
 COMMENT
 
