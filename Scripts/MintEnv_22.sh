@@ -171,6 +171,9 @@ remember-recent-files=false
 [org/cinnamon/desktop/screensaver]
 lock-enabled=false
 
+[org/cinnamon/desktop/session]
+idle-delay=uint32 0
+
 [org/cinnamon/desktop/sound]
 event-sounds=false
 
