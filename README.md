@@ -36,8 +36,8 @@ gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQ
 **#Conda**
 wget -q https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
 sh Miniconda3-latest-Linux-x86_64.sh
-conda create -n ENV
-source activate Cenv # or conda activate Cenv
-conda install 
-source deactivate Cenv
+conda create -n myenv
+conda activate myenv
+conda install ...
+source deactivate myenv
 ```
