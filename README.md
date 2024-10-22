@@ -23,12 +23,12 @@ chmod 600 KEY.prv
 **#My Public IP Address**
 curl ifconfig.me
 ------------------------------
+**#FFMPEG**
+for i in *.mkv; do ffmpeg -i "$i" -vcodec libx264 -r 25 -crf 23 -ab 384k -acodec ac3 "${i%.mkv}.mp4"; done
+------------------------------
 **#Convert PDF to IMAGE**
 pdfimages FILENAME.pdf x
 convert x-000.ppm FILENAME.jpg
-------------------------------
-**#FFMPEG**
-for i in *.mkv; do ffmpeg -i "$i" -vcodec libx264 -r 25 -crf 23 -ab 384k -acodec ac3 "${i%.mkv}.mp4"; done
 ------------------------------
 **#Compress PDF**
 gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=output.pdf input.pdf
