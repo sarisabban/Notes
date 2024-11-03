@@ -25,6 +25,7 @@ curl ifconfig.me
 ------------------------------
 **#FFMPEG**
 for i in *.mkv; do ffmpeg -i "$i" -vcodec libx264 -r 25 -crf 23 -ab 384k -acodec ac3 "${i%.mkv}.mp4"; done
+ffmpeg -i in.mp4 -c:v libx264 -crf 18 -preset veryslow -c:a copy out.mp4 # Reduce size
 ------------------------------
 **#Convert PDF to IMAGE**
 pdfimages FILENAME.pdf x
