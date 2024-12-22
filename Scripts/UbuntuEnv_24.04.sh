@@ -79,7 +79,9 @@ sudo update-locale LC_PAPER=en_GB.UTF-8
 
 # Turn Off Bluetooth:
 #--------------------
+sleep 3
 rfkill block bluetooth
+sleep 3
 
 # Change User Profile Picture:
 #-----------------------------
@@ -92,7 +94,7 @@ release-check-time=uint32 1715323391
 
 [org/gnome/TextEditor]
 auto-indent=false
-last-save-directory='file:///home/atreo/Desktop'
+last-save-directory='file://$HOME/Desktop'
 restore-session=false
 show-line-numbers=true
 style-scheme='cobalt-light'
