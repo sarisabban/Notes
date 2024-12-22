@@ -401,7 +401,7 @@ active-plugins=['modelines', 'spell', 'time', 'joinlines', 'open-uri-context-men
 [org/x/editor/plugins/filebrowser/on-load]
 root='file:///'
 tree-view=true
-virtual-root='file:///home/slurm/Desktop'
+virtual-root='file://$HOME/Desktop'
 
 [org/x/editor/preferences/editor]
 bracket-matching=false
