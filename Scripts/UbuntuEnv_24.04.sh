@@ -236,7 +236,7 @@ name='Web Browser'
 
 [org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1]
 binding='<Control><Alt>h'
-command=
+command==
 name='Home'
 
 [org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2]
@@ -300,7 +300,7 @@ window-size=(1192, 372)
 
 [system/locale]
 region='en_GB.UTF-8'">dconf-settings.ini
-printf '%s\n' '/command==/' d i 'command="sh -c '\''setsid xdg-open '"$HOME"' &'\''"' . w q | ed -s dconf-settings.ini
+printf '%s\n' '/command==/' d i 'command="sh -c '\''setsid xdg-open \"$HOME\" &'\''"' . w q | ed -s dconf-settings.ini
 cat dconf-settings.ini | dconf load / # Dump info using dconf dump / > dconf-settings.ini
 rm dconf-settings.ini
 
