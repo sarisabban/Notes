@@ -236,7 +236,7 @@ name='Web Browser'
 
 [org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1]
 binding='<Control><Alt>h'
-command="sh -c 'setsid xdg-open \"$HOME\" &'"
+command=
 name='Home'
 
 [org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2]
