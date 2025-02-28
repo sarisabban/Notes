@@ -13,7 +13,7 @@ COMMENT
 #----------------------
 sudo apt update
 sudo apt full-upgrade -y
-sudo apt install weechat vim openconnect tmux htop git ffmpeg python3-venv -y
+sudo apt install weechat vim openconnect tmux htop git ffmpeg btop python3-venv -y
 
 # Setup Terminal Environment:
 #----------------------------
