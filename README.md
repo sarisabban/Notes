@@ -1,8 +1,9 @@
 ```
 **#COMMANDS**
 ===============
-**#Ubuntu Environment Setup**
+**#Linux Environment Setup**
 wget -O - https://raw.githubusercontent.com/sarisabban/Notes/master/Scripts/MintEnv_22.sh | bash
+wget -O - https://raw.githubusercontent.com/sarisabban/Notes/master/Scripts/UbuntuEnv_24.04.sh | bash
 ------------------------------
 **#Live USB**
 sudo fdisk -l
