@@ -13,7 +13,7 @@ COMMENT
 #----------------------
 sudo apt update
 sudo apt full-upgrade -y
-sudo apt install weechat vim tmux htop git python3-venv -y
+sudo apt install weechat vim tmux htop git btop python3-venv -y
 
 # Setup Terminal Environment:
 #----------------------------
