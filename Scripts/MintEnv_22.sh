@@ -19,7 +19,7 @@ sudo apt install weechat vim tmux htop git btop python3-venv -y
 #----------------------------
 n="$(awk '/PS1=/ { $0 = "PS1=\x27\\[\\033[0;33m\\][\\W]\\$ \\[\\033[0m\\]\x27" } 1' .bashrc)"; echo "$n" > ~/.bashrc
 printf ':set shiftwidth=4 noexpandtab\n:set softtabstop=4 noexpandtab\n:set list\n:set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:+\n:syntax enable\n:set nowrap\n:set number\n:set ts=4 sw=4\n:set cc=81' >> ~/.vimrc
-printf "set -g status-bg black\nset -g status-fg red\nset -g pane-border-style fg=magenta\nset -g pane-active-border-style fg=magenta\nset -g status-justify 'centre'\nset -g status-left-length '100'\nset -g status 'on'\nset -g status-right-length '100'\nsetw -g window-status-separator ''\nset -g status-right '%%H:%%M'\nsetw -g window-status-current-format '#(whoami)'\nset -g status off" > ~/.tmux.conf
+printf "set -g status-bg black\nset -g status-fg red\nset -g pane-border-style fg=magenta\nset -g pane-active-border-style fg=magenta\nset -g status-justify 'centre'\nset -g status-left-length '100'\nset -g status 'on'\nset -g status-right-length '100'\nsetw -g window-status-separator ''\nset -g status-right '%%H:%%M'\nsetw -g window-status-current-format '#(whoami)'\nset -g status off\nsetw -g mode-keys vi" > ~/.tmux.conf
 
 # Turn Off Bluetooth:
 #--------------------
