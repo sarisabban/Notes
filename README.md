@@ -42,4 +42,11 @@ conda create -n myenv
 conda activate myenv
 conda install ...
 source deactivate myenv
+------------------------------
+**#Make a Swap File**
+dd if=/dev/zero of=./swapfile bs=1K count=100M # This makes 100GB SWAP
+chmod 600 ./swapfile
+mkswap ./swapfile
+sudo swapon ./swapfile
+swapoff -v ./swapfile
 ```
