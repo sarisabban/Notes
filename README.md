@@ -12,6 +12,10 @@ sudo dd bs=4M if=FILENAME.iso of=/dev/sdb status=progress oflag=sync iflag=fullb
 **#TMUX**
 tmux new -s work -n work \; split-window -d -t 0 -v -l "30%" weechat \; split-window -h -l "40%" htop \; split-window -v -l "68%" vlc -I ncurses --no-video https://www.youtube.com/watch?v=jfKfPfyJRdk \; split-window -v -l "68%"
 tmux new -s work -n work \; split-window -d -t 0 -v -l "30%" weechat \; split-window -h -l "40%" htop \; split-window -v -l "66%"
+# Show pane number
+ctrl + q
+# Swap panes
+swap-pane -s3 -t5
 ------------------------------
 **#SSH**
 ssh-keygen -t rsa -b 4096 -C USERNAME
