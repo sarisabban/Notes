@@ -74,6 +74,13 @@ nvtop: Shows GPU usage
 iftop: Shows internet usage
 wavemon: Shows wifi signal
 ------------------------------
+**#Terminal WiFi**
+nmcli radio wifi on
+nmcli dev wifi list
+sudo nmcli dev wifi connect WIFI_NAME password WIFI_PASSWORD
+or
+Graphical = nmtui
+------------------------------
 **#Conda**
 wget -q https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
 sh Miniconda3-latest-Linux-x86_64.sh
