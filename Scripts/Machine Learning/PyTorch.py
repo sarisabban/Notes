@@ -4,17 +4,23 @@ import numpy as np
 import pandas as pd
 from sklearn import model_selection
 
-# Import data
-data = pd.read_csv('fruits.csv')
-X = data[['mass', 'width', 'height', 'color_score']].to_numpy()
-Y = data['fruit_label'].to_numpy()
-X, Y = sklearn.utils.shuffle(X, Y)
-train_x, valid_x, train_y, valid_y = model_selection.train_test_split(X, Y)
-
 '''
+https://www.youtube.com/watch?v=Z_ikDlimN6A
+
 Concepts:
 =========
 We work with torch tensors rather than numpy tensors
+
+0. Creat a tensor:
+x = torch.tensor([[1, 2], [3, 4]],
+                 type=torch.float32,  # dtype (precision)              - default
+                 evice='cpu',         # cpu/cuda for GPU               - default
+                 requires_grad=False) # not param ie no grade no train - default
+attributes:
+print(x.shape)         # torch.Size([5, 3])
+print(x.dtype)         # torch.float32, data can be int, params must be float for (gradient)
+print(x.device)        # cpu
+print(x.requires_grad) # trainable or not
 
 1. Create from numpy array:
 x = torch.tensor(train_x); print(x)
@@ -27,14 +33,17 @@ random = torch.randn(shape) # shape (44, 4) with random numbers -3 to 3
 random = torch.rand(shape)  # shape (44, 4) with uniform dist 0 to 1
 
 3. Mimic another tensor (same shape and dtype):
-template = torch.tensor([[1, 2], [3, 4]])
-mimic = torch.randn_like(tempalte)
+mimic = torch.randn_like(x)
 --------------------------------------------------------------------------------
-Tensors have attributes:
-x = torch.rand((5, 3))
-print(x.shape)  # torch.Size([5, 3])
-print(x.dtype)  # torch.float32, data can be int params must be float (gradient)
-print(x.device) # cpu
+X usually capital, mathematical notation of a tensor
+y usually small, mathematical notation of a vector
+--------------------------------------------------------------------------------
+Global fuse random seed:
+torch.manual_seed(42)
+np.random.seed(42)
+--------------------------------------------------------------------------------
+Global device assinment
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
 --------------------------------------------------------------------------------
 Parameters need to be declared:
 x = torch.randint(0, 10, (5, 3))           # Input data (int)
@@ -102,7 +111,7 @@ class FFW(torch.nn.Module):
 	def forward(self, x):
 		x = self.L1(x)
 		x = self.A1(x)
-		x = self.L2(x)
+		x = self.L2(x)   # technically this is building a nested setup self.L2(self.A1(self.L1(x)))
 		return x
 model = FFW(in_features=44, out_features=4)
 print(model)
@@ -117,19 +126,281 @@ lossFN = torch.nn.CrossEntropyLoss()
 --------------------------------------------------------------------------------
 Training loop
 for epoch in range(epochs):
-	y_hat = model(X)                       # Get forward pass output from model
-	loss = lossFN(y_hat, y_true)           # Calc loss between y_hat & y_true
-	optm.zero_grad()                       # Zero the gradients of all params
-	loss.backward()                        # Compute new gradients for params
-	optm.step()                            # Update params
-	print(epoch, loss.item())
+	# --- Training --- #
+	model.train()                 # Set train mode, will calculate param gradients and track them
+	y_hat = model(X_train)        # Forward pass
+	loss = loss_fn(y_hat, y_true) # Calculate loss between y_hat and y_true
+	optimiser.zero_grad()         # Reset all param gradients
+	loss.backward()               # Backpropagation to find new param gradients
+	optimiser.step()              # Gradient discent step
+	# --- Validation --- #
+	model.eval()                  # Set eval mode to disable dropout & bachnorm
+	with torch.inference_mode(),  # Freez gradients
+		y_hat_val = model(X_val)  # Forward pass on validation set
+		loss_val = loss_fn(y_hat_val, y_true_val) # Calculate loss
+	print(epoch, loss.item(), loss_val.item())
+--------------------------------------------------------------------------------
+Save model:
+torch.save(model.state_dict(), 'model.pt')
+Load model:
+model.load_state_dict(torch.load('model.pt'))
+--------------------------------------------------------------------------------
+Run prediction:
+model.eval()
+with torch.inference_mode(): # freezes grad tracking ie no param adjustments
+    y_pred = model(X_test)
+print(y_pred)
+================================================================================
+QUESTIONS:
+1. why in FFW() no softmax?
+2. why X dtype float32 while Y dtype is int64 and not int32?
 '''
 
+# Data
+def line():
+	w = 0.7
+	b = 0.3
+	start = 0
+	end = 1
+	step = 0.02
+	X = torch.arange(start, end, step).unsqueeze(dim=1)
+	y = w*X + b
+	return X, y
+
+def sine_data(samples=1000):
+	''' Regression '''
+	X = np.arange(samples).reshape(-1, 1) / samples
+	y = np.sin(2 * np.pi * X).reshape(-1, 1)
+	return X, y
+
+def spiral_data(samples, classes):
+	''' Binary or Categorical Classification '''
+	X = np.zeros((samples*classes, 2))
+	y = np.zeros(samples*classes, dtype='uint8')
+	for class_n in range(classes):
+		ix = range(samples*class_n, samples*(class_n+1))
+		r = np.linspace(0.0, 1, samples)
+		t = np.linspace(class_n*4, (class_n+1)*4, samples) + np.random.randn(samples)*0.2
+		X[ix] = np.c_[r*np.sin(t*2.5), r*np.cos(t*2.5)]
+		y[ix] = class_n
+	return X, y
+'''
+### --- Regression --- ###
+X, y_true = line()
+
+# 1. Build model:
+class REGRESSION(torch.nn.Module):
+	def __init__(self):
+		super().__init__()                          # Call the parent class's constructor
+		self.W = torch.nn.Parameter(torch.randn(1)) # Same as self.W = torch.randn(1, requires_grad=True)
+		self.B = torch.nn.Parameter(torch.randn(1)) # Better to use nn.Parameters to push to optimiser
+	def forward(self, x):
+		return self.W * x + self.B
+
+model_R = REGRESSION()
+
+# 2. Declare loss function and optimiser:
+loss_fn = torch.nn.L1Loss()
+optimiser = torch.optim.SGD(model_R.parameters(), lr=0.01)
+
+# 3. Train model:
+for epoch in range(1000):
+	model_R.train()
+	y_hat = model_R(X)
+	loss = loss_fn(y_hat, y_true)
+	optimiser.zero_grad()
+	loss.backward()
+	optimiser.step()
+	print(loss.item())
+print(model_R.state_dict())
+'''
+
+'''
+### --- Binary Classification --- ###
+X, y = spiral_data(samples=1000, classes=2)
+y = y.reshape(-1, 1)
+X = torch.from_numpy(X).type(torch.float32)
+y = torch.from_numpy(y).type(torch.float32)
+
+X, y = sklearn.utils.shuffle(X, y)
+x_train, x_test, y_train, y_test = model_selection.train_test_split(X, y)
+
+# 1. Build model: # this allows us to build more complex networks
+class BIN_CLASS(torch.nn.Module):
+	def __init__(self):
+		super().__init__()
+		self.L1 = torch.nn.Linear(2, 10)
+		self.A1 = torch.nn.ReLU()
+		self.L2 = torch.nn.Linear(10, 10)
+		self.A2 = torch.nn.ReLU()
+		self.L3 = torch.nn.Linear(10, 1)
+	def forward(self, x):
+		z = self.L1(x)
+		z = self.A1(z)
+		z = self.L2(z)
+		z = self.A2(z)
+		z = self.L3(z)
+		return z
+
+device = 'cpu'
+model_B = BIN_CLASS().to(device)
+print(model_B)
+
+model_b = torch.nn.Sequential( # this allows us to only build FFE networks
+	torch.nn.Linear(2, 8),
+	torch.nn.Linear(8, 1)).to(device)
+
+print(model_b)
+
+# 2. Declare loss function and optimiser:
+loss_fn = torch.nn.BCEWithLogitsLoss() # has sigmoid AF built in, as if adding nn.Sigmoid() at the end of the network then using nn.BCELoss()
+
+optimiser = torch.optim.SGD(model_B.parameters(), lr=0.1)
+
+def accuracy(y_true, y_hat):
+	correct = torch.eq(y_true, y_hat).sum().item()
+	acc = (correct / len(y_hat)) * 100
+	return acc
+
+# 3. Train model:
+for epoch in range(10000):
+	# --- Train --- #
+	model_B.train()
+	y_logits = model_B(x_train) # logits because output without activation function
+	loss = loss_fn(y_logits, y_train) # calculate loss
+	y_pred_prob = torch.sigmoid(y_logits) # puch logits through activation function
+	y_hat = torch.round(y_pred_prob) # round the values to make the probability clearer for each class
+	acc = accuracy(y_hat, y_train) # calcualte accuracy
+	optimiser.zero_grad()
+	loss.backward()
+	optimiser.step()
+	# --- Validation --- #
+	model_B.eval() # Validaiton mode disable dropout and bachnorm
+	with torch.inference_mode():
+		y_logits_val = model_B(x_test)
+		loss_val = loss_fn(y_logits_val, y_test)
+		y_pred_val = torch.sigmoid(y_logits_val)
+		y_hat_val = torch.round(y_pred_val)
+		acc_val = accuracy(y_hat_val, y_test)
+	print(loss.item(), acc, loss_val.item(), acc_val)
+
+# 4. Run prediction
+model_B.eval()
+with torch.inference_mode():
+	y_logits = model_B(x_test.to(device))
+
+# Convert probabilities into class labels in this binary classification
+#print(y_pred) # shape (500, 1)
+#print(y_pred.squeeze()) # shape (500)
+#print(torch.eq(y_pred.squeeze(), y_test.squeeze())) # compare pred to test labels
+'''
+
+'''
+### --- Categorical Classification --- ###
+X, y = spiral_data(samples=1000, classes=3)
+X = torch.from_numpy(X).type(torch.float32)
+y = torch.from_numpy(y).type(torch.long)
+
+X, y = sklearn.utils.shuffle(X, y)
+x_train, x_test, y_train, y_test = model_selection.train_test_split(X, y)
+
+# 1. Build model: # this allows us to build more complex networks
+class CAT_CLASS(torch.nn.Module):
+	def __init__(self):
+		super().__init__()
+		self.L1 = torch.nn.Linear(2, 512)
+		self.A1 = torch.nn.ReLU()
+		self.L2 = torch.nn.Linear(512, 512)
+		self.A2 = torch.nn.ReLU()
+		self.L3 = torch.nn.Linear(512, 3)
+	def forward(self, x):
+		z = self.L1(x)
+		z = self.A1(z)
+		z = self.L2(z)
+		z = self.A2(z)
+		z = self.L3(z)
+		return z
+
+device = 'cpu'
+model_C = CAT_CLASS().to(device)
+
+# 2. Declare loss function and optimiser:
+loss_fn = torch.nn.CrossEntropyLoss() # has softmax AF built in
+
+optimiser = torch.optim.SGD(model_C.parameters(), lr=0.1)
+
+def accuracy(y_hat, y_true):
+	y_pred = torch.argmax(y_hat, dim=1)
+	correct = (y_pred == y_true).sum().item()
+	acc = (correct / len(y_hat)) * 100
+	return acc
+
+# 3. Train model:
+for epoch in range(10000):
+	# --- Train --- #
+	model_C.train()
+	y_logits = model_C(x_train)
+	loss = loss_fn(y_logits, y_train)
+	acc = accuracy(y_logits, y_train)
+	optimiser.zero_grad()
+	loss.backward()
+	optimiser.step()
+	# --- Validation --- #
+	model_C.eval()
+	with torch.inference_mode():
+		y_logits_val = model_C(x_test)
+		loss_val = loss_fn(y_logits_val, y_test)
+		acc_val = accuracy(y_logits_val, y_test)
+	print(loss.item(), acc, loss_val.item(), acc_val)
+'''
+
+
+
+
+
+
+
+
+
+
+
+### --- CNN --- ###
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
+# Import data
+data = pd.read_csv('fruits.csv')
+X = data[['mass', 'width', 'height', 'color_score']].to_numpy()
+Y = data['fruit_label'].to_numpy()
+X, Y = sklearn.utils.shuffle(X, Y)
+train_x, valid_x, train_y, valid_y = model_selection.train_test_split(X, Y)
+
 X = torch.tensor(train_x, dtype=torch.float32)
-y_true = torch.tensor(train_y, dtype=torch.long)
+y_true = torch.tensor(train_y, dtype=torch.int64)
 
 X_val = torch.tensor(valid_x, dtype=torch.float32)
-y_true_val = torch.tensor(valid_y, dtype=torch.long)
+y_true_val = torch.tensor(valid_y, dtype=torch.int64)
 
 # Setup Network
 class FFW(torch.nn.Module):
@@ -151,7 +422,7 @@ optm = torch.optim.Adam(model.parameters(), lr=0.001)
 lossFN = torch.nn.CrossEntropyLoss()
 
 # Train Model
-for epoch in range(100000):
+for epoch in range(10):
 	# --- Training --- #
 	model.train() # Training mode
 	y_hat = model(X)
@@ -165,17 +436,4 @@ for epoch in range(100000):
 		y_hat_val = model(X_val)
 		loss_val = lossFN(y_hat_val, y_true_val)
 	print(epoch, loss.item(), loss_val.item())
-
-# Save Model
-torch.save(model.state_dict(), 'model.pth')
-
-# Load Model
-model.load_state_dict(torch.load('model.pth'))
-
-# Model Prediction
-model.eval()
-with torch.no_grad():
-	pred = model(X_val)
-
-print(y_true_val)
-print(torch.argmax(pred, dim=1))
+'''
