@@ -354,37 +354,165 @@ for epoch in range(10000):
 	print(loss.item(), acc, loss_val.item(), acc_val)
 '''
 
-
-
-
-
-
-
-
-
-
-
+'''
 ### --- CNN --- ###
+import torchvision #pip install torchvision
+from torchvision import datasets
+from torchvision import transforms
+from torchvision.transforms import ToTensor
+from torch.utils.data import DataLoader
 
+train_data = datasets.FashionMNIST(root='./', train=True, download=True, transform=ToTensor(), target_transform=None)
+tests_data = datasets.FashionMNIST(root='./', train=False, download=True, transform=ToTensor(), target_transform=None)
 
+train_data_batches = DataLoader(dataset=train_data, batch_size=32, shuffle=True)
+tests_data_batches = DataLoader(dataset=tests_data, batch_size=32, shuffle=True)
+print(len(train_data_batches)) # 1875 batches divided into 32 examples each batches
+print(len(tests_data_batches)) # 313  batches divided into 32 examples each batches
 
+train_x_data_batches, train_y_data_batches = next(iter(train_data_batches))
+tests_x_data_batches, tests_y_data_batches = next(iter(tests_data_batches))
 
+print(train_x_data_batches.shape, train_y_data_batches.shape)
+#         (32, 1, 28, 28)                (32) 32 example labels
+#   32 examples, each example is 1 colour channels, 28 height, 28 width
+print(train_x_data_batches[0].shape) # (1, 28, 28)
 
+flatten_model = torch.nn.Flatten()
+print(flatten_model(train_x_data_batches[0]).shape) # (1, 784) convert matrix to vector
 
+#1. Build model
 
+#class IMG_CLASS(torch.nn.Module):
+#	def __init__(self, ins, hidden, outs):
+#		super().__init__()
+#		self.layer_stack = torch.nn.Sequential(
+#		torch.nn.Flatten(),
+#		torch.nn.Linear(ins, hidden),
+#		torch.nn.Linear(hidden, outs),
+#		)
+#	def forward(self, x):
+#		return self.layer_stack(x)
+#number_of_classes=10
+#model_I = IMG_CLASS(784, 10, 10).to('cpu')
 
+class IMG_CLASS(torch.nn.Module):
+	def __init__(self, ins, hidden, outs):
+		super().__init__()
+		self.block1 = torch.nn.Sequential(
+			torch.nn.Conv2d(ins,    hidden, kernel_size=3, stride=1, padding=1),
+			torch.nn.ReLU(),
+			torch.nn.Conv2d(hidden, hidden, kernel_size=3, stride=1, padding=1),
+			torch.nn.ReLU(),
+			torch.nn.MaxPool2d(kernel_size=2))
+		self.block2 = torch.nn.Sequential(
+			torch.nn.Conv2d(hidden, hidden, kernel_size=3, stride=1, padding=1),
+			torch.nn.ReLU(),
+			torch.nn.Conv2d(hidden, hidden, kernel_size=3, stride=1, padding=1),
+			torch.nn.ReLU(),
+			torch.nn.MaxPool2d(kernel_size=2))
+		self.FFW = torch.nn.Sequential(
+			torch.nn.Flatten(),
+			torch.nn.Linear(10*7*7, outs))# print('3', z.shape)->(32, 10, 7, 7) therefore 10*7*7
+	def forward(self, x):
+#		print('1', x.shape)
+		z = self.block1(x)
+#		print('2', z.shape)
+		z = self.block2(z)
+#		print('3', z.shape)
+		z = self.FFW(z)
+#		print('4', z.shape)
+		return z
 
+number_of_classes=10
+model_I = IMG_CLASS(1, 10, 10).to('cpu')
 
+# confirm model is working and giving output - first NN
+#print(model_I(flatten_model(train_x_data_batches[0])))
 
+# confirm model is working and giving output - CNN NN
+print('test output', model_I(train_x_data_batches).shape)
 
+loss_fn = torch.nn.CrossEntropyLoss()
 
+optimiser = torch.optim.SGD(model_I.parameters(), lr=0.1)
 
+def accuracy(y_hat, y_true):
+	y_pred = torch.argmax(y_hat, dim=1)
+	correct = (y_pred == y_true).sum().item()
+	acc = (correct / y_true.size(0)) * 100
+	return acc
 
+from torchinfo import summary
+summary(model_I)
 
+# Training:
+for epoch in range(1):
+	# --- Training --- #
+	train_loss = 0
+	model_I.train()
+	# bach loop
+	for batch, (X, y) in enumerate(train_data_batches):
+		y_pred = model_I(X)
+		loss = loss_fn(y_pred, y)
+		train_loss += loss        # accumelate loss over all batches
+		optimiser.zero_grad()
+		loss.backward()
+		optimiser.step()
+	train_loss /= len(train_data_batches)
+	# --- Validation --- #
+	test_loss = 0
+	test_acc = 0
+	model_I.eval()
+	with torch.inference_mode():
+		# bach loop
+		for X_test, y_test in tests_data_batches:
+			y_pred = model_I(X_test)
+			loss = loss_fn(y_pred, y_test)
+			test_loss += loss        # accumelate loss over all batches
+			test_acc += accuracy(y_pred, y_test)
+		test_loss /= len(tests_data_batches)
+		test_acc /= len(tests_data_batches)
+	print(train_loss.item(), test_loss.item(), test_acc)
+'''
 
+# Import local images and Augment them
+# directory/set/class/images
+# Food/train/pizza/img0001.jpg
 
+from torchvision import datasets
+from torchvision import transforms
+from torchvision.transforms import ToTensor
+from torch.utils.data import DataLoader
 
+# augment data: ===> Even though the count stays the same, the content changes every epoch
+from torchvision import transforms
 
+T = transforms.Compose([
+	transforms.Resize((64, 64)),
+	transforms.RandomHorizontalFlip(p=0.5),
+	transforms.RandomRotation(15),
+	transforms.RandomResizedCrop(64, scale=(0.8, 1.0)),
+	transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2),
+	transforms.ToTensor()])
+
+train_data = datasets.ImageFolder(root='pizza_steak_sushi/train',
+	transform=T, # transform/augment images
+	target_transform=None) # transform labels (keep None)
+tests_data = datasets.ImageFolder(root='pizza_steak_sushi/test',
+	transform=T, # do not augment test set, just resize it
+	target_transform=None)
+
+# no augment
+#train_data = datasets.ImageFolder(root='pizza_steak_sushi/train', transform=ToTensor(), target_transform=None)
+#tests_data = datasets.ImageFolder(root='pizza_steak_sushi/test', transform=ToTensor(), target_transform=None)
+
+train_data_batches = DataLoader(dataset=train_data, batch_size=32, shuffle=True)
+tests_data_batches = DataLoader(dataset=tests_data, batch_size=32, shuffle=True)
+
+print(len(train_data_batches))
+images, labels = next(iter(train_data_batches))
+print(images.shape)
 
 
 
