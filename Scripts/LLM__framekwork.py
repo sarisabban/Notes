@@ -1,13 +1,14 @@
-# pip install torch requests transformers diffusers
+# pip install transformers pillow torch torchvision
 
 import json
 import torch
 import base64
 import requests
 import mimetypes
+import threading
+from PIL import Image
 from pathlib import Path
-#from diffusers import DiffusionPipeline
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoTokenizer, AutoModelForImageTextToText, AutoProcessor, TextIteratorStreamer
 
 # API Keys:
 CHATGPT = ''
@@ -15,7 +16,7 @@ CLAUDE  = ''
 
 class LLM:
 	''' A Multimodal LLM framework '''
-	def __init__(self, vendor='', model='', key='', memory=None):
+	def __init__(self, vendor='', model='', key='', memory=None, args=None):
 		'''
 		OpenAI models:       https://developers.openai.com/api/docs/models
 		Anthropic models:    https://platform.claude.com/docs/en/about-claude/models/overview
@@ -62,21 +63,24 @@ class LLM:
 			'do_sample':             True, # If False temperature has no effect
 			'temperature':           1.0,  # Randomness [0.0-2.0]
 			'num_return_sequences':  1}    # Number of output responses
-		Note 2 Local Models:         args = {'max_tokens':200} must be included
+		Note 2 Local Models:     args = {'max_new_tokens':200} must be included
 		'''
-		list_of_vendors = ['openai', 'anthropic', 'transformer', 'diffusion']
+		list_of_vendors = ['openai', 'anthropic', 'local']
 		assert vendor.lower() in list_of_vendors, 'Unsupported vendor'
 		if vendor.lower() == 'openai' or vendor.lower() == 'anthropic':
 			assert key != '', 'API key is required'
+		self.vendor      = vendor.lower()
 		self.model       = model
 		self.key         = key
 		self.memory      = memory if memory is not None else []
-		self.vendor      = vendor.lower()
+		self.args        = args
 		self.device      = 'mps' if torch.backends.mps.is_available() else 'cpu'
 		self.personality = ''
-#		elif self.vendor == 'transformer':
-#			self.tokenizer = AutoTokenizer.from_pretrained(self.model)
-#			self.HGmodel = AutoModelForCausalLM.from_pretrained(self.model)
+		if self.vendor == 'local':
+			self.processor = AutoProcessor.from_pretrained(self.model)
+			self.tokenizer = self.processor.tokenizer
+			self.HGmodel = AutoModelForImageTextToText.from_pretrained(\
+			self.model).to(self.device)
 #		elif self.vendor == 'diffusion':
 #			dtype = torch.float16 if self.device != 'cpu' else torch.float32
 #			self.pipe = DiffusionPipeline.from_pretrained(
@@ -98,72 +102,85 @@ class LLM:
 			self.memory.append({'role':'system', 'content':personality})
 		elif self.vendor == 'anthropic':
 			self.personality = personality
-#		elif self.vendor == 'transformer':
-#			self.memory.append({'role':'system', 'content':personality})
-#		elif self.vendor == 'diffusion':
-#			self.memory.append({'role':'system', 'content':personality})
+		elif self.vendor == 'local':
+			self.memory.append(
+				{'role':'system',
+				'content':[{'type':'text', 'text':personality}]})
 
-	def stream(self, response=''):
+	def stream(self, inputs=''):
 		''' Stream packets from LLM models '''
-		text = ''
-		for line in response.iter_lines():
-			decoded = line.decode('utf-8')
-			if decoded.startswith('data: '):
-				data = decoded[6:]
-				if data == '[DONE]': break
-				chunk = json.loads(data)
-				if self.vendor == 'openai':
-					delta = chunk['choices'][0]['delta'].get('content')
-					if delta:
-						text += delta
-						print(delta, end='', flush=True)
-				elif self.vendor == 'anthropic':
-					delta = None
-					t = chunk.get("type")
-					if t == "content_block_delta":
-						d = chunk.get("delta", {})
-						if d.get("type") == "text_delta":
-							delta = d.get("text")
-					if delta is None:
-						delta = chunk.get("completion")
-					if delta:
-						text += delta
-						print(delta, end='', flush=True)
-		print()
+		if self.vendor == 'openai' or self.vendor == 'anthropic':
+			text = ''
+			for line in inputs.iter_lines():
+				decoded = line.decode('utf-8')
+				if decoded.startswith('data: '):
+					data = decoded[6:]
+					if data == '[DONE]': break
+					chunk = json.loads(data)
+					if self.vendor == 'openai':
+						delta = chunk['choices'][0]['delta'].get('content')
+						if delta:
+							text += delta
+							print(delta, end='', flush=True)
+					elif self.vendor == 'anthropic':
+						delta = None
+						t = chunk.get('type')
+						if t == 'content_block_delta':
+							d = chunk.get('delta', {})
+							if d.get('type') == 'text_delta':
+								delta = d.get('text')
+						if delta is None:
+							delta = chunk.get('completion')
+						if delta:
+							text += delta
+							print(delta, end='', flush=True)
+			print()
+		elif self.vendor == 'local':
+			streamer = TextIteratorStreamer(
+				self.processor.tokenizer,
+				skip_special_tokens=True,
+				skip_prompt=True)
+			gen_kwargs = dict(
+				**inputs,
+				max_new_tokens=self.args['max_new_tokens'],
+				streamer=streamer)
+			threading.Thread(
+				target=self.HGmodel.generate,
+				kwargs=gen_kwargs,
+				daemon=True).start()
+			text = ''
+			for chunk in streamer:
+				text += chunk
+				print(chunk, end='', flush=True)
+			print()
 		return text
 
 	def chat(self, *args, **kwargs):
-		''' Text completion '''
+		''' Image-text-text completion model '''
 		if self.vendor == 'openai':
 			text = self.chat_openai(*args, **kwargs)
 		elif self.vendor == 'anthropic':
 			text = self.chat_anthropic(*args, **kwargs)
-#		elif self.vendor == 'transformer':
-#			text = self.chat_local_transformer(prompt)
+		elif self.vendor == 'local':
+			text = self.chat_local(*args, **kwargs)
 		return text
 
-	def chat_openai(self, mode='chat', prompt='', filename=None, args=None):
-		''' OpenAI's ChatGPT models '''
-		args = args or {}
-		if mode == 'image':
-			url = 'https://api.openai.com/v1/images/generations'
-			payload = {
-				'model':self.model,
-				'prompt':prompt,} | args
-		elif mode == 'chat':
-			url = 'https://api.openai.com/v1/chat/completions'
-			if filename != None:
-				content = [{'type':'text', 'text':prompt}]
-				b64 = self.file_encode(filename)
-				content.append({
-					'type':'image_url',
-					'image_url':{'url':b64, 'detail':'auto'}})
-				self.memory.append({'role':'user', 'content':content})
-			else:
-				self.memory.append({'role':'user', 'content':prompt})
-			payload = {
-				'model':self.model,
-				'messages':self.memory} | args
+	def image(self, *args, **kwargs):
+		''' Image generation models '''
+		if self.vendor == 'openai':
+			text = self.image_openai(*args, **kwargs)
+		elif self.vendor == 'anthropic':
+			raise SystemError('No image generation with Anthropic models')
+		elif self.vendor == 'local':
+			text = self.image_local(*args, **kwargs)
+		return text
+
+	def image_openai(self, prompt='', filename='out.png'):
+		''' OpenAI's ChatGPT text-image models '''
+		url = 'https://api.openai.com/v1/images/generations'
+		payload = {
+			'model':self.model,
+			'prompt':prompt,} | self.args
 		header = {
 			'Authorization':f'Bearer {self.key}',
 			'Content-Type':'application/json'}
@@ -171,62 +188,91 @@ class LLM:
 			url,
 			headers=header,
 			json=payload,
-			stream=args.get('stream', False))
-		if args.get('stream', False):
-			text = self.stream(response)
-			self.memory.append({'role':'assistant', 'content':text})
-			return text
-		if mode == 'chat':
-			if response.status_code != 200:
-				error = response.json()['error']['message']
-				raise SystemError(error)
-			else:
-				text = response.json()['choices'][0]['message']['content']
-				self.memory.append({'role':'assistant', 'content':text})
-				return text
-		elif mode == 'image':
-			b64 = response.json()['data'][0]['b64_json']
-			file_bytes = base64.b64decode(b64)
-			with open(filename, 'wb') as f: f.write(file_bytes)
-			content = [{'type':'text', 'text':f'I generated this image from the prompt: {prompt}'}]
+			stream=self.args.get('stream', False))
+		b64 = response.json()['data'][0]['b64_json']
+		file_bytes = base64.b64decode(b64)
+		with open(filename, 'wb') as f: f.write(file_bytes)
+		content = [
+		{'type':'text',
+		'text':f'I generated this image from the prompt: {prompt}'}]
+		content.append({
+			'type':'image_url',
+			'image_url':{'url':b64, 'detail':'auto'}})
+		self.memory.append({'role':'assistant', 'content':content})
+		return 'Image generated'
+
+	def chat_openai(self, prompt='', filename=None):
+		''' OpenAI's ChatGPT image-text-text models '''
+		self.args = self.args or {}
+		url = 'https://api.openai.com/v1/chat/completions'
+		if filename != None:
+			content = []
+			b64 = self.file_encode(filename)
 			content.append({
 				'type':'image_url',
 				'image_url':{'url':b64, 'detail':'auto'}})
-			self.memory.append({'role':'assistant', 'content':content})
-			return 'Image generated'
+			content.append({'type':'text', 'text':prompt})
+			self.memory.append({'role':'user', 'content':content})
+		else:
+			self.memory.append({'role':'user', 'content':prompt})
+		payload = {
+			'model':self.model,
+			'messages':self.memory} | self.args
+		header = {
+			'Authorization':f'Bearer {self.key}',
+			'Content-Type':'application/json'}
+		response = requests.post(
+			url,
+			headers=header,
+			json=payload,
+			stream=self.args.get('stream', False))
+		if self.args.get('stream', False):
+			text = self.stream(response)
+			self.memory.append({'role':'assistant', 'content':text})
+			return text
+		if response.status_code != 200:
+			error = response.json()['error']['message']
+			raise SystemError(error)
+		else:
+			text = response.json()['choices'][0]['message']['content']
+			self.memory.append({'role':'assistant', 'content':text})
+			return text
 
-	def chat_anthropic(self, mode='chat', prompt='', filename=None, args=None):
-		''' OpenAI's ChatGPT models '''
-		args = args or {}
+	def chat_anthropic(self, prompt='', filename=None):
+		''' Anthropic's Claud and Sonnet image-text-text models '''
+		self.args = self.args or {}
+		if 'max_tokens' not in self.args:
+			raise ValueError('Anthropic models require args with max_tokens')
 		url = 'https://api.anthropic.com/v1/messages'
 		if filename != None:
-			content = [{'type':'text', 'text':prompt}]
+			content = []
 			b64 = self.file_encode(filename)
-			header, b64 = b64.split(",", 1)
-			media_type = header.split(";")[0].split(":", 1)[1]
+			header, b64 = b64.split(',', 1)
+			media_type = header.split(';')[0].split(':', 1)[1]
 			content.append({
 				'type':'image',
 				'source':{
 					'type':'base64',
 					'media_type':media_type,
 					'data':b64}})
+			content.append({'type':'text', 'text':prompt})
 			self.memory.append({'role':'user', 'content':content})
 		else:
 			self.memory.append({'role':'user', 'content':prompt})
 		header = {
-			"x-api-key": self.key,
-			"anthropic-version":"2023-06-01",
-			"content-type":"application/json"}
+			'x-api-key': self.key,
+			'anthropic-version':'2023-06-01',
+			'content-type':'application/json'}
 		payload = {
 			'model':self.model,
 			'system':self.personality,
-			'messages':self.memory} | args
+			'messages':self.memory} | self.args
 		response = requests.post(
 			url,
 			headers=header,
 			json=payload,
-			stream=args.get('stream', False))
-		if args.get('stream', False):
+			stream=self.args.get('stream', False))
+		if self.args.get('stream', False):
 			text = self.stream(response)
 			self.memory.append({'role':'assistant', 'content':text})
 			return text
@@ -238,92 +284,77 @@ class LLM:
 			self.memory.append({'role':'assistant', 'content':text})
 			return text
 
+	def chat_local(self, prompt='', filename=None):
+		''' Hugging Face's local transformer-based image-text-text models '''
+		self.args = self.args or {}
+		if 'max_new_tokens' not in self.args:
+			raise ValueError('Local models require args with max_new_tokens')
+		if filename != None:
+			content = []
+			img = Image.open(filename).convert('RGB')
+			content.append({'type':'image', 'image':img})
+			content.append({'type':'text', 'text':prompt})
+			self.memory.append({'role':'user', 'content':content})
+		else:
+			self.memory.append(
+			{'role':'user', 'content':[{'type':'text', 'text':prompt}]})
+		inputs = self.processor.apply_chat_template(
+			self.memory,
+			add_generation_prompt=True,
+			tokenize=True,
+			return_dict=True,
+			return_tensors='pt').to(self.HGmodel.device)
+		outputs = self.HGmodel.generate(
+			**inputs,
+			max_new_tokens=self.args['max_new_tokens'])
+		text = self.tokenizer.decode(outputs[0][inputs['input_ids'].shape[-1]:])
+		if self.args.get('stream', False):
+			text = self.stream(inputs)
+			self.memory.append(
+			{'role':'assistant', 'content':[{'type':'text', 'text':text}]})
+			return text
+		self.memory.append(
+		{'role':'assistant', 'content':[{'type':'text', 'text':text}]})
+		return text
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#	def chat_local_transformer(self, prompt):
-#		''' Hugging Face's open source locally run transformer-based models '''
-#		self.memory.append({'role':'user', 'content':prompt})
-#		inputs = self.tokenizer.apply_chat_template(
-#			self.memory,
-#			return_dict=True,
-#			return_tensors='pt',
-#			**self.args).to(self.HGmodel.device)
-#		outputs = self.HGmodel.generate(
-#			**inputs,
-#			max_new_tokens=self.args['max_new_tokens'])
-#		text = self.tokenizer.decode(outputs[0][inputs['input_ids'].shape[-1]:])
-#		self.memory.append({'role':'assistant', 'content':text})
-#		return text
 
 #	def image_local_diffusion(self, prompt, filename):
 #		''' Hugging Face's open source locally run diffusion-based models '''
-#		image = self.pipe(prompt).images[0]
-#		image.save(filename)
 
-
-
-
-#model_id = 'stabilityai/sd-turbo'  # good lightweight choice
-#device = 'mps' if torch.backends.mps.is_available() else 'cpu'
-#pipe = DiffusionPipeline.from_pretrained(
-#    model_id,
-#    torch_dtype=torch.float16 if device != 'cpu' else torch.float32,)
-#pipe = pipe.to(device)
-#image = pipe('a futuristic cyberpunk city at night').images[0]
-#image.save('output.png')
 
 
 
 def main():
-#	# --- ChatGPT Models --- #
-#	llm = LLM('OpenAI', 'gpt-4o-mini', CHATGPT)
-#	llm.system('you are a helpful assistant')
-#	llm.chat(mode='chat', prompt='write me 300 charachter tweet about love', args={'stream':True})
+	# --- ChatGPT Models --- #
+	args = {'stream':True}
+	llm = LLM('OpenAI', 'gpt-4o-mini', CHATGPT, args=args)
+	llm.system('you are a helpful assistant')
+	llm.chat(prompt='write me 300 charachter tweet about love')
+	llm.chat(prompt='describe this image', filename='out.png')
 
-#	llm = LLM('OpenAI', 'gpt-4o-mini', CHATGPT)
-#	llm.system('you are a helpful assistant')
-#	print(llm.chat(mode='chat', prompt='describe this image', filename='out.png'))
+	args = {'size':'1024x1024', 'n':1}
+	llm = LLM('OpenAI', 'gpt-image-1', CHATGPT, args=args)
+	print(llm.image_openai(prompt='generate me an image of a fantasy planet', filename='planet.png'))
 
-#	args = {'size':'1024x1024', 'n':1}
-#	llm = LLM('OpenAI', 'gpt-image-1', CHATGPT)
-#	print(llm.chat(mode='image', prompt='generate me an image of a fantasy planet', filename='planet.png', args=args))
+	# --- Claude Models --- #
+	args={'max_tokens':200, 'stream':True}
+	llm = LLM('Anthropic', 'claude-opus-4-6', CLAUDE, args=args)
+	llm.system('you are a helpful assistant')
+	llm.chat(prompt='hello, are you online?')
+	llm.chat(prompt='describe this image', filename='out.png')
 
-#	# --- Claude Models --- #
-#	llm = LLM('Anthropic', 'claude-opus-4-6', CLAUDE)
-#	llm.system('you are a helpful assistant')
-#	llm.chat(mode='chat', prompt='hello, are you online?', args={'max_tokens':200, 'stream':True})
-
-#	llm = LLM('Anthropic', 'claude-opus-4-6', CLAUDE)
-#	llm.system('you are a helpful assistant')
-#	print(llm.chat(mode='chat', prompt='describe this image', filename='out.png', args={'max_tokens':200}))
-
-
-	pass
 	# --- Hugging Face Local Models --- #
-#	llm = LLM('transformer', 'TinyLlama/TinyLlama-1.1B-Chat-v1.0', args={'max_new_tokens':200})
-#	llm.system('you are a helpful assistant')
-#	print(llm.chat('hello, are you online?'))
+	args = {'max_new_tokens':200, 'stream':True}
+	llm = LLM(vendor='local', model='Qwen/Qwen3-VL-2B-Instruct', args=args)
+	llm.system('you are a helpful assistant')
+	llm.chat(prompt='hello, are you online?')
+	llm.chat(prompt='are you sure you are online? count 1-10')
+	llm.chat(prompt='what is the object in this image?', filename='out.png')
+
 #	M = 'stable-diffusion-v1-5/stable-diffusion-v1-5'
 #	M = 'stabilityai/sd-turbo'
 #	M = 'stabilityai/sdxl-turbo'
@@ -331,4 +362,7 @@ def main():
 #	llm.system('you are a helpful assistant')
 #	llm.image('Astronaut in a jungle, cold color palette, muted colors, detailed, 8k', 'out.png')
 
+
 if __name__ == '__main__': main()
+
+
