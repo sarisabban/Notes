@@ -1,14 +1,18 @@
-# pip install transformers pillow torch torchvision
+# pip install transformers pillow torch torchvision diffusers accelerate
 
 import json
 import torch
 import base64
 import requests
+import warnings
 import mimetypes
 import threading
 from PIL import Image
 from pathlib import Path
-from transformers import AutoTokenizer, AutoModelForImageTextToText, AutoProcessor, TextIteratorStreamer
+from transformers import AutoTokenizer, AutoProcessor
+from transformers import AutoModelForImageTextToText, TextIteratorStreamer
+warnings.filterwarnings('ignore', message='.*CUDA is not available.*')
+from diffusers import DiffusionPipeline
 
 # API Keys:
 CHATGPT = ''
@@ -74,28 +78,22 @@ class LLM:
 		self.key         = key
 		self.memory      = memory if memory is not None else []
 		self.args        = args
-		self.device      = 'mps' if torch.backends.mps.is_available() else 'cpu'
+		if torch.backends.mps.is_available(): self.device = 'mps'
+		elif torch.cuda.is_available() and torch.cuda.device_count() > 0:       self.device = 'cuda'
+		else:                                 self.device = 'cpu'
 		self.personality = ''
 		if self.vendor == 'local':
-			self.processor = AutoProcessor.from_pretrained(self.model)
-			self.tokenizer = self.processor.tokenizer
-			self.HGmodel = AutoModelForImageTextToText.from_pretrained(\
-			self.model).to(self.device)
-#		elif self.vendor == 'diffusion':
-#			dtype = torch.float16 if self.device != 'cpu' else torch.float32
-#			self.pipe = DiffusionPipeline.from_pretrained(
-#				self.model,
-#				torch_dtype=dtype).to(self.device)
-
-	def file_encode(self, path=''):
-		''' Encode images and files into base64 '''
-		p = Path(path)
-		mime, _ = mimetypes.guess_type(str(p))
-		if mime is None: raise SystemError(f'Unrecognised file format: {mime}')
-		b64 = base64.b64encode(p.read_bytes()).decode('utf-8')
-		b64 = f'data:{mime};base64,{b64}'
-		return b64
-
+			try:
+				self.processor = AutoProcessor.from_pretrained(self.model)
+				self.tokenizer = self.processor.tokenizer
+				self.HGmodel = AutoModelForImageTextToText.from_pretrained(\
+				self.model).to(self.device)
+			except:
+				dtype = torch.float16 if self.device != 'cpu' else torch.float32
+				self.pipe = DiffusionPipeline.from_pretrained(
+					self.model,
+					dtype=dtype,
+					device_map=self.device)
 	def system(self, personality):
 		''' Declare system-wide instructions '''
 		if self.vendor == 'openai':
@@ -106,7 +104,32 @@ class LLM:
 			self.memory.append(
 				{'role':'system',
 				'content':[{'type':'text', 'text':personality}]})
-
+	def chat(self, *args, **kwargs):
+		''' Image-text-text completion model '''
+		if self.vendor == 'openai':
+			text = self.chat_openai(*args, **kwargs)
+		elif self.vendor == 'anthropic':
+			text = self.chat_anthropic(*args, **kwargs)
+		elif self.vendor == 'local':
+			text = self.chat_local(*args, **kwargs)
+		return text
+	def image(self, *args, **kwargs):
+		''' Image generation models '''
+		if self.vendor == 'openai':
+			text = self.image_openai(*args, **kwargs)
+		elif self.vendor == 'anthropic':
+			raise SystemError('No image generation with Anthropic models')
+		elif self.vendor == 'local':
+			text = self.image_local(*args, **kwargs)
+		return text
+	def file_encode(self, path=''):
+		''' Encode images and files into base64 '''
+		p = Path(path)
+		mime, _ = mimetypes.guess_type(str(p))
+		if mime is None: raise SystemError(f'Unrecognised file format: {mime}')
+		b64 = base64.b64encode(p.read_bytes()).decode('utf-8')
+		b64 = f'data:{mime};base64,{b64}'
+		return b64
 	def stream(self, inputs=''):
 		''' Stream packets from LLM models '''
 		if self.vendor == 'openai' or self.vendor == 'anthropic':
@@ -154,55 +177,8 @@ class LLM:
 				print(chunk, end='', flush=True)
 			print()
 		return text
-
-	def chat(self, *args, **kwargs):
-		''' Image-text-text completion model '''
-		if self.vendor == 'openai':
-			text = self.chat_openai(*args, **kwargs)
-		elif self.vendor == 'anthropic':
-			text = self.chat_anthropic(*args, **kwargs)
-		elif self.vendor == 'local':
-			text = self.chat_local(*args, **kwargs)
-		return text
-
-	def image(self, *args, **kwargs):
-		''' Image generation models '''
-		if self.vendor == 'openai':
-			text = self.image_openai(*args, **kwargs)
-		elif self.vendor == 'anthropic':
-			raise SystemError('No image generation with Anthropic models')
-		elif self.vendor == 'local':
-			text = self.image_local(*args, **kwargs)
-		return text
-
-	def image_openai(self, prompt='', filename='out.png'):
-		''' OpenAI's ChatGPT text-image models '''
-		url = 'https://api.openai.com/v1/images/generations'
-		payload = {
-			'model':self.model,
-			'prompt':prompt,} | self.args
-		header = {
-			'Authorization':f'Bearer {self.key}',
-			'Content-Type':'application/json'}
-		response = requests.post(
-			url,
-			headers=header,
-			json=payload,
-			stream=self.args.get('stream', False))
-		b64 = response.json()['data'][0]['b64_json']
-		file_bytes = base64.b64decode(b64)
-		with open(filename, 'wb') as f: f.write(file_bytes)
-		content = [
-		{'type':'text',
-		'text':f'I generated this image from the prompt: {prompt}'}]
-		content.append({
-			'type':'image_url',
-			'image_url':{'url':b64, 'detail':'auto'}})
-		self.memory.append({'role':'assistant', 'content':content})
-		return 'Image generated'
-
 	def chat_openai(self, prompt='', filename=None):
-		''' OpenAI's ChatGPT image-text-text models '''
+		''' OpenAI's ChatGPT image-text->text models '''
 		self.args = self.args or {}
 		url = 'https://api.openai.com/v1/chat/completions'
 		if filename != None:
@@ -237,9 +213,33 @@ class LLM:
 			text = response.json()['choices'][0]['message']['content']
 			self.memory.append({'role':'assistant', 'content':text})
 			return text
-
+	def image_openai(self, prompt='', filename='out.png'):
+		''' OpenAI's ChatGPT text->image models '''
+		url = 'https://api.openai.com/v1/images/generations'
+		payload = {
+			'model':self.model,
+			'prompt':prompt,} | self.args
+		header = {
+			'Authorization':f'Bearer {self.key}',
+			'Content-Type':'application/json'}
+		response = requests.post(
+			url,
+			headers=header,
+			json=payload,
+			stream=self.args.get('stream', False))
+		b64 = response.json()['data'][0]['b64_json']
+		file_bytes = base64.b64decode(b64)
+		with open(filename, 'wb') as f: f.write(file_bytes)
+		content = []
+		content.append({
+			'type':'image_url',
+			'image_url':{'url':b64, 'detail':'auto'}})
+		content.append({'type':'text',
+		'text':f'I generated this image from the prompt: {prompt}'})
+		self.memory.append({'role':'assistant', 'content':content})
+		return 'Image generated'
 	def chat_anthropic(self, prompt='', filename=None):
-		''' Anthropic's Claud and Sonnet image-text-text models '''
+		''' Anthropic's Claud and Sonnet image-text->text models '''
 		self.args = self.args or {}
 		if 'max_tokens' not in self.args:
 			raise ValueError('Anthropic models require args with max_tokens')
@@ -283,9 +283,8 @@ class LLM:
 			text = response.json()['content'][0]['text']
 			self.memory.append({'role':'assistant', 'content':text})
 			return text
-
 	def chat_local(self, prompt='', filename=None):
-		''' Hugging Face's local transformer-based image-text-text models '''
+		''' Hugging Face's local transformer-based image-text->text models '''
 		self.args = self.args or {}
 		if 'max_new_tokens' not in self.args:
 			raise ValueError('Local models require args with max_new_tokens')
@@ -316,53 +315,46 @@ class LLM:
 		self.memory.append(
 		{'role':'assistant', 'content':[{'type':'text', 'text':text}]})
 		return text
-
-
-
-
-
-
-#	def image_local_diffusion(self, prompt, filename):
-#		''' Hugging Face's open source locally run diffusion-based models '''
-
-
-
+	def image_local(self, prompt='', filename='out.png'):
+		''' Hugging Face's local diffusion-based text->image models '''
+		image = self.pipe(prompt).images[0]
+		image.save(filename)
+		img = Image.open(filename).convert('RGB')
+		content = []
+		content.append({
+			'type':'image_url',
+			'image_url':{'url':img, 'detail':'auto'}})
+		content.append({'type':'text',
+		'text':f'I generated this image from the prompt: {prompt}'})
+		self.memory.append({'role':'assistant', 'content':content})
+		return 'Image generated'
 
 def main():
 	# --- ChatGPT Models --- #
-	args = {'stream':True}
-	llm = LLM('OpenAI', 'gpt-4o-mini', CHATGPT, args=args)
-	llm.system('you are a helpful assistant')
-	llm.chat(prompt='write me 300 charachter tweet about love')
-	llm.chat(prompt='describe this image', filename='out.png')
-
-	args = {'size':'1024x1024', 'n':1}
-	llm = LLM('OpenAI', 'gpt-image-1', CHATGPT, args=args)
-	print(llm.image_openai(prompt='generate me an image of a fantasy planet', filename='planet.png'))
-
-	# --- Claude Models --- #
-	args={'max_tokens':200, 'stream':True}
-	llm = LLM('Anthropic', 'claude-opus-4-6', CLAUDE, args=args)
-	llm.system('you are a helpful assistant')
-	llm.chat(prompt='hello, are you online?')
-	llm.chat(prompt='describe this image', filename='out.png')
-
-	# --- Hugging Face Local Models --- #
+#	args = {'stream':True}
+#	llm = LLM('OpenAI', 'gpt-4o-mini', CHATGPT, args=args)
+#	llm.system('you are a helpful assistant')
+#	llm.chat(prompt='write me 300 charachter tweet about love')
+#	llm.chat(prompt='describe this image', filename='out.png')
+#	args = {'size':'1024x1024', 'n':1}
+#	llm = LLM('OpenAI', 'gpt-image-1', CHATGPT, args=args)
+#	llm.system('you are a helpful assistant')
+#	print(llm.image_openai(prompt='generate me an image of a fantasy planet', filename='planet.png'))
+#	# --- Claude Models --- #
+#	args={'max_tokens':200, 'stream':True}
+#	llm = LLM('Anthropic', 'claude-opus-4-6', CLAUDE, args=args)
+#	llm.system('you are a helpful assistant')
+#	llm.chat(prompt='hello, are you online?')
+#	llm.chat(prompt='describe this image', filename='out.png')
+#	# --- Hugging Face Local Models --- #
 	args = {'max_new_tokens':200, 'stream':True}
 	llm = LLM(vendor='local', model='Qwen/Qwen3-VL-2B-Instruct', args=args)
-	llm.system('you are a helpful assistant')
-	llm.chat(prompt='hello, are you online?')
-	llm.chat(prompt='are you sure you are online? count 1-10')
-	llm.chat(prompt='what is the object in this image?', filename='out.png')
-
-#	M = 'stable-diffusion-v1-5/stable-diffusion-v1-5'
-#	M = 'stabilityai/sd-turbo'
-#	M = 'stabilityai/sdxl-turbo'
-#	llm = LLM('diffusion', M)#'Tongyi-MAI/Z-Image-Turbo')
 #	llm.system('you are a helpful assistant')
-#	llm.image('Astronaut in a jungle, cold color palette, muted colors, detailed, 8k', 'out.png')
-
+#	llm.chat(prompt='hello, are you online?')
+#	llm.chat(prompt='are you sure you are online? count 1-10')
+#	llm.chat(prompt='what is the object in this image?', filename='out.png')
+#	llm = LLM('local', 'stable-diffusion-v1-5/stable-diffusion-v1-5')
+#	llm.system('you are a helpful assistant')
+#	print(llm.image('Alien in a jungle, warm color palette, detailed, 8k', 'out.png'))
 
 if __name__ == '__main__': main()
-
-
