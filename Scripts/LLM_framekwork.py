@@ -339,37 +339,37 @@ class LLM:
 		return 'Image generated'
 
 def main():
-#	# ----- ChatGPT Models ----- #
-#	args = {'stream':True}
-#	llm = LLM('OpenAI', 'gpt-4o-mini', CHATGPT, args=args)
-#	llm.system('you are a helpful assistant')
-#	# Chat
-#	llm.chat(prompt='write me 300 charachter tweet about love')
-#	# Analyse image
-#	llm.chat(prompt='describe this image', filename='out.png')
-#	# Generate image
-#	args = {'size':'1024x1024', 'n':1}
-#	llm = LLM('OpenAI', 'gpt-image-1', CHATGPT, args=args)
-#	llm.system('you are a helpful assistant')
-#	print(llm.image_openai(prompt='generate me an image of a fantasy planet', filename='planet.png'))
-#	# ----- Claude Models ----- #
-#	args={'max_tokens':200, 'stream':True}
-#	llm = LLM('Anthropic', 'claude-opus-4-6', CLAUDE, args=args)
-#	llm.system('you are a helpful assistant')
-#	# Chat
-#	llm.chat(prompt='hello, are you online?')
-#	# Analyse image
-#	llm.chat(prompt='describe this image', filename='out.png')
-#	# ----- Hugging Face Local Models ----- #
-#	args = {'max_new_tokens':200, 'stream':True}
-#	llm = LLM(vendor='local', model='Qwen/Qwen3-VL-2B-Instruct', args=args)
-#	llm.system('you are a helpful assistant')
-#	# Chat
-#	llm.chat(prompt='hello, are you online?')
-#	llm.chat(prompt='are you sure you are online? count 1-10')
-#	# Analyse image
-#	llm.chat(prompt='what is the object in this image?', filename='out.png')
-#	# Generate image
+	# ----- ChatGPT Models ----- #
+	args = {'stream':True}
+	llm = LLM('OpenAI', 'gpt-4o-mini', CHATGPT, args=args)
+	llm.system('you are a helpful assistant')
+	# Chat
+	llm.chat(prompt='write me 300 charachter tweet about love')
+	# Analyse image
+	llm.chat(prompt='describe this image', filename='out.png')
+	# Generate image
+	args = {'size':'1024x1024', 'n':1}
+	llm = LLM('OpenAI', 'gpt-image-1', CHATGPT, args=args)
+	llm.system('you are a helpful assistant')
+	print(llm.image_openai(prompt='generate me an image of a fantasy planet', filename='planet.png'))
+	# ----- Claude Models ----- #
+	args={'max_tokens':200, 'stream':True}
+	llm = LLM('Anthropic', 'claude-opus-4-6', CLAUDE, args=args)
+	llm.system('you are a helpful assistant')
+	# Chat
+	llm.chat(prompt='hello, are you online?')
+	# Analyse image
+	llm.chat(prompt='describe this image', filename='out.png')
+# ----- Hugging Face Local Models ----- #
+	args = {'max_new_tokens':200, 'stream':True}
+	llm = LLM(vendor='local', model='Qwen/Qwen3-VL-2B-Instruct', args=args)
+	llm.system('you are a helpful assistant')
+	# Chat
+	llm.chat(prompt='hello, are you online?')
+	llm.chat(prompt='are you sure you are online? count 1-10')
+	# Analyse image
+	llm.chat(prompt='what is the object in this image?', filename='out.png')
+	# Generate image
 	llm = LLM('local', 'stable-diffusion-v1-5/stable-diffusion-v1-5')
 	llm.system('you are a helpful assistant')
 	print(llm.image('Alien in a jungle, warm color palette, detailed, 8k', 'out.png'))
