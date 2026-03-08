@@ -361,6 +361,7 @@ def main():
 	# Analyse image
 	llm.chat(prompt='describe this image', filename='out.png')
 # ----- Hugging Face Local Models ----- #
+	# meta-llama/Llama-3.1-8B-Instruct
 	args = {'max_new_tokens':200, 'stream':True}
 	llm = LLM(vendor='local', model='Qwen/Qwen3-VL-2B-Instruct', args=args)
 	llm.system('you are a helpful assistant')
