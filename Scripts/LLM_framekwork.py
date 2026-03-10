@@ -1,4 +1,4 @@
-# pip install transformers pillow torch torchvision diffusers accelerate
+# pip install transformers pillow torch torchvision diffusers accelerate bs4
 
 import re
 import math
@@ -15,6 +15,7 @@ import threading
 import torch.nn.functional as F
 from PIL import Image
 from pathlib import Path
+from bs4 import BeautifulSoup
 from transformers import AutoTokenizer, AutoProcessor, AutoModel
 from transformers import AutoModelForImageTextToText, TextIteratorStreamer
 warnings.filterwarnings('ignore', message='.*CUDA is not available.*')
@@ -343,6 +344,170 @@ class LLM:
 		'text':f'I generated this image from the prompt: {prompt}'})
 		self.memory.append({'role':'assistant', 'content':content})
 		return 'Image generated'
+	def chunk(self, text, min_words=150, max_words=300):
+		''' Split text into chunks, breaking on sentence boundaries '''
+		sentences = re.split(r'(?<=[.!?])\s+(?=[A-Z"\']|$)', text.strip())
+		sentences = [s.strip() for s in sentences if s.strip()]
+		chunks, current, count = [], [], 0
+		for sentence in sentences:
+			s_words = len(sentence.split())
+			if count + s_words <= max_words:
+				current.append(sentence)
+				count += s_words
+			else:
+				if current and count >= min_words:
+					chunks.append(' '.join(current))
+					current = [sentence]
+					count   = s_words
+				elif current:
+					current.append(sentence)
+					count += s_words
+					chunks.append(' '.join(current))
+					current = []
+					count   = 0
+				else:
+					chunks.append(sentence)
+		if current:
+			if chunks and count < min_words:
+				chunks[-1] = chunks[-1] + ' ' + ' '.join(current)
+			else:
+				chunks.append(' '.join(current))
+		return chunks
+	def embedding_openai(self, chunks=[]):
+		''' Embedding text chunks using an OpenAi model '''
+		url = 'https://api.openai.com/v1/embeddings'
+		model = 'text-embedding-3-small'
+		payload = {
+			'model':model,
+			'input':chunks}
+		header = {
+			'Authorization':f'Bearer {self.key}',
+			'Content-Type':'application/json'}
+		response = requests.post(
+			url,
+			headers=header,
+			json=payload)
+		if response.status_code != 200:
+			error = response.json()['error']['message']
+			raise SystemError(error)
+		else:
+			data = response.json()['data']
+			vectors = [item['embedding'] for item in data]
+			return vectors
+	def embedding_local(self, chunks=[]):
+		''' Embedding text chunks using a local LLM '''
+		model = 'BAAI/bge-large-en-v1.5'
+		tokenizer = AutoTokenizer.from_pretrained(model)
+		HGmodel = AutoModel.from_pretrained(model)
+		inputs = tokenizer(
+			chunks,
+			padding=True,
+			truncation=True,
+			return_tensors='pt')
+		with torch.no_grad(): outputs = HGmodel(**inputs)
+		embeddings = outputs.last_hidden_state[:, 0]
+		embeddings = F.normalize(embeddings, p=2, dim=1)
+		vectors = embeddings.numpy().tolist()
+		return vectors
+	def store(self, chunks=[], vectors=[], filename='db.sqlite', metadata=''):
+		''' Store embeddings into a binary sqlite vector database '''
+		conn = sqlite3.connect(filename)
+		cur  = conn.cursor()
+		cur.execute('''
+			CREATE TABLE IF NOT EXISTS vectors (
+				id       TEXT PRIMARY KEY,
+				text     TEXT NOT NULL,
+				vector   BLOB NOT NULL,
+				metadata TEXT DEFAULT '{}')
+			''')
+		meta_str = json.dumps({'source':metadata})
+		for text, vector in zip(chunks, vectors):
+			record_id = hashlib.sha256(text.encode('utf-8')).hexdigest()[:16]
+		blob = struct.pack(f'{len(vector)}f', *vector)
+		cur.execute(
+			'INSERT OR REPLACE INTO vectors (id, text, vector, metadata) '
+			'VALUES (?, ?, ?, ?)',
+			(record_id, text, blob, meta_str))
+		conn.commit()
+		cur.execute('SELECT COUNT(*) FROM vectors')
+		total = cur.fetchone()[0]
+		conn.close()
+	def web(self, url):
+		''' Web retrieval '''
+		headers = {'User-Agent':'Mozilla/5.0'}
+		response = requests.get(url, headers=headers, timeout=10)
+		response.raise_for_status()
+		soup = BeautifulSoup(response.text, 'html.parser')
+		tags = [
+		'script', 'style',  'nav',
+		'footer', 'header', 'aside',
+		'form',   'iframe', 'noscript']
+		for tag in soup(tags): tag.decompose()
+		text = soup.get_text(separator=' ', strip=True)
+		text = re.sub(r'\s+', ' ', text).strip()
+		if not text: return []
+		else: return text
+	def RAG_vec(self, text='', metadata=''):
+		''' Vectorise text in preparation for RAG '''
+		chunks = self.chunk(text)
+		if self.vendor == 'openai':
+			vectors = self.embedding_openai(chunks)
+		else:
+			vectors = self.embedding_local(chunks)
+		self.store(chunks, vectors, 'db.sqlite', metadata)
+	def RAG_ret(self, query='', filename='db.sqlite', top_k=5, threshold=0.7):
+		''' Retrieval Augmented Generation from a vectorised database '''
+		if self.vendor == 'openai':
+			query_vec = self.embedding_openai(query)[0]
+		else:
+			query_vec = self.embedding_local(query)[0]
+		conn = sqlite3.connect(filename)
+		cur  = conn.cursor()
+		cur.execute('SELECT text, vector, metadata FROM vectors')
+		rows = cur.fetchall()
+		conn.close()
+		query_mag = math.sqrt(sum(q * q for q in query_vec))
+		results = []
+		for text, blob, meta_str in rows:
+			n_floats    = len(blob) // 4
+			vector      = struct.unpack(f'{n_floats}f', blob)
+			dot_product = sum(q * v for q, v in zip(query_vec, vector))
+			vector_mag  = math.sqrt(sum(v * v for v in vector))
+			if query_mag == 0 or vector_mag == 0: score = 0.0
+			else: score = dot_product / (query_mag * vector_mag)
+			if threshold and score < threshold: continue
+			results.append({
+				'text':     text,
+				'score':    round(score, 4),
+				'metadata': json.loads(meta_str)})
+		context = ' '.join(item['text'] for item in results)
+		A = 'Use the followng context to answer the question. '
+		B = 'If the context does not contain the answer, say so.\n\n'
+		instruction = A + B + context
+		if self.vendor == 'openai':
+			self.memory.append({'role':'system', 'content':instruction})
+		elif self.vendor == 'anthropic':
+			self.memory.append({'role':'user', 'content':instruction})
+		elif self.vendor == 'local':
+			content = []
+			content.append({'type':'text', 'text':instruction})
+			self.memory.append({'role':'user', 'content':content})
+		return self.chat(query)
+	def long_context(self, query='', text=''):
+		A = 'Use the followng context to answer the question. '
+		B = 'If the context does not contain the answer, say so.\n\n'
+		instruction = A + B + text
+		if self.vendor == 'openai':
+			self.memory.append({'role':'system', 'content':instruction})
+		elif self.vendor == 'anthropic':
+			self.memory.append({'role':'user', 'content':instruction})
+		elif self.vendor == 'local':
+			content = []
+			content.append({'type':'text', 'text':instruction})
+			self.memory.append({'role':'user', 'content':content})
+		return self.chat(query)
+
+
 
 def main():
 #	# ----- ChatGPT Models ----- #
@@ -376,198 +541,33 @@ def main():
 #	# Analyse image
 #	llm.chat(prompt='what is the object in this image?', filename='out.png')
 #	# Generate image
-	llm = LLM('local', 'stable-diffusion-v1-5/stable-diffusion-v1-5')
+#	llm = LLM('local', 'stable-diffusion-v1-5/stable-diffusion-v1-5')
+#	llm.system('you are a helpful assistant')
+#	print(llm.image('Alien in a jungle, warm color palette, detailed, 8k', 'out.png'))
+#	# --- RAG --- #
+#	args={'max_tokens':200, 'stream':True}
+#	llm = LLM('openai', 'gpt-4o-mini', key=CHATGPT)
+#	llm = LLM('anthropic', 'claude-opus-4-6', key=CLAUDE, args=args)
+#	llm = LLM('local', 'Qwen/Qwen3-VL-2B-Instruct', args={'max_new_tokens':200})
+#	llm.system('you are a helpful assistant')
+#	llm.chat('i am going to send you a text to summerise, say ok if you understand')
+#	with open('text.txt', 'r') as f: text = f.read()
+#	llm.RAG_vec(text, 'text.txt')
+#	print(llm.RAG_ret('summerise this text into a 5 word sentence', 'db.sqlite', 5, 0.0))
+#	print(llm.long_context('summerise this text into a 5 word sentence', text))
+	# --- Web retrieval ---#
+	args={'max_tokens':200, 'stream':True}
+#	llm = LLM('openai', 'gpt-4o-mini', key=CHATGPT)
+#	llm = LLM('anthropic', 'claude-opus-4-6', key=CLAUDE, args=args)
+	llm = LLM('local', 'Qwen/Qwen3-VL-2B-Instruct', args={'max_new_tokens':200})
 	llm.system('you are a helpful assistant')
-	print(llm.image('Alien in a jungle, warm color palette, detailed, 8k', 'out.png'))
+	llm.chat('i am going to send you a text to summerise, say ok if you understand')
+	text = llm.web('https://en.wikipedia.org/wiki/Allergy')
+#	llm.RAG_vec(text, 'text.txt')
+#	print(llm.RAG_ret('summerise this text in 5 sentences', 'db.sqlite', 5, 0.0))
+	text = llm.web('https://en.wikipedia.org/wiki/Weimer_Township,_Barnes_County,_North_Dakota')
+	print(llm.long_context('summerise this text in 5 sentences', text))
 
-#if __name__ == '__main__': main()
+	# --- Function Calling ---#
 
-
-
-
-
-#‘’’
-#meta-llama/Llama-3.1-8B-Instruct
-#‘’’
-
-
-
-
-def chunk(text, min_words=150, max_words=300):
-	''' Split text into chunks, breaking on sentence boundaries'''
-	sentences = re.split(r'(?<=[.!?])\s+(?=[A-Z"\']|$)', text.strip())
-	sentences = [s.strip() for s in sentences if s.strip()]
-	chunks, current, count = [], [], 0
-	for sentence in sentences:
-		s_words = len(sentence.split())
-		if count + s_words <= max_words:
-			current.append(sentence)
-			count += s_words
-		else:
-			if current and count >= min_words:
-				chunks.append(' '.join(current))
-				current = [sentence]
-				count   = s_words
-			elif current:
-				current.append(sentence)
-				count += s_words
-				chunks.append(' '.join(current))
-				current = []
-				count   = 0
-			else:
-				chunks.append(sentence)
-	if current:
-		if chunks and count < min_words:
-			chunks[-1] = chunks[-1] + ' ' + ' '.join(current)
-		else:
-			chunks.append(' '.join(current))
-	return chunks
-
-def embedding_openai(chunks=[]):
-	''' Vectorise text chunks with OpenAI models '''
-	url = 'https://api.openai.com/v1/embeddings'
-	model = 'text-embedding-3-small'
-	payload = {
-		'model':model,
-		'input':chunks}
-	header = {
-		'Authorization':f'Bearer {CHATGPT}',
-		'Content-Type':'application/json'}
-	response = requests.post(
-		url,
-		headers=header,
-		json=payload)
-	if response.status_code != 200:
-		error = response.json()['error']['message']
-		raise SystemError(error)
-	else:
-		data = response.json()['data']
-		vectors = [item['embedding'] for item in data]
-		return vectors
-
-def embedding_local(chunks=[]):
-	'''  '''
-	model = 'BAAI/bge-large-en-v1.5'
-	tokenizer = AutoTokenizer.from_pretrained(model)
-	HGmodel = AutoModel.from_pretrained(model)
-	inputs = tokenizer(
-		chunks,
-		padding=True,
-		truncation=True,
-		return_tensors='pt')
-	with torch.no_grad(): outputs = HGmodel(**inputs)
-	embeddings = outputs.last_hidden_state[:, 0]
-	embeddings = F.normalize(embeddings, p=2, dim=1)
-	vectors = embeddings.numpy().tolist()
-	return vectors
-
-def store_json(chunks=[], vectors=[], filename='db.json', metadata=None):
-	'''  '''
-	p = Path(filename)
-	if p.exists():
-		with open(p, 'r', encoding='utf-8') as f: existing = json.load(f)
-	else:
-		existing = []
-	index = {record['id']: record for record in existing}
-	for text, vector in zip(chunks, vectors):
-		record_id = hashlib.sha256(text.encode('utf-8')).hexdigest()[:16]
-		record = {
-			'id':       record_id,
-			'text':     text,
-			'vector':   vector,
-			'metadata': {'source': filename}}
-		index[record_id] = record
-	records = list(index.values())
-	with open(p, 'w', encoding='utf-8') as f: json.dump(records, f, indent=2)
-
-
-def store_db(chunks=[], vectors=[], filename='db.sqlite', metadata=None):
-	'''  '''
-	conn = sqlite3.connect(filename)
-	cur  = conn.cursor()
-	cur.execute('''
-		CREATE TABLE IF NOT EXISTS vectors (
-			id       TEXT PRIMARY KEY,
-			text     TEXT NOT NULL,
-			vector   BLOB NOT NULL,
-			metadata TEXT DEFAULT '{}')
-		''')
-	meta_str = json.dumps({'source': filename})
-	for text, vector in zip(chunks, vectors):
-		record_id = hashlib.sha256(text.encode('utf-8')).hexdigest()[:16]
-	blob = struct.pack(f'{len(vector)}f', *vector)
-	cur.execute(
-		'INSERT OR REPLACE INTO vectors (id, text, vector, metadata) '
-		'VALUES (?, ?, ?, ?)',
-		(record_id, text, blob, meta_str))
-	conn.commit()
-	cur.execute('SELECT COUNT(*) FROM vectors')
-	total = cur.fetchone()[0]
-	conn.close()
-
-def retrieve_json(query_vec, filename='db.json', top_k=5, threshold=0.7):
-	'''  '''
-	with open(filename, 'r', encoding='utf-8') as f: records = json.load(f)
-	query_mag = math.sqrt(sum(q * q for q in query_vec))
-	results = []
-	for record in records:
-		vector = record['vector']
-		dot_product = sum(q * v for q, v in zip(query_vec, vector))
-		vector_mag  = math.sqrt(sum(v * v for v in vector))
-		if query_mag == 0 or vector_mag == 0: score = 0.0
-		else: score = dot_product / (query_mag * vector_mag)
-		if threshold and score < threshold: continue
-		results.append({
-			'text':     record['text'],
-			'score':    round(score, 4),
-			'metadata': record.get('metadata', {})})
-	return results
-
-def retrieve_db(query_vec, filename='db.sqlite', top_k=5, threshold=0.7):
-	'''  '''
-	conn = sqlite3.connect(filename)
-	cur  = conn.cursor()
-	cur.execute('SELECT text, vector, metadata FROM vectors')
-	rows = cur.fetchall()
-	conn.close()
-	query_mag = math.sqrt(sum(q * q for q in query_vec))
-	results = []
-	for text, blob, meta_str in rows:
-		n_floats    = len(blob) // 4
-		vector      = struct.unpack(f'{n_floats}f', blob)
-		dot_product = sum(q * v for q, v in zip(query_vec, vector))
-		vector_mag  = math.sqrt(sum(v * v for v in vector))
-		if query_mag == 0 or vector_mag == 0: score = 0.0
-		else: score = dot_product / (query_mag * vector_mag)
-		if threshold and score < threshold: continue
-		results.append({
-			'text':     text,
-			'score':    round(score, 4),
-			'metadata': json.loads(meta_str)})
-	return results
-
-
-# ── Quick test ─────────────────────────────────────────────────────────
-sample = (
-'The quick brown fox jumps over the lazy dog. '                  * 40 +
-'Artificial intelligence is transforming industries worldwide. ' * 60 +
-'Vector databases store high-dimensional embeddings for fast '
-'similarity search. They are essential for modern RAG pipelines. '
-'ChromaDB is a lightweight option that runs locally. '           * 30)
-
-query = embedding_local(['what did the fox fox fox do?'])[0]
-
-
-chunks = chunk(sample)
-vector = embedding_local(chunks)
-store_json(chunks, vector)
-print(retrieve_json(query))
-
-#store_db(chunks, vector)
-#print(retrieve_db(query))
-
-#RAG = def of the while pipleine end to end:
-
-# def web, input HTML from requests
-
-# Add retreived text to memory
+if __name__ == '__main__': main()
