@@ -1,15 +1,21 @@
 # pip install transformers pillow torch torchvision diffusers accelerate
 
+import re
+import math
 import json
 import torch
+import struct
 import base64
+import sqlite3
+import hashlib
 import requests
 import warnings
 import mimetypes
 import threading
+import torch.nn.functional as F
 from PIL import Image
 from pathlib import Path
-from transformers import AutoTokenizer, AutoProcessor
+from transformers import AutoTokenizer, AutoProcessor, AutoModel
 from transformers import AutoModelForImageTextToText, TextIteratorStreamer
 warnings.filterwarnings('ignore', message='.*CUDA is not available.*')
 from diffusers import DiffusionPipeline
@@ -339,40 +345,229 @@ class LLM:
 		return 'Image generated'
 
 def main():
-	# ----- ChatGPT Models ----- #
-	args = {'stream':True}
-	llm = LLM('OpenAI', 'gpt-4o-mini', CHATGPT, args=args)
-	llm.system('you are a helpful assistant')
-	# Chat
-	llm.chat(prompt='write me 300 charachter tweet about love')
-	# Analyse image
-	llm.chat(prompt='describe this image', filename='out.png')
-	# Generate image
-	args = {'size':'1024x1024', 'n':1}
-	llm = LLM('OpenAI', 'gpt-image-1', CHATGPT, args=args)
-	llm.system('you are a helpful assistant')
-	print(llm.image_openai(prompt='generate me an image of a fantasy planet', filename='planet.png'))
-	# ----- Claude Models ----- #
-	args={'max_tokens':200, 'stream':True}
-	llm = LLM('Anthropic', 'claude-opus-4-6', CLAUDE, args=args)
-	llm.system('you are a helpful assistant')
-	# Chat
-	llm.chat(prompt='hello, are you online?')
-	# Analyse image
-	llm.chat(prompt='describe this image', filename='out.png')
-# ----- Hugging Face Local Models ----- #
-	# meta-llama/Llama-3.1-8B-Instruct
-	args = {'max_new_tokens':200, 'stream':True}
-	llm = LLM(vendor='local', model='Qwen/Qwen3-VL-2B-Instruct', args=args)
-	llm.system('you are a helpful assistant')
-	# Chat
-	llm.chat(prompt='hello, are you online?')
-	llm.chat(prompt='are you sure you are online? count 1-10')
-	# Analyse image
-	llm.chat(prompt='what is the object in this image?', filename='out.png')
-	# Generate image
+#	# ----- ChatGPT Models ----- #
+#	args = {'stream':True}
+#	llm = LLM('OpenAI', 'gpt-4o-mini', CHATGPT, args=args)
+#	llm.system('you are a helpful assistant')
+#	# Chat
+#	llm.chat(prompt='write me 300 charachter tweet about love')
+#	# Analyse image
+#	llm.chat(prompt='describe this image', filename='out.png')
+#	# Generate image
+#	args = {'size':'1024x1024', 'n':1}
+#	llm = LLM('OpenAI', 'gpt-image-1', CHATGPT, args=args)
+#	llm.system('you are a helpful assistant')
+#	print(llm.image_openai(prompt='generate me an image of a fantasy planet', filename='planet.png'))
+#	# ----- Claude Models ----- #
+#	args={'max_tokens':200, 'stream':True}
+#	llm = LLM('Anthropic', 'claude-opus-4-6', CLAUDE, args=args)
+#	llm.system('you are a helpful assistant')
+#	# Chat
+#	llm.chat(prompt='hello, are you online?')
+#	# Analyse image
+#	llm.chat(prompt='describe this image', filename='out.png')
+#	# ----- Hugging Face Local Models ----- #
+#	args = {'max_new_tokens':200, 'stream':True}
+#	llm = LLM(vendor='local', model='Qwen/Qwen3-VL-2B-Instruct', args=args)
+#	llm.system('you are a helpful assistant')
+#	# Chat
+#	llm.chat(prompt='hello, are you online?')
+#	llm.chat(prompt='are you sure you are online? count 1-10')
+#	# Analyse image
+#	llm.chat(prompt='what is the object in this image?', filename='out.png')
+#	# Generate image
 	llm = LLM('local', 'stable-diffusion-v1-5/stable-diffusion-v1-5')
 	llm.system('you are a helpful assistant')
 	print(llm.image('Alien in a jungle, warm color palette, detailed, 8k', 'out.png'))
 
-if __name__ == '__main__': main()
+#if __name__ == '__main__': main()
+
+
+
+
+
+#‘’’
+#meta-llama/Llama-3.1-8B-Instruct
+#‘’’
+
+
+
+
+def chunk(text, min_words=150, max_words=300):
+	''' Split text into chunks, breaking on sentence boundaries'''
+	sentences = re.split(r'(?<=[.!?])\s+(?=[A-Z"\']|$)', text.strip())
+	sentences = [s.strip() for s in sentences if s.strip()]
+	chunks, current, count = [], [], 0
+	for sentence in sentences:
+		s_words = len(sentence.split())
+		if count + s_words <= max_words:
+			current.append(sentence)
+			count += s_words
+		else:
+			if current and count >= min_words:
+				chunks.append(' '.join(current))
+				current = [sentence]
+				count   = s_words
+			elif current:
+				current.append(sentence)
+				count += s_words
+				chunks.append(' '.join(current))
+				current = []
+				count   = 0
+			else:
+				chunks.append(sentence)
+	if current:
+		if chunks and count < min_words:
+			chunks[-1] = chunks[-1] + ' ' + ' '.join(current)
+		else:
+			chunks.append(' '.join(current))
+	return chunks
+
+def embedding_openai(chunks=[]):
+	''' Vectorise text chunks with OpenAI models '''
+	url = 'https://api.openai.com/v1/embeddings'
+	model = 'text-embedding-3-small'
+	payload = {
+		'model':model,
+		'input':chunks}
+	header = {
+		'Authorization':f'Bearer {CHATGPT}',
+		'Content-Type':'application/json'}
+	response = requests.post(
+		url,
+		headers=header,
+		json=payload)
+	if response.status_code != 200:
+		error = response.json()['error']['message']
+		raise SystemError(error)
+	else:
+		data = response.json()['data']
+		vectors = [item['embedding'] for item in data]
+		return vectors
+
+def embedding_local(chunks=[]):
+	'''  '''
+	model = 'BAAI/bge-large-en-v1.5'
+	tokenizer = AutoTokenizer.from_pretrained(model)
+	HGmodel = AutoModel.from_pretrained(model)
+	inputs = tokenizer(
+		chunks,
+		padding=True,
+		truncation=True,
+		return_tensors='pt')
+	with torch.no_grad(): outputs = HGmodel(**inputs)
+	embeddings = outputs.last_hidden_state[:, 0]
+	embeddings = F.normalize(embeddings, p=2, dim=1)
+	vectors = embeddings.numpy().tolist()
+	return vectors
+
+def store_json(chunks=[], vectors=[], filename='db.json', metadata=None):
+	'''  '''
+	p = Path(filename)
+	if p.exists():
+		with open(p, 'r', encoding='utf-8') as f: existing = json.load(f)
+	else:
+		existing = []
+	index = {record['id']: record for record in existing}
+	for text, vector in zip(chunks, vectors):
+		record_id = hashlib.sha256(text.encode('utf-8')).hexdigest()[:16]
+		record = {
+			'id':       record_id,
+			'text':     text,
+			'vector':   vector,
+			'metadata': {'source': filename}}
+		index[record_id] = record
+	records = list(index.values())
+	with open(p, 'w', encoding='utf-8') as f: json.dump(records, f, indent=2)
+
+
+def store_db(chunks=[], vectors=[], filename='db.sqlite', metadata=None):
+	'''  '''
+	conn = sqlite3.connect(filename)
+	cur  = conn.cursor()
+	cur.execute('''
+		CREATE TABLE IF NOT EXISTS vectors (
+			id       TEXT PRIMARY KEY,
+			text     TEXT NOT NULL,
+			vector   BLOB NOT NULL,
+			metadata TEXT DEFAULT '{}')
+		''')
+	meta_str = json.dumps({'source': filename})
+	for text, vector in zip(chunks, vectors):
+		record_id = hashlib.sha256(text.encode('utf-8')).hexdigest()[:16]
+	blob = struct.pack(f'{len(vector)}f', *vector)
+	cur.execute(
+		'INSERT OR REPLACE INTO vectors (id, text, vector, metadata) '
+		'VALUES (?, ?, ?, ?)',
+		(record_id, text, blob, meta_str))
+	conn.commit()
+	cur.execute('SELECT COUNT(*) FROM vectors')
+	total = cur.fetchone()[0]
+	conn.close()
+
+def retrieve_json(query_vec, filename='db.json', top_k=5, threshold=0.7):
+	'''  '''
+	with open(filename, 'r', encoding='utf-8') as f: records = json.load(f)
+	query_mag = math.sqrt(sum(q * q for q in query_vec))
+	results = []
+	for record in records:
+		vector = record['vector']
+		dot_product = sum(q * v for q, v in zip(query_vec, vector))
+		vector_mag  = math.sqrt(sum(v * v for v in vector))
+		if query_mag == 0 or vector_mag == 0: score = 0.0
+		else: score = dot_product / (query_mag * vector_mag)
+		if threshold and score < threshold: continue
+		results.append({
+			'text':     record['text'],
+			'score':    round(score, 4),
+			'metadata': record.get('metadata', {})})
+	return results
+
+def retrieve_db(query_vec, filename='db.sqlite', top_k=5, threshold=0.7):
+	'''  '''
+	conn = sqlite3.connect(filename)
+	cur  = conn.cursor()
+	cur.execute('SELECT text, vector, metadata FROM vectors')
+	rows = cur.fetchall()
+	conn.close()
+	query_mag = math.sqrt(sum(q * q for q in query_vec))
+	results = []
+	for text, blob, meta_str in rows:
+		n_floats    = len(blob) // 4
+		vector      = struct.unpack(f'{n_floats}f', blob)
+		dot_product = sum(q * v for q, v in zip(query_vec, vector))
+		vector_mag  = math.sqrt(sum(v * v for v in vector))
+		if query_mag == 0 or vector_mag == 0: score = 0.0
+		else: score = dot_product / (query_mag * vector_mag)
+		if threshold and score < threshold: continue
+		results.append({
+			'text':     text,
+			'score':    round(score, 4),
+			'metadata': json.loads(meta_str)})
+	return results
+
+
+# ── Quick test ─────────────────────────────────────────────────────────
+sample = (
+'The quick brown fox jumps over the lazy dog. '                  * 40 +
+'Artificial intelligence is transforming industries worldwide. ' * 60 +
+'Vector databases store high-dimensional embeddings for fast '
+'similarity search. They are essential for modern RAG pipelines. '
+'ChromaDB is a lightweight option that runs locally. '           * 30)
+
+query = embedding_local(['what did the fox fox fox do?'])[0]
+
+
+chunks = chunk(sample)
+vector = embedding_local(chunks)
+store_json(chunks, vector)
+print(retrieve_json(query))
+
+#store_db(chunks, vector)
+#print(retrieve_db(query))
+
+#RAG = def of the while pipleine end to end:
+
+# def web, input HTML from requests
+
+# Add retreived text to memory
