@@ -12,6 +12,7 @@ import requests
 import warnings
 import mimetypes
 import threading
+import subprocess
 import torch.nn.functional as F
 from PIL import Image
 from pathlib import Path
@@ -570,4 +571,99 @@ def main():
 
 	# --- Function Calling ---#
 
-if __name__ == '__main__': main()
+#if __name__ == '__main__': main()
+
+
+
+
+
+def run(command='date', flags='-I'):
+	line = [command, flags]
+	output = subprocess.run(line, capture_output=True, text=True)
+	return output.stdout.strip()
+
+
+
+# define tool name as key and the function def as value
+tool_map = {'run':run}
+
+
+tool_def = [
+	{'type': 'function',
+	'function': {
+		'name': 'run',
+		'description': 'Runs a bash command with an option flag',
+		'parameters': {
+			'type': 'object',
+			'properties': {
+				'command': {'type': 'string', 'description': 'The bash command to run, e.g. date, ls, whoami'},
+				'options': {'type': 'string', 'description': 'A single option flag, e.g. -I, -la, -a'}},
+			'required': ['command']}}}]
+
+
+
+def chat_openai(prompt='', filename=None, tool_map=None, tool_def=None):
+	model = 'gpt-4o-mini'
+	memory = [{'role':'system', 'content':'you are a helpful assistant'}]
+	key = CHATGPT
+	args = {}
+
+	''' OpenAI's ChatGPT image-text->text models '''
+	args = args or {} ############ self.args
+	url = 'https://api.openai.com/v1/chat/completions'
+	if filename != None:
+		content = []
+		b64 = self.file_encode(filename)
+		content.append({
+			'type':'image_url',
+			'image_url':{'url':b64, 'detail':'auto'}})
+		content.append({'type':'text', 'text':prompt})
+		self.memory.append({'role':'user', 'content':content})
+	else:
+		memory.append({'role':'user', 'content':prompt}) ####### self.memory
+	payload = {
+		'model':model,####### self.model
+		'messages':memory,
+		'tools':tool_def,
+		'tool_choice':'auto' if tool_def else None
+		} | args#### self.memory self.args
+	header = {
+		'Authorization':f'Bearer {key}', ##### self.key
+		'Content-Type':'application/json'}
+
+
+
+	response = requests.post(
+		url,
+		headers=header,
+		json=payload,
+		stream=args.get('stream', False)) ###### self.args
+	message = response.json()['choices'][0]['message']
+	if message.get('tool_calls'):
+		for tool_call in message['tool_calls']:
+			fn_name = tool_call['function']['name']
+			fn_args = json.loads(tool_call['function']['arguments'])
+			fn      = tool_map[fn_name]
+			output  = fn(**fn_args)
+			memory.append({     ###############self.memory
+				'role':         'tool',
+				'tool_call_id': tool_call['id'],
+				'name':         fn_name,
+				'content':      str(output)})
+			return(output)
+	if response.status_code != 200:
+		error = response.json()['error']['message']
+		raise SystemError(error)
+	else:
+		if args.get('stream', False):   ####### self.args
+			text = self.stream(response)
+			self.memory.append({'role':'assistant', 'content':text})
+			return text
+		text = response.json()['choices'][0]['message']['content']
+		memory.append({'role':'assistant', 'content':text})##### self.memory
+		return text
+
+
+print(chat_openai('what is the date right now?', tool_map=tool_map, tool_def=tool_def))
+
+#### I am too lazy to integrate this back into the class and port this setup to both the claude chat and the local chat, but this is basically the idea of how function calling works.
