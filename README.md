@@ -10,8 +10,8 @@ sudo fdisk -l
 sudo dd bs=4M if=FILENAME.iso of=/dev/sdb status=progress oflag=sync iflag=fullblock
 ------------------------------
 **#TMUX**
-tmux new -s work -n work \; split-window -d -t 0 -v -l "30%" weechat \; split-window -h -l "40%" htop \; split-window -v -l "68%" vlc -I ncurses --no-video https://www.youtube.com/watch?v=jfKfPfyJRdk \; split-window -v -l "68%"
-tmux new -s work -n work \; split-window -d -t 0 -v -l "30%" weechat \; split-window -h -l "40%" htop \; split-window -v -l "66%"
+tmux new -s work -n work \; split-window -d -t 0 -v -l "30%" "weechat -r '/connect libera; /wait 10s /command -buffer irc.server.libera irc /join #pose,#linux,#python'" \; split-window -h -l "47%" htop \; split-window -v -l "66%"
+tmux new -s work -n work \; split-window -d -t 0 -v -l "30%" weechat \; split-window -h -l "47%" htop \; split-window -v -l "66%"
 # Show pane number
 ctrl + q
 # Swap panes
